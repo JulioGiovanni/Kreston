@@ -3,6 +3,7 @@ import  UserButton   from "./UserButton"
 import { SegmentedToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
 import { useContext } from 'react';
 import { AuthContext } from "../../context/auth";
+import { getInitials } from '../../utils/GetInitials';
 
 
 
@@ -11,22 +12,7 @@ import { AuthContext } from "../../context/auth";
 const MenuNavbar = () => {
   const {Logout,User} = useContext(AuthContext)
 
-  const names = User?.nombre.split(" ");
-  let initials = "";
-  switch (names?.length) {
-    case 1:
-      initials = names[0].charAt(0);
-      break; 
-    case 2:
-      initials = names[0].charAt(0) + names[1].charAt(0); 
-      break; 
-    case 3:
-      initials = names[0].charAt(0) + names[2].charAt(0); 
-      break; 
-    case 4:
-      initials = names[0].charAt(0) + names[3].charAt(0); 
-      break; 
-  }
+  const initials = getInitials(User!.nombre)
   return (
     
   

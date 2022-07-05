@@ -4,12 +4,12 @@ import { Sun, Moon } from 'tabler-icons-react';
 
 export function SegmentedToggle() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-
+  
   return (
     <Group position='center' m={5} >
       <SegmentedControl
         value={colorScheme}
-        onChange={toggleColorScheme}
+        onChange={((val) => toggleColorScheme(val as typeof colorScheme))}
         data={[
           {
             value: 'light',
