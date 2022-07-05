@@ -12,7 +12,7 @@ import { getInitials } from '../../utils/GetInitials';
 const MenuNavbar = () => {
   const {Logout,User} = useContext(AuthContext)
 
-  const initials = getInitials(User!.nombre)
+  const initials = getInitials(User?.nombre || '')
   return (
     
   

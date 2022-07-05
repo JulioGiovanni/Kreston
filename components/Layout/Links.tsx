@@ -66,7 +66,7 @@ const Links = () => {
                     </AccordionItem>
                 </Accordion> 
                 :
-                <Link href={link.link} passHref 
+                <Link href={link.link || "/"} passHref 
                     key={link.link}
                 >
                      <Button 

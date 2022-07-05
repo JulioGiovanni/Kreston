@@ -7,7 +7,7 @@ import { prisma } from '../../db';
 import { useForm, useMediaQuery } from '@mantine/hooks';
 import NewUserForm from '../../components/Users/NewUserForm';
 import Layout from '../../components/Layout/Layout';
-import { ShowUsersTable } from '../../components/Users/ShowUsersTable';
+import { ShowUsersTable2 } from '../../components/Users/ShowUsersTable2';
 import { UserApi } from '../../API/UserApi';
 
 
@@ -95,7 +95,7 @@ const UsuariosIndex = ({users,areas,oficinas,roles}:any) => {
                 <tbody>{rows}</tbody>
                 <tfoot>{ths}</tfoot>
             </Table> */}
-            <ShowUsersTable
+            <ShowUsersTable2
               opened={opened}
               setOpened={setOpened}
               onCancel={onCancel}
