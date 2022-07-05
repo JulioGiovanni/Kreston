@@ -9,6 +9,7 @@ import {
   Center,
   TextInput,
   Checkbox,
+  Title,
 } from '@mantine/core';
 import { Selector, ChevronDown, ChevronUp, Search, Edit } from 'tabler-icons-react';
 import EditUser from './EditUser';
@@ -19,7 +20,7 @@ import { API } from '../../API';
 
 
 
-export function ShowUsersTable2({ data,EditIcon,onCancel,EyeIcon,opened,setOpened }: any) {
+export function ShowUsersTable2({ data,EditIcon,onCancel,EyeIcon,opened,setOpened }) {
     const [values, handlers] = useListState(data);
 
 
@@ -40,16 +41,29 @@ export function ShowUsersTable2({ data,EditIcon,onCancel,EyeIcon,opened,setOpene
 
     const ths = (
         <tr>
-          <th>Nombre</th>
-          <th>Correo</th>
-          <th>Rol</th>
-          <th>Oficina</th>
-          <th>Área</th>
-          <th>Activo</th>
+            <td>
+                <Title order={3}>Nombre</Title>
+            </td>
+            <td>
+                <Title order={3}>Correo</Title>
+            </td>
+            <td>
+                <Title order={3}>Rol</Title>
+            </td>
+            <td>
+                <Title order={3}>Oficina</Title>
+            </td>
+            <td>
+                <Title order={3}>Área</Title>
+            </td>
+            <td>
+                <Title order={3}>Activo</Title>
+            </td>
+        
         </tr>
       );
     
-      const rows = values.map((row:any,index:number) => (
+      const rows = values.map((row,index) => (
         <tr key={row.id}>
           <td>{row.nombre}</td>
           <td>{row.correo}</td>
@@ -67,11 +81,10 @@ export function ShowUsersTable2({ data,EditIcon,onCancel,EyeIcon,opened,setOpene
       ));
     
       return (
-        <Table captionSide="bottom">
-          <caption>Some elements from periodic table</caption>
+        <Table highlightOnHover>
+          
           <thead>{ths}</thead>
           <tbody>{rows}</tbody>
-          <tfoot>{ths}</tfoot>
         </Table>
       );
 }
