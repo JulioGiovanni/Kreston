@@ -8,11 +8,11 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { AuthProvider } from '../context/auth/AuthProvider';
 import { ErrorsProvider } from '../context/Errors';
 
-export default function App(props: AppProps & { colorScheme: ColorScheme }) {
+export default function App(props , { colorScheme }) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme);
 
-  const toggleColorScheme = (value?: ColorScheme) => {
+  const toggleColorScheme = (value) => {
     const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
     setColorScheme(nextColorScheme);
     setCookies('mantine-color-scheme', nextColorScheme, { maxAge: 60 * 60 * 24 * 30 });
@@ -41,6 +41,6 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   );
 }
 
-App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
+App.getInitialProps = ({ ctx }) => ({
   colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
 });
