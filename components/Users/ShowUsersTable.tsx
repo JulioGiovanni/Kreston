@@ -1,3 +1,12 @@
+import React from 'react'
+
+const ShowUsersTable = () => {
+  return (
+    <div>ShowUsersTable</div>
+  )
+}
+
+export default ShowUsersTable
 // import React, { useState } from 'react';
 // import {
 //   createStyles,
