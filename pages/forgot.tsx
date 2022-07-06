@@ -3,6 +3,7 @@ import {Center,Grid,Card,PasswordInput,TextInput,Button,Space,Anchor} from '@man
 import Image from 'next/image'
 import Link from 'next/link'
 import forgotPasswordImage from '../public/images/forgot-image.jpg'
+import { getSession } from 'next-auth/react';
 
 const forgot = () => {
   return (
@@ -50,5 +51,21 @@ const forgot = () => {
 
   )
 }
-
+export const getServerSideProps = async ({req}:any) => {
+    // your fetch function here 
+        const session = await getSession({req});
+    
+        if (session){
+            return {
+                redirect:{
+                    destination: '/index/dashboard',
+                    permanent: false
+                }
+            }
+        }
+    
+        return {
+            props: {  }
+        }
+    }
 export default forgot

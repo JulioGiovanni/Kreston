@@ -2,13 +2,13 @@ import Link from 'next/link';
 import { ActionIcon, Anchor, Button, Card, Group, Modal, Popover, Space, Table, Text, TextInput, Title, useMantineTheme } from '@mantine/core';
 import { useState } from 'react';
 import { FiEdit, FiPlus,FiEye} from "react-icons/fi";
-import { prisma } from '../../db';
+import { prisma } from '../../../db';
 
 import { useForm, useMediaQuery } from '@mantine/hooks';
-import NewUserForm from '../../components/Users/NewUserForm';
-import Layout from '../../components/Layout/Layout';
-import { ShowUsersTable2 } from '../../components/Users/ShowUsersTable2';
-import { UserApi } from '../../API/UserApi';
+import NewUserForm from '../../../components/Users/NewUserForm';
+import Layout from '../../../components/Layout/Layout';
+import { ShowUsersTable2 } from '../../../components/Users/ShowUsersTable2';
+import { UserApi } from '../../../API/UserApi';
 
 
 

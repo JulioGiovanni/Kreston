@@ -3,17 +3,17 @@ import { FiCheck,FiHome,FiUser,FiFolder,FiSquare,FiInfo,FiClipboard, FiBriefcase
 
 export const AdminLinks = [
     {   
-        link: '/dashboard',  
+        link: '/index/dashboard',  
         text: 'Inicio',
         Icon:  FiHome, 
     },
     {   
-        link: '/aceptacion',  
+        link: '/index/aceptacion',  
         text: 'Aceptación',
         Icon:  FiCheck,
     },
     {   
-        link: '/independencias',  
+        link: '/index/independencias',  
         text: 'Independencia',
         Icon:  FiFolder ,
     },
@@ -24,36 +24,36 @@ export const AdminLinks = [
         accordionLinks:[
 
             {
-                link: '/consultas/crear',
+                link: '/index/consultas/crear',
                 text:' Crear',  
             },
             {
-                link: '/consultas/aprobadas',
+                link: '/index/consultas/aprobadas',
                 text:' Aprobadas',
             },
             {
-                link: '/consultas/rechazadas',
+                link: '/index/consultas/rechazadas',
                 text:' Rechazadas',
             },
             {
-                link: '/consultas/espera',
+                link: '/index/consultas/espera',
                 text:' En espera',
             },
         ]
         
     },
     {   
-        link: '/usuarios',  
+        link: '/index/usuarios',  
         text: 'Usuarios',
         Icon:  FiUser ,
     },
     {   
-        link: '/areas',  
+        link: '/index/areas',  
         text: 'Áreas',
         Icon:  FiSquare ,
     },
     {   
-        link: '/oficinas',  
+        link: '/index/oficinas',  
         text: 'Oficinas',
         Icon:  FiBriefcase ,
 
@@ -66,22 +66,22 @@ export const AdminLinks = [
         accordionLinks:[
             {
                 text: 'Nuevo cuestionario',
-                link: '/cuestionarios/crear',
+                link: '/index/cuestionarios/crear',
             },
             {
                 text: 'Ver cuestionarios',
-                link: '/cuestionarios/ver',
+                link: '/index/cuestionarios/ver',
             },
             {
                 text: 'Editar cuestionarios',
-                link: '/cuestionarios/editar',
+                link: '/index/cuestionarios/editar',
             }
         ]
     },
     {
         text: 'Proyectos',
         Icon: FiArchive,
-        link: '/proyectos',
+        link: '/index/proyectos',
     }
 ]
 

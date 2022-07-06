@@ -3,11 +3,11 @@ import { FiPlus } from "react-icons/fi";
 import { Avatar, Button, Card, Grid, Space, Text, Title, Modal, TextInput, useMantineColorScheme } from "@mantine/core";
 import Link from "next/link";
 import { useContext, useState } from "react";
-import { prisma } from '../../db';
-import Layout from "../../components/Layout/Layout";
+import { prisma } from '../../../db';
+import Layout from "../../../components/Layout/Layout";
 import { useForm } from "@mantine/hooks";
-import { API } from "../../API";
-import { ErrorsContext } from "../../context/Errors";
+import { API } from "../../../API";
+import { ErrorsContext } from "../../../context/Errors";
 
 
 export const getServerSideProps = async () => {

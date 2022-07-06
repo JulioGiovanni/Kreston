@@ -1,5 +1,6 @@
 
 import {Center,Grid,Card,PasswordInput,TextInput,Button,Anchor} from '@mantine/core';
+import { getSession } from 'next-auth/react';
 import Image from 'next/image'
 import Link from 'next/link'
 import resetPasswordImage from '../public/images/reset-image.jpg'
@@ -39,4 +40,21 @@ const reset = () => {
   )
 }
 
+export const getServerSideProps = async ({req}:any) => {
+    // your fetch function here 
+        const session = await getSession({req});
+    
+        if (session){
+            return {
+                redirect:{
+                    destination: '/index/dashboard',
+                    permanent: false
+                }
+            }
+        }
+    
+        return {
+            props: {  }
+        }
+    }
 export default reset

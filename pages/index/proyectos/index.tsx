@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { createStyles, Table, Checkbox, ScrollArea, Group, Avatar, Text, Card, Title, Button, Modal, TextInput, Select, Space } from '@mantine/core';
-import Layout from '../../components/Layout/Layout';
+import Layout from '../../../components/Layout/Layout';
 import { FiPlus } from 'react-icons/fi';
-import { prisma } from '../../db';
-import { ErrorsContext } from '../../context/Errors';
+import { prisma } from '../../../db';
+import { ErrorsContext } from '../../../context/Errors';
 import { useForm } from '@mantine/hooks';
-import { API } from '../../API';
-import { getInitials } from '../../utils/GetInitials';
+import { API } from '../../../API';
+import { getInitials } from '../../../utils/GetInitials';
 
 const useStyles = createStyles((theme) => ({
   rowSelected: {

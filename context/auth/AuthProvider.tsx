@@ -1,12 +1,13 @@
 import { FC, useEffect, useReducer } from 'react';
 import { useRouter } from 'next/router';
+import { useSession, signOut } from 'next-auth/react';
 import Cookies from 'js-cookie';
 import { API } from '../../API';
 import { User } from '../../interfaces';
 import { AuthContext, authReducer } from '.'; //Cambiar Reducer a minúsculas
 import { showNotification } from '@mantine/notifications';
 import { CheckIcon,Cross1Icon } from '@modulz/radix-icons';
-import { jwt } from '../../utils';
+
 
 export interface LoginState{
     User: User | null;
@@ -26,27 +27,34 @@ interface Props {
 
 export const AuthProvider:FC<Props> = ({ children }) => {
     const router = useRouter();
+    const { data,status } = useSession();
     const {login,validate} = API.LoginApi
     const [state, dispatch] = useReducer(authReducer, LOGIN_INITIAL_STATE); //Cambiar Reducer a minúsculas
     
-    const checkToken = async() =>{
-        if(!Cookies.get('token')) return;
-        try {
-            const response = await validate();
-            const user:User = response.data.user;
-            Cookies.set('token', response.data.token);
-            dispatch({
-                type: '[AUTH] - Login',
-                payload: user
-            });
-        } catch (error) {
-            Cookies.remove('token');
-        }
-    }
+    // const checkToken = async() =>{
+    //     if(!Cookies.get('token')) return;
+    //     try {
+    //         const response = await validate();
+    //         const user:User = response.data.user;
+    //         Cookies.set('token', response.data.token);
+    //         dispatch({
+    //             type: '[AUTH] - Login',
+    //             payload: user
+    //         });
+    //     } catch (error) {
+    //         Cookies.remove('token');
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     checkToken();
+    // }, [])
 
     useEffect(() => {
-        checkToken();
-    }, [])
+        if(status === 'authenticated'){
+            dispatch({type: '[AUTH] - Login', payload: data?.user as User});
+        }
+    }, [ status, data ])
     
     const Login = async (correo:string,password:string) => {
         try {
@@ -105,8 +113,9 @@ export const AuthProvider:FC<Props> = ({ children }) => {
         dispatch({
             type: '[AUTH] - Logout'
         });
-        Cookies.remove('token');
-        router.replace('/login');
+        // Cookies.remove('token');
+        // router.replace('/login');
+        signOut();
     }
 
     return (
