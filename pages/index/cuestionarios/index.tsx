@@ -3,7 +3,7 @@ import { createStyles, Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { GripVertical } from 'tabler-icons-react';
-import Layout from '../../components/Layout/Layout';
+import Layout from '../../../components/Layout/Layout';
 
 const data = [
   {

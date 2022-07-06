@@ -1,8 +1,11 @@
 import React from 'react'
+import Layout from '../../../components/Layout/Layout';
 
 const crear = () => {
   return (
-    <div>crear</div>
+    <Layout>
+        crear
+    </Layout>
   )
 }
 

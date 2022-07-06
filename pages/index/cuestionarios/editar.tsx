@@ -1,8 +1,11 @@
 import React from 'react'
+import Layout from '../../../components/Layout/Layout'
 
 const Editar = () => {
   return (
-    <div>Editar</div>
+    <Layout>
+      Editar
+    </Layout>
   )
 }
 
