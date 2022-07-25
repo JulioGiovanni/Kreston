@@ -36,7 +36,7 @@ const Links = () => {
                     disableIconRotation
                 >
                     <AccordionItem label={link.text} color={theme.primaryColor}>
-                        {link.accordionLinks.map((l:any) => {
+                        {link.accordionLinks!.map((l:any) => {
                             return(
                                 <Link href={l.link} passHref 
                                     key={l.link}

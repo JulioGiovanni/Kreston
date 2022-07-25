@@ -1,7 +1,20 @@
 
+import { IconType } from "react-icons";
 import { FiCheck,FiHome,FiUser,FiFolder,FiSquare,FiInfo,FiClipboard, FiBriefcase,FiArchive } from "react-icons/fi";
 
-export const AdminLinks = [
+interface IArrayLinks {
+    text: string;
+    Icon: IconType;
+    link?: string;
+    accordion?: boolean;
+    accordionLinks?:IAccordionLinks[]
+}
+interface IAccordionLinks {
+    link:string;
+    text:string;
+}
+
+export const AdminLinks: IArrayLinks[] = [
     {   
         link: '/index/dashboard',  
         text: 'Inicio',
@@ -56,27 +69,12 @@ export const AdminLinks = [
         link: '/index/oficinas',  
         text: 'Oficinas',
         Icon:  FiBriefcase ,
-
-        
     },
     {   
         text: 'Cuestionario',
         Icon: FiClipboard,
-        accordion:true,
-        accordionLinks:[
-            {
-                text: 'Nuevo cuestionario',
-                link: '/index/cuestionarios/crear',
-            },
-            {
-                text: 'Ver cuestionarios',
-                link: '/index/cuestionarios/ver',
-            },
-            {
-                text: 'Editar cuestionarios',
-                link: '/index/cuestionarios/editar',
-            }
-        ]
+        link: '/index/cuestionarios',
+        
     },
     {
         text: 'Proyectos',
