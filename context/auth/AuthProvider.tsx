@@ -3,14 +3,14 @@ import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
 import Cookies from 'js-cookie';
 import { API } from '../../API';
-import { User } from '../../interfaces';
+import { IUsuario } from '../../interfaces';
 import { AuthContext, authReducer } from '.'; //Cambiar Reducer a minúsculas
 import { showNotification } from '@mantine/notifications';
 import { CheckIcon,Cross1Icon } from '@modulz/radix-icons';
 
 
 export interface LoginState{
-    User: User | null;
+    User: IUsuario | null;
     isLogged: boolean;
     message:string | null;
 }
@@ -52,7 +52,7 @@ export const AuthProvider:FC<Props> = ({ children }) => {
 
     useEffect(() => {
         if(status === 'authenticated'){
-            dispatch({type: '[AUTH] - Login', payload: data?.user as User});
+            dispatch({type: '[AUTH] - Login', payload: data?.user as IUsuario});
         }
     }, [ status, data ])
     
@@ -60,7 +60,7 @@ export const AuthProvider:FC<Props> = ({ children }) => {
         try {
             const response = await login(correo,password);
             if(response.status === 200){
-                const user:User = response.data.user;
+                const user:IUsuario = response.data.user;
                 Cookies.set('token', response.data.token);
                 showNotification({
                     title: 'Inicio de sesión',

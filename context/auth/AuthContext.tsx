@@ -1,10 +1,10 @@
 import { createContext } from 'react';
-import { User } from '../../interfaces';
+import { IUsuario } from '../../interfaces';
 
 
 interface ContextProps {
     isLogged: boolean;
-    User: User | null;
+    User: IUsuario | null;
     message: string | null;
 
     //Métodos
