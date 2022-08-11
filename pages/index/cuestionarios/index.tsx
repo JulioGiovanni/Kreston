@@ -6,7 +6,7 @@ import { FiPlus } from 'react-icons/fi';
 import Layout from '../../../components/Layout/Layout';
 import { prisma } from '../../../db';
 import proyectos from '../independencias/proyectos';
-import { useForm } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
 
 const data = [
   {

@@ -38,12 +38,18 @@ const getAllRoles = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 const createNewRol = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
         const { nombre,} = req.body
-        const rol = await prisma.role.create({
+        const newRol = await prisma.role.create({
             data: {
                 nombre,
                 createdAt: new Date(),
             }
         })
+        const rol = await prisma.role.findFirst({
+            where: {
+                nombre,
+            }
+        })
+
         return res.status(200).json({
             message: 'ok',
             data: rol

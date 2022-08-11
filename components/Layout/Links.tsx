@@ -2,7 +2,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Accordion, AccordionItem, Button, useMantineTheme } from '@mantine/core'
+import { Accordion, Button, useMantineTheme } from '@mantine/core'
 
 import { AdminLinks } from '../../utils/ArrayLinks'
 
@@ -17,8 +17,8 @@ const Links = () => {
                 link.accordion ?
                 <Accordion
                     key={link.text +1}
-                    initialItem={router.pathname.includes('/consultas') ? 0 : -1}
-                    icon={<link.Icon/>}  
+                    // initialItem={router.pathname.includes('/consultas') ? 0 : -1}
+                    chevron={<link.Icon/>}  
                     styles={{
                         label:{color: theme.colors.blue[2]},
                         control:{
@@ -33,9 +33,9 @@ const Links = () => {
                         item:{border: 'none'},
                     
                     }}
-                    disableIconRotation
+                    disableChevronRotation
                 >
-                    <AccordionItem label={link.text} color={theme.primaryColor}>
+                    <Accordion.Item value={link.text} color={theme.primaryColor}>
                         {link.accordionLinks!.map((l:any) => {
                             return(
                                 <Link href={l.link} passHref 
@@ -63,7 +63,7 @@ const Links = () => {
                                 </Link>
                             )
                         })}
-                    </AccordionItem>
+                    </Accordion.Item>
                 </Accordion> 
                 :
                 <Link href={link.link || "/"} passHref 

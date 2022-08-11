@@ -24,10 +24,10 @@ export default function  (req: NextApiRequest, res: NextApiResponse<Data>) {
 const getAllOficinas = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     try {
-        const users = await prisma.area.findMany({});
+        const oficinas = await prisma.oficina.findMany({});
         return res.status(200).json({
             message: 'ok',
-            data: users
+            data: oficinas
         });
     } catch (error) {
         return res.status(500).json({
@@ -50,13 +50,19 @@ const createNewOficina = async (req: NextApiRequest, res: NextApiResponse<Data>)
 
         if(found) return res.status(400).json({ message: 'La oficina ya existe', type: 'nombre' })
 
-        const oficina = await prisma.oficina.create({
+        const newOficina = await prisma.oficina.create({
             data: {
                 nombre,
                 direccion,
                 createdAt: new Date(),
             }
         })
+        const oficina = await prisma.oficina.findFirst({
+            where: {
+                id: newOficina.id
+            }
+        })
+
         return res.status(200).json({
             message: 'ok',
             data: oficina

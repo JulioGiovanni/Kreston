@@ -1,58 +1,53 @@
 import { FC, useContext } from 'react';
 
 import { Anchor, Button, Group, PasswordInput, Select, TextInput } from '@mantine/core';
-import { useForm, useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
 import { API } from '../../API';
 import { ErrorsContext } from '../../context/Errors/ErrorsContext';
+import { DataContext } from '../../context/Data/DataContext';
 
 interface UserEditFormProps {
-    areas: any;
-    oficinas: any;
-    roles: any;
-
     setOpenedModal:any;
 }
 
-const NewUserForm: FC<UserEditFormProps> = ({areas,oficinas,roles,setOpenedModal}) => {
-        const {setNewError,removeError,message,type } = useContext(ErrorsContext)
+const NewUserForm: FC<UserEditFormProps> = ({setOpenedModal}) => {
+        const {setNewError,removeError } = useContext(ErrorsContext)
+        const { setNewData,Areas,Oficinas,Roles } = useContext(DataContext);
         const isMobile = useMediaQuery('(max-width: 755px');
-        const areaData = areas.map((area:any) => ({value:area.id,label:area.nombre}));
-        const oficinaData = oficinas.map((oficina:any) => ({value:oficina.id,label:oficina.nombre}));
-        const roleData = roles.map((role:any) => ({value:role.id,label:role.nombre}));
+        const areaData = Areas.map((area:any) => ({value:area.id,label:area.nombre}));
+        const oficinaData = Oficinas.map((oficina:any) => ({value:oficina.id,label:oficina.nombre}));
+        const roleData = Roles.map((role:any) => ({value:role.id,label:role.nombre}));
+        
         const form = useForm({
             initialValues:{
                 nombre:'',
                 correo:'',
                 contrasena:'',
-                area:null,
-                rol:null,
-                oficina:null,
+                area:0,
+                rol:0,
+                oficina:0,
             },
-            validationRules: {
-            nombre: (value) => value.trim().length > 5,
-            correo: (value) => value.trim().length > 6,
-            contrasena: (value) => value.trim().length >= 6,
-            // area: (value) => value.trim().length > 1,
-            // rol: (value) => value.trim().length > 1,
-            // oficina: (value) => value.trim().length > 1,
-            },
+            // validationRules: {
+            // nombre: (value) => value.trim().length > 5,
+            // correo: (value) => value.trim().length > 6,
+            // contrasena: (value) => value.trim().length >= 6,
+            // // area: (value) => value.trim().length > 1,
+            // // rol: (value) => value.trim().length > 1,
+            // // oficina: (value) => value.trim().length > 1,
+            // },
             
             
         });
 
-        
-
-        // const onCreateNewUser = async (values:any) => {
-        //     return await UserApi.createNewUser(values);
-        //   }
-
     return (
         <form onSubmit={form.onSubmit(async(values)=>{
-            try {
-
+            try {       
                 const { createNewUser } = API.UserApi;
-                await createNewUser(values);
+                const {data:newUser} = await createNewUser(values);
+                setNewData(newUser.data,'Usuarios')
                 removeError();
+                setOpenedModal(false);
             } catch (error:any) {
 
                 setNewError(error.response.data.message,error.response.data.type);

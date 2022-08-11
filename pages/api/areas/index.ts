@@ -24,7 +24,11 @@ export default function  (req: NextApiRequest, res: NextApiResponse<Data>) {
 const getAllAreas = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     try {
-        const areas = await prisma.area.findMany({});
+        const areas = await prisma.area.findMany({
+            include: {
+                oficina: true
+            }
+        });
         return res.status(200).json({
             message: 'ok',
             data: areas
@@ -54,13 +58,22 @@ const createNewArea = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
 
         if(found) return res.status(400).json({ message: 'El área ya existe para esa oficina', type: 'nombre' })
 
-        const area = await prisma.area.create({
+        const newArea = await prisma.area.create({
             data: {
                 nombre,
                 oficinaId: oficina,
                 createdAt: new Date(),
             }
         })
+        const area = await prisma.area.findFirst({
+            where: {
+                id: newArea.id
+            },
+            include: {
+                oficina: true
+            }
+        })
+
         return res.status(200).json({
             message: 'ok',
             data: area

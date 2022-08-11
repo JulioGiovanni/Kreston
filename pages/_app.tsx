@@ -8,6 +8,7 @@ import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core
 import { NotificationsProvider } from '@mantine/notifications';
 import { AuthProvider } from '../context/auth/AuthProvider';
 import { ErrorsProvider } from '../context/Errors';
+import { DataProvider } from '../context/Data';
 
 export default function App(props: any & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -31,11 +32,13 @@ export default function App(props: any & { colorScheme: ColorScheme }) {
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <AuthProvider>
-            <NotificationsProvider>
-              <ErrorsProvider>
-                <Component {...pageProps} />
-              </ErrorsProvider>
-            </NotificationsProvider>
+            <DataProvider>
+              <NotificationsProvider>
+                <ErrorsProvider>
+                  <Component {...pageProps} />
+                </ErrorsProvider>
+              </NotificationsProvider>
+            </DataProvider>
           </AuthProvider>
         </MantineProvider>
       </ColorSchemeProvider>
