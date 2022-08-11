@@ -1,6 +1,6 @@
 
 import { IconType } from "react-icons";
-import { FiCheck,FiHome,FiUser,FiFolder,FiSquare,FiInfo,FiClipboard, FiBriefcase,FiArchive } from "react-icons/fi";
+import { FiCheck,FiHome,FiUser,FiFolder,FiSquare,FiInfo,FiClipboard, FiBriefcase,FiArchive,FiUsers } from "react-icons/fi";
 
 interface IArrayLinks {
     text: string;
@@ -80,6 +80,11 @@ export const AdminLinks: IArrayLinks[] = [
         text: 'Proyectos',
         Icon: FiArchive,
         link: '/index/proyectos',
+    },
+    {
+        text: 'Clientes',
+        Icon: FiUsers,
+        link: '/index/clientes',
     }
 ]
 

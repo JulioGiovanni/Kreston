@@ -10,6 +10,9 @@ import { IUsuario } from '../../interfaces/usuario.interface';
 import { IOficina } from '../../interfaces/oficina.interface';
 import { IArea } from '../../interfaces/area.interface';
 import { IRole } from '../../interfaces/role.interface';
+import proyectos from '../../pages/index/independencias/proyectos';
+import { ProyectosApi } from '../../API/ProyectoAPI';
+import { IProyecto } from '../../interfaces/proyecto.interface';
 
 
 export interface DataState{
@@ -37,17 +40,19 @@ export const DataProvider:FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(dataReducer, DATA_INITIAL_STATE); //Cambiar Reducer a minúsculas
 
     const setInitialData = async () =>{
-        const [usuarios, oficinas, areas, roles] = await Promise.all([
+        const [usuarios, oficinas, areas, roles,proyectos] = await Promise.all([
             UserApi.getAllUsers(),
             OficinaApi.getAllOficinas(),
             AreaApi.getAllAreas(),
-            RolApi.getAllRoles()
+            RolApi.getAllRoles(),
+            ProyectosApi.getAllProyectos()
         ]);
         
         const AllUsers :IUsuario[] = usuarios.data.data;
         const AllOficinas :IOficina[] = oficinas.data.data; 
         const AllAreas :IArea[] = areas.data.data;
         const AllRoles :IRole[]  = roles.data.data;
+        const AllProyectos :IProyecto [] = proyectos.data.data;
 
         dispatch({
             type: '[Data] - Estado inicial',
@@ -55,8 +60,8 @@ export const DataProvider:FC<Props> = ({ children }) => {
                 Usuarios: AllUsers,
                 Oficinas: AllOficinas,
                 Areas: AllAreas,
-                Proyectos: [],
-                Roles: AllRoles
+                Roles: AllRoles,
+                Proyectos: AllProyectos,
             }
         });
     }

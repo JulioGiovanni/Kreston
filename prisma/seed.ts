@@ -1,13 +1,15 @@
 import { PrismaClient, Prisma } from '@prisma/client'
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient()
 
 const createUser = async () => {
+    const pass = await bcrypt.hash('123456', 10);
     await prisma.usuario.create({
         data: {
             nombre: 'Julio Giovanni Flores Zermeño',
             correo: 'jg250998@gmail.com',
-            contrasena: '123456',
+            contrasena: pass,
             oficinaId: 1,
             areaId: 1,
             rolId: 1,
