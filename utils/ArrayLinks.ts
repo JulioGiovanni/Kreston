@@ -1,18 +1,6 @@
 
-import { IconType } from "react-icons";
 import { FiCheck,FiHome,FiUser,FiFolder,FiSquare,FiInfo,FiClipboard, FiBriefcase,FiArchive,FiUsers } from "react-icons/fi";
-
-interface IArrayLinks {
-    text: string;
-    Icon: IconType;
-    link?: string;
-    accordion?: boolean;
-    accordionLinks?:IAccordionLinks[]
-}
-interface IAccordionLinks {
-    link:string;
-    text:string;
-}
+import { IArrayLinks } from '../interfaces/links.interface';
 
 export const AdminLinks: IArrayLinks[] = [
     {   
@@ -34,6 +22,7 @@ export const AdminLinks: IArrayLinks[] = [
         text: 'Consultas',
         Icon:  FiInfo ,
         accordion:true,
+        link:'/index/consultas',
         accordionLinks:[
 
             {
