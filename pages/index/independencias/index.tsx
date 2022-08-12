@@ -8,7 +8,7 @@ const index = () => {
   return (
     <Layout>
         <Card style={{height:400}} >
-            <Tabs  variant="outline" >
+            <Tabs color={'dark'} defaultValue='Proyectos' variant="pills" >
                 <Tabs.List grow position="center">
 
                   <Tabs.Tab value="Proyectos">
