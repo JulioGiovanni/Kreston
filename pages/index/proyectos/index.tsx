@@ -4,7 +4,7 @@ import Layout from '../../../components/Layout/Layout';
 import { FiPlus } from 'react-icons/fi';
 import { prisma } from '../../../db';
 import { ErrorsContext } from '../../../context/Errors';
-import { useForm } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
 import { API } from '../../../API';
 import { getInitials } from '../../../utils/GetInitials';
 

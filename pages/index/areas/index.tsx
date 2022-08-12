@@ -3,31 +3,19 @@ import { FiPlus } from "react-icons/fi";
 import { Avatar, Button, Card, Grid, Space, Text, Title, Modal, TextInput, Center, Select, useMantineColorScheme } from "@mantine/core";
 import Link from "next/link";
 import { useState, useContext } from 'react';
-import { prisma } from '../../../db';
 import Layout from "../../../components/Layout/Layout";
-import { useForm } from "@mantine/hooks";
+import { useForm } from "@mantine/form";
 import { API } from "../../../API";
 import { ErrorsContext } from '../../../context/Errors';
+import { DataContext } from '../../../context/Data/DataContext';
 
 
 
-export const getServerSideProps = async () => {
-    
-    const areas = await prisma.area.findMany({})
-    const oficinas = await prisma.oficina.findMany({})
-    return { 
-        props:{
-            areas:JSON.parse(JSON.stringify(areas)),
-            oficinas:JSON.parse(JSON.stringify(oficinas))
-        }  
-    }
-  }
-
-
-const index = ({areas,oficinas}:any) => {
+const index = () => {
     const [openedModal, setOpenedModal] = useState(false)
     const { colorScheme } = useMantineColorScheme();
     const {setNewError,removeError} = useContext(ErrorsContext)
+    const { Areas,Oficinas,setNewData } = useContext(DataContext)
     const form = useForm({
         initialValues:{
             nombre:'',
@@ -36,10 +24,12 @@ const index = ({areas,oficinas}:any) => {
     })
     const onSubmitForm = async (values:any)=>{
         try {
-            await API.AreaApi.createNewArea(values)
+            const newArea = await API.AreaApi.createNewArea(values)
+            const Area = newArea.data.data;
             form.reset();
-            setOpenedModal(false)
             removeError();
+            setNewData(Area,'Areas')
+            setOpenedModal(false)
         } catch (error:any) {
             setNewError(error.response.data.message,error.response.data.type)
             form.setFieldError(error.response.data.type,error.response.data.message)
@@ -65,7 +55,7 @@ const index = ({areas,oficinas}:any) => {
                 <Select
                     label="Oficina"
                     name="oficina"
-                    data={oficinas.map((oficina:any) => ({value:oficina.id, label:oficina.nombre}))}
+                    data={Oficinas.map((oficina:any) => ({value:oficina.id, label:oficina.nombre}))}
                     {...form.getInputProps("oficina")}
                 />
     
@@ -88,10 +78,9 @@ const index = ({areas,oficinas}:any) => {
             <Space h={30}/>
 
         <Grid>
-            {areas.map((area:any) => {
+            {Areas.map((area:any) => {
                 //Get the first letter of every word in the name
                 const initials = area.nombre.split(" ").map((word:any) => word[0]).join("");
-
                 return(
                     <Grid.Col sm={12} md={6} lg={4} key={area.id}>
                         
@@ -101,12 +90,15 @@ const index = ({areas,oficinas}:any) => {
                                 <Card.Section>
 
                                     <div style={{display:'flex', justifyContent:'space-between'}}>
-                                        <Title order={3}>{area.nombre}</Title>
+                                        <div style={{display:'flex', flexDirection: 'column'}}>
+                                            <Title order={3}>{area.nombre}</Title>
+                                            <Text size='xs' color={'dimmed'}>{area.oficina.nombre}</Text>
+                                        </div>
+
 
                                             <Avatar radius="xl" size={'lg'}>
                                                 <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
                                                     <Text color={colorScheme == 'dark' ? 'white' : 'dark'} weight={'bold'}>{initials}</Text>
-                                                    <Text size='xs' color={'dimmed'}>{area.oficina}</Text>
                                                 </div>
                                             </Avatar>
 

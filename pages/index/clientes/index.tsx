@@ -1,12 +1,12 @@
 import React from 'react'
 import Layout from '../../../components/Layout/Layout'
 
-const Editar = () => {
+const index = () => {
   return (
     <Layout>
-      Editar
+        index
     </Layout>
   )
 }
 
-export default Editar
+export default index

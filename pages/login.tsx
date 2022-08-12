@@ -5,7 +5,7 @@ import Image from 'next/image';
 import loginImage from '../public/images/login-image.png';
 import {Center,Grid,Card,PasswordInput,TextInput,Button,Space,Anchor, Text} from '@mantine/core';
 import { AuthContext } from '../context/auth/AuthContext';
-import { useForm } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
 import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
@@ -22,10 +22,10 @@ const login = () => {
             password: ''
         },
         
-        validationRules: {
-            correo: (value) => value.trim().length > 5,
-            password: (value) => value.trim().length >= 6,
-        }
+        // validationRules: {
+        //     correo: (value) => value.trim().length > 5,
+        //     password: (value) => value.trim().length >= 6,
+        // }
 
 
     });

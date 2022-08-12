@@ -105,7 +105,7 @@ const createNewUser = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
                 
         const securePassword = await bcrypt.hash(contrasena, 10);
 
-        const user = await prisma.usuario.create({
+        const newUser = await prisma.usuario.create({
             data: {
                 nombre,
                 correo,
@@ -116,6 +116,29 @@ const createNewUser = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
                 createdAt: new Date(),
             }
         })
+        const user = await prisma.usuario.findFirst({
+            where: {
+                id: newUser.id
+            },
+            include: {
+                rol: {
+                    select:{
+                        nombre:true
+                    }
+                },
+                oficina: {
+                    select:{
+                        nombre:true
+                    }
+                },
+                area: {
+                    select:{
+                        nombre:true
+                    }
+                }
+            }
+        });
+        
         return res.status(200).json({
             message: 'ok',
             data: user

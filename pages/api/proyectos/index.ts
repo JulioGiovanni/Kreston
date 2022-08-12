@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '../../../db';
+import { IProyecto } from '../../../interfaces/proyecto.interface';
 
 type Data = {
     message?: string
@@ -38,12 +39,14 @@ const getAllProyectos = async (req: NextApiRequest, res: NextApiResponse<Data>) 
 }
 const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
-        const { nombre, descripcion, usuario, oficina, area} = req.body.data;
+        console.log(req.body.data)
+        const { nombre, descripcion, usuario, oficina, area, fechaInicio, cliente} = req.body.data;
         if(!nombre) return res.status(400).json({ message: 'El nombre del proyecto es requerido', type: 'nombre' })
         if(!descripcion) return res.status(400).json({ message: 'La descripción del proyecto es requrido', type: 'descripcion' })
         if(!usuario) return res.status(400).json({ message: 'El usuario de este proyecto es requrido', type: 'usuario' })
         if(!oficina) return res.status(400).json({ message: 'La oficina para este proyecto es requrido', type: 'oficina' })
         if(!area) return res.status(400).json({ message: 'El área de este proyecto es requrido', type: 'area' })
+        if(!cliente) return res.status(400).json({ message: 'El cliente de este proyecto es requrido', type: 'cliente' })
 
         const found = await prisma.proyecto.findFirst({
             where: {
@@ -53,17 +56,27 @@ const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>
 
         if(found) return res.status(400).json({ message: 'El nombre de este proyecto ya existe', type: 'nombre' })
 
-        const proyecto = await prisma.proyecto.create({
+        const newProyecto = await prisma.proyecto.create({
             data: {
+
                 nombre,
                 descripcion,
                 estado: 'activo',
                 usuarioId: usuario,
                 oficinaId: oficina,
                 areaId: area,
+                fechaInicio: fechaInicio ?? new Date(),
+                fechaFin: '',
+                clienteId: cliente,
                 createdAt: new Date(),
             }
         })
+        const proyecto = await prisma.proyecto.findFirst({
+            where: {
+                id: newProyecto.id
+            }
+        })
+
         return res.status(200).json({
             message: 'ok',
             data: proyecto

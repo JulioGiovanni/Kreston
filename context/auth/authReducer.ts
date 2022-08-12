@@ -1,10 +1,10 @@
-import { User } from '../../interfaces';
+import { IUsuario } from '../../interfaces';
 import { LoginState } from '.';
 
 
 type LoginActionType =
-|{type: '[AUTH] - Login', payload:User}
-|{type: '[AUTH] - Veryfy Token',payload:User}
+|{type: '[AUTH] - Login', payload:IUsuario}
+|{type: '[AUTH] - Veryfy Token',payload:IUsuario}
 |{type: '[AUTH] - Logout'}
 |{type: '[AUTH] - Error', payload:string}
 

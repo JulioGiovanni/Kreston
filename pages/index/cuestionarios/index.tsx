@@ -1,133 +1,136 @@
-import React from 'react';
-import { createStyles, Text } from '@mantine/core';
-import { useListState } from '@mantine/hooks';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { GripVertical } from 'tabler-icons-react';
+import React, { useState } from 'react'
+import { GetServerSideProps } from 'next'
+import Link from 'next/link';
+import { Button, Card, Modal, Select, Space, Table, Text, Title, TextInput } from '@mantine/core';
+import { FiPlus } from 'react-icons/fi';
 import Layout from '../../../components/Layout/Layout';
+import { prisma } from '../../../db';
+import proyectos from '../independencias/proyectos';
+import { useForm } from '@mantine/form';
 
 const data = [
   {
-    "position": 6,
-    "mass": 12.011,
-    "symbol": "C",
-    "name": "Carbon"
+    id:1,
+    nombre: 'Cuestionario 1',
+    proyecto: 'Proyecto 1',
+    preguntas: '10',
   },
   {
-    "position": 7,
-    "mass": 14.007,
-    "symbol": "N",
-    "name": "Nitrogen"
+    id:2,
+    nombre: 'Cuestionario 2',
+    proyecto: 'Proyecto 2',
+    preguntas: '20',
   },
   {
-    "position": 39,
-    "mass": 88.906,
-    "symbol": "Y",
-    "name": "Yttrium"
+    id:3,
+    nombre: 'Cuestionario 3',
+    proyecto: 'Proyecto 3',
+    preguntas: '30',
   },
   {
-    "position": 56,
-    "mass": 137.33,
-    "symbol": "Ba",
-    "name": "Barium"
+    id:4,
+    nombre: 'Cuestionario 4',
+    proyecto: 'Proyecto 4',
+    preguntas: '40',
   },
-  {
-    "position": 58,
-    "mass": 140.12,
-    "symbol": "Ce",
-    "name": "Cerium"
-  }
 ]
 
-const useStyles = createStyles((theme) => ({
-  item: {
-    display: 'flex',
-    alignItems: 'center',
-    borderRadius: theme.radius.md,
-    border: `1px solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
-    }`,
-    padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
-    paddingLeft: theme.spacing.xl - theme.spacing.md, // to offset drag handle
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
-    marginBottom: theme.spacing.sm,
-  },
 
-  itemDragging: {
-    boxShadow: theme.shadows.sm,
-  },
-
-  symbol: {
-    fontSize: 30,
-    fontWeight: 700,
-    width: 60,
-  },
-
-  dragHandle: {
-    ...theme.fn.focusStyles(),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[6],
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-  },
-}));
-
-interface DndListHandleProps {
-  data: {
-    position: number;
-    mass: number;
-    symbol: string;
-    name: string;
-  }[];
-}
-
-export function Cuestionarios ({ data }: DndListHandleProps) {
-  const { classes, cx } = useStyles();
-  const [state, handlers] = useListState(data);
-
-  const items = state.map((item, index) => (
-    <Draggable key={item.symbol} index={index} draggableId={item.symbol}>
-      {(provided, snapshot) => (
-        <div
-          className={cx(classes.item, { [classes.itemDragging]: snapshot.isDragging })}
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-        >
-          <div {...provided.dragHandleProps} className={classes.dragHandle}>
-            <GripVertical size={18} />
-          </div>
-          <Text className={classes.symbol}>{item.symbol}</Text>
-          <div>
-            <Text>{item.name}</Text>
-            <Text color="dimmed" size="sm">
-              Position: {item.position} • Mass: {item.mass}
-            </Text>
-          </div>
-        </div>
-      )}
-    </Draggable>
-  ));
+const index = ({proyectos}:any) => {
+  const [openedModal, setOpenedModal] = useState(false);
+  const ths = (
+      <tr>
+        <th>Nombre</th>
+        <th>Proyecto</th>
+        <th># Preguntas</th>
+      </tr>
+    )
+  
+  const rows = data.map((item:any) => {
+    return(
+        <Link href={`/index/cuestionarios/${item.id}`}>  
+          <tr key={item.nombre} style={{cursor:'pointer'}}>
+            <td>{item.nombre}</td>
+            <td>{item.proyecto}</td>
+            <td>{item.preguntas}</td>
+          </tr> 
+        </Link>
+    )
+  });
+  
+  const form = useForm({
+    initialValues:{
+      nombre: '',
+      proyecto: '',
+    }
+  }) 
+  
+  const onSubmitForm = () => {  }
 
   return (
     <Layout>
-      <DragDropContext
-        onDragEnd={({ destination, source }) =>
-          handlers.reorder({ from: source.index, to: destination!.index })
-        }
+      <Modal
+        opened={openedModal}
+        onClose={() => setOpenedModal(false)}
+        title={"Agregar nuevo cuestionario"}
       >
-        <Droppable droppableId="dnd-list" direction="vertical">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {items}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+        <form onSubmit={form.onSubmit(onSubmitForm)}>
+          <TextInput
+            label='Nombre'
+            name='nombre'
+            {...form.getInputProps('nombre')}
+          />
+          <Select
+            label='Proyecto'
+            name='proyecto'
+            data={proyectos.map((p:any)=>{return {value:p.id, label:p.nombre}})}
+            searchable
+            {...form.getInputProps('proyecto')}
+          />
+          <Button fullWidth type='submit' my='md'>
+            Crear nuevo cuestionario
+          </Button>
+        </form>
+      </Modal>
+      <Card>
+        <div style={{display:'flex', justifyContent:'space-between'}}>
+          <Title order={2} >Cuestionarios</Title>
+          <Button 
+            leftIcon={<FiPlus/>} 
+            onClick={() => setOpenedModal(true)}
+          >  
+              <Text>Crear nuevo cuestionario</Text>
+          </Button>
+        </div>
+        <Space h={30}/>
+        <Table highlightOnHover>
+          <thead>
+           {ths}
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
+        </Table>
+      
+      </Card>
     </Layout>
-  );
+  )
 }
 
-export default Cuestionarios;
+export default index
+
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
+
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const proyectos = await prisma.proyecto.findMany({});
+  const cuestionarios = await prisma.cuestionario.findMany({});
+
+  return {
+    props: {
+      proyectos: JSON.parse(JSON.stringify(proyectos)),
+      cuestionarios: JSON.parse(JSON.stringify(cuestionarios))
+    }
+  }
+}

@@ -5,22 +5,19 @@ import Link from "next/link";
 import { useContext, useState } from "react";
 import { prisma } from '../../../db';
 import Layout from "../../../components/Layout/Layout";
-import { useForm } from "@mantine/hooks";
+import { useForm } from "@mantine/form";
 import { API } from "../../../API";
 import { ErrorsContext } from "../../../context/Errors";
+import { DataContext } from '../../../context/Data/DataContext';
 
 
-export const getServerSideProps = async () => {
-
-    const oficinas = await prisma.oficina.findMany({
-    })
-    return { props:  {oficinas:JSON.parse(JSON.stringify(oficinas))}  }
-  }
 
 
-const index = ({oficinas}:any) => {
+
+const index = () => {
     const [openedModal, setOpenedModal] = useState(false)
     const {setNewError,removeError} = useContext(ErrorsContext)
+    const { Oficinas, setNewData } = useContext(DataContext)
     const { colorScheme } = useMantineColorScheme();
     const form = useForm({
         initialValues:{
@@ -30,10 +27,12 @@ const index = ({oficinas}:any) => {
     })
     const onSubmitForm = async (values:any)=>{
         try {
-            await API.OficinaApi.createNewOficina(values)
+            const newOficina = await API.OficinaApi.createNewOficina(values)
+            const Oficina = newOficina.data.data;
             form.reset();
-            setOpenedModal(false)
             removeError();
+            setNewData(Oficina,'Oficinas')
+            setOpenedModal(false)
         } catch (error:any) {
             setNewError(error.response.data.message,error.response.data.type)
             form.setFieldError(error.response.data.type,error.response.data.message)
@@ -83,7 +82,7 @@ const index = ({oficinas}:any) => {
             <Space h={30}/>
 
         <Grid>
-            {oficinas.map((area:any) => {
+            {Oficinas.map((area:any) => {
                 //Get the first letter of every word in the name
                 const initials = area.nombre.split(" ").map((word:any) => word[0]).join("");
 
