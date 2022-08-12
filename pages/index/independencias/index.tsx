@@ -8,13 +8,16 @@ const index = () => {
   return (
     <Layout>
         <Card style={{height:400}} >
-            <Tabs grow position="center" variant="outline" tabPadding="xl">
-                <Tabs.Tab label="Proyectos">
-                    
-                </Tabs.Tab>
-                <Tabs.Tab label="Anual">
-                    
-                </Tabs.Tab>
+            <Tabs  variant="outline" >
+                <Tabs.List grow position="center">
+
+                  <Tabs.Tab value="Proyectos">
+                      Proyectos
+                  </Tabs.Tab>
+                  <Tabs.Tab value="Anual">
+                      Anual                      
+                  </Tabs.Tab>
+                </Tabs.List>
             </Tabs>
         </Card>
     </Layout>
