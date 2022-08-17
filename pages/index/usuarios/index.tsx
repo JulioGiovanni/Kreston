@@ -15,7 +15,12 @@ const UsuariosIndex = () => {
   const [openedModal, setOpenedModal] = useState(false);
       
   return (
-      <Layout>
+      <Layout HeaderChildrenComponent={<Button 
+        leftIcon={<FiPlus/>} 
+        onClick={() => setOpenedModal(true)}
+      >  
+          <Text>Agregar usuario</Text>
+      </Button>}>
 
       <Modal
         opened={openedModal}

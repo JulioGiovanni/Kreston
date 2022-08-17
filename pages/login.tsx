@@ -85,9 +85,11 @@ const login = () => {
 
 
                         <Center mt={"lg"}>
-                            <Anchor component={Link} href="/forgot" underline={false}>
-                                ¿Olvidaste tu contraseña?
-                            </Anchor>
+                            <Link href="/forgot" passHref>
+                                <Anchor component='a' underline={false}>
+                                    ¿Olvidaste tu contraseña?
+                                </Anchor>
+                            </Link>
                         </Center>
                     </Grid.Col>
                 </Grid>
