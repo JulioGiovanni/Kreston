@@ -84,11 +84,9 @@ export function Proyectos({
       const oficina = await API.ProyectosApi.createNewProyecto(values);
       form.reset();
       setOpenedModal(false);
-      console.log(oficina);
       removeError();
     } catch (error: any) {
       setNewError(error.response.data.message, error.response.data.type);
-      console.log(error.response.data);
       form.setFieldError(error.response.data.type, error.response.data.message);
     }
   };

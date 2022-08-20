@@ -37,7 +37,6 @@ const getAllProyectos = async (req: NextApiRequest, res: NextApiResponse<Data>) 
 };
 const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
-    console.log(req.body.data);
     const { nombre, descripcion, usuario, oficina, area, fechaInicio, cliente, estado } =
       req.body.data;
     if (!nombre)
@@ -131,7 +130,6 @@ const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>
       data: proyecto,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: 'error',
       data: error,

@@ -14,80 +14,80 @@ import proyectos from '../../pages/index/independencias/proyectos';
 import { ProyectosApi } from '../../API/ProyectoAPI';
 import { IProyecto } from '../../interfaces/proyecto.interface';
 
-
-export interface DataState{
-    Usuarios: [],
-    Oficinas: [],
-    Areas: [],
-    Proyectos: [],
-    Roles: [],
+export interface DataState {
+  Usuarios: [];
+  Oficinas: [];
+  Areas: [];
+  Proyectos: [];
+  Roles: [];
 }
 
 const DATA_INITIAL_STATE: DataState = {
-    Usuarios: [],
-    Oficinas: [],
-    Areas: [],
-    Proyectos: [],
-    Roles: [],
-}
+  Usuarios: [],
+  Oficinas: [],
+  Areas: [],
+  Proyectos: [],
+  Roles: [],
+};
 
 interface Props {
-    children: any;
+  children: any;
 }
 
-export const DataProvider:FC<Props> = ({ children }) => {
-    const router = useRouter();
-    const [state, dispatch] = useReducer(dataReducer, DATA_INITIAL_STATE); //Cambiar Reducer a minúsculas
+export const DataProvider: FC<Props> = ({ children }) => {
+  const router = useRouter();
+  const [state, dispatch] = useReducer(dataReducer, DATA_INITIAL_STATE); //Cambiar Reducer a minúsculas
 
-    const setInitialData = async () =>{
-        const [usuarios, oficinas, areas, roles,proyectos] = await Promise.all([
-            UserApi.getAllUsers(),
-            OficinaApi.getAllOficinas(),
-            AreaApi.getAllAreas(),
-            RolApi.getAllRoles(),
-            ProyectosApi.getAllProyectos()
-        ]);
-        
-        const AllUsers :IUsuario[] = usuarios.data.data;
-        const AllOficinas :IOficina[] = oficinas.data.data; 
-        const AllAreas :IArea[] = areas.data.data;
-        const AllRoles :IRole[]  = roles.data.data;
-        const AllProyectos :IProyecto [] = proyectos.data.data;
+  const setInitialData = async () => {
+    const [usuarios, oficinas, areas, roles, proyectos] = await Promise.all([
+      UserApi.getAllUsers(),
+      OficinaApi.getAllOficinas(),
+      AreaApi.getAllAreas(),
+      RolApi.getAllRoles(),
+      ProyectosApi.getAllProyectos(),
+    ]);
 
-        dispatch({
-            type: '[Data] - Estado inicial',
-            payload: {
-                Usuarios: AllUsers,
-                Oficinas: AllOficinas,
-                Areas: AllAreas,
-                Roles: AllRoles,
-                Proyectos: AllProyectos,
-            }
-        });
-    }
+    const AllUsers: IUsuario[] = usuarios.data.data;
+    const AllOficinas: IOficina[] = oficinas.data.data;
+    const AllAreas: IArea[] = areas.data.data;
+    const AllRoles: IRole[] = roles.data.data;
+    const AllProyectos: IProyecto[] = proyectos.data.data;
 
-    const setNewData = (data:PayloadData,type: PayloadTypes) => {
-        dispatch({
-            type: '[Data] - Agregar nuevo registro',
-            payload: {
-                data,
-                type,
-            }
-        });
-    }
+    dispatch({
+      type: '[Data] - Estado inicial',
+      payload: {
+        Usuarios: AllUsers,
+        Oficinas: AllOficinas,
+        Areas: AllAreas,
+        Roles: AllRoles,
+        Proyectos: AllProyectos,
+      },
+    });
+  };
 
-    useEffect(() => {
-        setInitialData();
-        console.log('Iniciar datos');
-    }, [])
+  const setNewData = (data: PayloadData, type: PayloadTypes) => {
+    dispatch({
+      type: '[Data] - Agregar nuevo registro',
+      payload: {
+        data,
+        type,
+      },
+    });
+  };
 
-    return (
-        <DataContext.Provider value={{
-            ...state,
-            setInitialData,
-            setNewData,
-        }}>
-            { children }
-        </DataContext.Provider>
-    )
-}
+  useEffect(() => {
+    setInitialData();
+  }, []);
+
+  return (
+    <DataContext.Provider
+      value={{
+        ...state,
+        setInitialData,
+        setNewData,
+      }}
+    >
+      {children}
+    </DataContext.Provider>
+  );
+};

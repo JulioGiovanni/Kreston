@@ -36,13 +36,13 @@ const getAllPreguntasFromCuestionario = async (req: NextApiRequest, res: NextApi
 };
 const createNewPregunta = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
-    const { pregunta, cuestionario, preguntaPadre } = req.body.data;
-    if (!pregunta)
+    const { mensaje, cuestionario, preguntaPadre } = req.body.data;
+    if (!mensaje)
       return res.status(400).json({ message: 'La pregunta es requerida', type: 'nombre' });
 
     const newPregunta = await prisma.pregunta.create({
       data: {
-        pregunta,
+        pregunta: mensaje,
         cuestionarioId: cuestionario,
         preguntaPadre,
         createdAt: new Date(),

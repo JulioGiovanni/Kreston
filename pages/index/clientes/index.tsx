@@ -27,7 +27,6 @@ const Clientes: FC = (props) => {
     try {
       const newCliente = await ClienteApi.createNewCliente(values);
       const Cliente = newCliente.data.data;
-      console.log(Cliente);
       form.reset();
 
       // setNewData(Area,'Areas')

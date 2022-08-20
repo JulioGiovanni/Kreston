@@ -34,7 +34,6 @@ const getAllClientes = async (req: NextApiRequest, res: NextApiResponse<Data>) =
   }
 };
 const createNewCliente = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  console.log(req.body);
   try {
     const { nombre, correo, telefono, domicilio, tipoPersona } = req.body;
     if (!nombre)
@@ -79,7 +78,6 @@ const createNewCliente = async (req: NextApiRequest, res: NextApiResponse<Data>)
       data: cliente,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: 'error',
       data: error,
