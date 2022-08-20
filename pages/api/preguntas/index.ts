@@ -45,7 +45,6 @@ const createNewPregunta = async (req: NextApiRequest, res: NextApiResponse<Data>
         pregunta: mensaje,
         cuestionarioId: cuestionario,
         preguntaPadre,
-        createdAt: new Date(),
       },
       select: {
         id: true,

@@ -63,7 +63,7 @@ model Proyecto {
   oficinaId     Int
   nombre        String
   descripcion   String
-  estado        String
+  estado        estadoProyecto @default(value: NUEVO)
   fechaInicio   DateTime
   fechaFin      DateTime?
   cliente       Cliente        @relation(fields: [clienteId], references: [id])
