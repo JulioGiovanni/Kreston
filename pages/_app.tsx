@@ -41,7 +41,7 @@ export default function App(props: Props) {
       <SessionProvider>
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
           <MantineProvider
-            theme={{ colorScheme, fontFamily: 'Roboto Serif, serif' }}
+            theme={{ colorScheme }}
             withGlobalStyles
             withNormalizeCSS
           >
