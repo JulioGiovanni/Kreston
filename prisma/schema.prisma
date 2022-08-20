@@ -65,7 +65,7 @@ model Proyecto {
   descripcion   String
   estado        String
   fechaInicio   DateTime
-  fechaFin      DateTime
+  fechaFin      DateTime?
   cliente       Cliente        @relation(fields: [clienteId], references: [id])
   clienteId     Int
   cuestionarios Cuestionario[]
@@ -91,6 +91,8 @@ model Pregunta {
   preguntaAnidada Pregunta?    @relation(name: "PreguntaAnidada", fields: [preguntaPadre], references: [id], onDelete: NoAction, onUpdate: NoAction)
   preguntaHijo    Pregunta[]   @relation(name: "PreguntaAnidada")
   preguntaPadre   Int?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 }
 
 model Respuesta {
@@ -164,4 +166,10 @@ model Cliente {
 enum TipoPersona {
   FISICA
   MORAL
+}
+
+enum estadoProyecto {
+  NUEVO
+  EN_PROGRESO
+  FINALIZADO
 }

@@ -10,21 +10,21 @@ type Data = {
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
     case 'GET':
-      return getAllOficinas(req, res);
+      return getAllClientes(req, res);
     case 'POST':
-      return createNewOficina(req, res);
+      return createNewCliente(req, res);
     default:
       res.status(405).json({ message: 'Method not allowed' });
       break;
   }
 }
 
-const getAllOficinas = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const getAllClientes = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
-    const oficinas = await prisma.oficina.findMany({});
+    const clientes = await prisma.cliente.findMany({});
     return res.status(200).json({
       message: 'ok',
-      data: oficinas,
+      data: clientes,
     });
   } catch (error) {
     return res.status(500).json({
@@ -33,45 +33,53 @@ const getAllOficinas = async (req: NextApiRequest, res: NextApiResponse<Data>) =
     });
   }
 };
-const createNewOficina = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const createNewCliente = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  console.log(req.body);
   try {
-    const { nombre, direccion } = req.body.data;
+    const { nombre, correo, telefono, domicilio, tipoPersona } = req.body;
     if (!nombre)
       return res
         .status(400)
         .json({ message: 'El nombre de la oficina es requrido', type: 'nombre' });
-    if (!direccion)
-      return res
-        .status(400)
-        .json({ message: 'La dirección de la oficina es requrido', type: 'direccion' });
+    // if (!domilicio)
+    //   return res
+    //     .status(400)
+    //     .json({ message: 'La dirección de la oficina es requrido', type: 'direccion' });
 
-    const found = await prisma.oficina.findFirst({
+    const found = await prisma.cliente.findFirst({
       where: {
-        nombre: nombre,
+        nombre,
       },
     });
 
-    if (found) return res.status(400).json({ message: 'La oficina ya existe', type: 'nombre' });
+    if (found) return res.status(400).json({ message: 'Ese cliente ya existe', type: 'nombre' });
 
-    const oficina = await prisma.oficina.create({
+    const cliente = await prisma.cliente.create({
       data: {
         nombre,
-        direccion,
+        correo,
+        telefono,
+        domicilio,
+        tipoPersona,
         createdAt: new Date(),
       },
       select: {
         id: true,
         nombre: true,
-        direccion: true,
+        domicilio: true,
+        telefono: true,
+        correo: true,
+        tipoPersona: true,
         createdAt: true,
       },
     });
 
     return res.status(200).json({
       message: 'ok',
-      data: oficina,
+      data: cliente,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: 'error',
       data: error,
