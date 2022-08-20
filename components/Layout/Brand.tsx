@@ -1,5 +1,5 @@
 import Image from "next/image"
-import logo  from "../../public/images/KRESTON-CSM-LOGO.jpg"
+import logo  from "../../public/images/KRESTON-CSM-LOGO.png"
 
 
 const Brand = () => {

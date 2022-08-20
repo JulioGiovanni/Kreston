@@ -13,146 +13,163 @@ datasource db {
 }
 
 model Usuario {
-  id                Int    @id @default(autoincrement())
-  nombre            String 
-  correo            String @unique
-  contrasena        String
-  oficina           Oficina @relation(fields: [oficinaId], references: [id])
-  oficinaId         Int
-  area              Area @relation(fields: [areaId], references: [id])
-  areaId            Int
-  rol               Role @relation(fields: [rolId], references: [id])
-  rolId             Int
-  activo            Boolean @default(value: true)
-  lastModifiedBy    String?
-  pregunta          Ticket[] @relation(name: "UsuarioPregunta")
-  responder         Ticket[] @relation(name: "UsuarioRespuesta")
-  proyectos         Proyecto[]
-  comentarios       Comentario[]
-  aceptaciones      Aceptacion[]
-  createdAt         DateTime? @default(now())
-  updatedAt         DateTime? @updatedAt
+  id             Int          @id @default(autoincrement())
+  nombre         String
+  correo         String       @unique
+  contrasena     String
+  oficina        Oficina      @relation(fields: [oficinaId], references: [id])
+  oficinaId      Int
+  area           Area         @relation(fields: [areaId], references: [id])
+  areaId         Int
+  rol            Role         @relation(fields: [rolId], references: [id])
+  rolId          Int
+  activo         Boolean      @default(value: true)
+  lastModifiedBy String?
+  pregunta       Ticket[]     @relation(name: "UsuarioPregunta")
+  responder      Ticket[]     @relation(name: "UsuarioRespuesta")
+  proyectos      Proyecto[]
+  comentarios    Comentario[]
+  aceptaciones   Aceptacion[]
+  createdAt      DateTime?    @default(now())
+  updatedAt      DateTime?    @updatedAt
 }
 
 model Role {
-  id           Int    @id @default(autoincrement())
-  usuarios    Usuario[]
-  nombre       String 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  usuarios  Usuario[]
+  nombre    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Oficina {
-  id           Int    @id @default(autoincrement())
-  nombre       String 
-  direccion    String
-  proyectos    Proyecto[]
-  usuarios     Usuario[]
-  areas        Area[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        Int        @id @default(autoincrement())
+  nombre    String
+  direccion String
+  proyectos Proyecto[]
+  usuarios  Usuario[]
+  areas     Area[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Proyecto {
-  id            Int    @id @default(autoincrement())
-  usuario       Usuario @relation(fields: [usuarioId], references: [id])
+  id            Int            @id @default(autoincrement())
+  usuario       Usuario        @relation(fields: [usuarioId], references: [id])
   usuarioId     Int
-  area          Area @relation(fields: [areaId], references: [id])
+  area          Area           @relation(fields: [areaId], references: [id])
   areaId        Int
-  oficina       Oficina @relation(fields: [oficinaId], references: [id])
+  oficina       Oficina        @relation(fields: [oficinaId], references: [id])
   oficinaId     Int
   nombre        String
   descripcion   String
-  estado        String
+  estado        estadoProyecto @default(value: NUEVO)
   fechaInicio   DateTime
-  fechaFin      DateTime
-  cliente       Cliente @relation(fields: [clienteId], references: [id])
+  fechaFin      DateTime?
+  cliente       Cliente        @relation(fields: [clienteId], references: [id])
   clienteId     Int
   cuestionarios Cuestionario[]
   respuestas    Respuesta[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model Cuestionario {
-  id                Int    @id @default(autoincrement())
-  proyecto          Proyecto @relation(fields: [proyectoId], references: [id])
-  proyectoId        Int
-  pregunta          String
-  preguntaAnidada   String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id         Int        @id @default(autoincrement())
+  proyecto   Proyecto   @relation(fields: [proyectoId], references: [id])
+  proyectoId Int
+  Preguntas  Pregunta[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Pregunta {
+  id              Int          @id @default(autoincrement())
+  cuestionario    Cuestionario @relation(fields: [cuestionarioId], references: [id], onDelete: Cascade)
+  cuestionarioId  Int
+  pregunta        String
+  preguntaAnidada Pregunta?    @relation(name: "PreguntaAnidada", fields: [preguntaPadre], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  preguntaHijo    Pregunta[]   @relation(name: "PreguntaAnidada")
+  preguntaPadre   Int?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 }
 
 model Respuesta {
-  id           Int    @id @default(autoincrement())
-  proyecto    Proyecto @relation(fields: [proyectoId], references: [id])
-  proyectoId   Int
-  respuesta    String
-  fecha        DateTime
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  proyecto   Proyecto @relation(fields: [proyectoId], references: [id])
+  proyectoId Int
+  respuesta  String
+  fecha      DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Ticket {
-  id                  Int    @id @default(autoincrement())
-  usuarioPregunta     Usuario @relation(name: "UsuarioPregunta",fields: [usuarioPreguntaId], references: [id])
-  usuarioPreguntaId   Int
-  usuarioRespuesta    Usuario? @relation(name: "UsuarioRespuesta",fields: [usuarioRespuestaId], references: [id])
-  usuarioRespuestaId  Int?
-  titulo              String
-  descripcion         String
-  estado              String
-  comentarios         Comentario[]
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id                 Int          @id @default(autoincrement())
+  usuarioPregunta    Usuario      @relation(name: "UsuarioPregunta", fields: [usuarioPreguntaId], references: [id])
+  usuarioPreguntaId  Int
+  usuarioRespuesta   Usuario?     @relation(name: "UsuarioRespuesta", fields: [usuarioRespuestaId], references: [id])
+  usuarioRespuestaId Int?
+  titulo             String
+  descripcion        String
+  estado             String
+  comentarios        Comentario[]
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 }
 
 model Area {
-  id           Int    @id @default(autoincrement())
-  usuarios     Usuario[]
-  proyectos    Proyecto[]
-  nombre       String 
-  oficina      Oficina @relation(fields: [oficinaId], references: [id])
-  oficinaId    Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        Int        @id @default(autoincrement())
+  usuarios  Usuario[]
+  proyectos Proyecto[]
+  nombre    String
+  oficina   Oficina    @relation(fields: [oficinaId], references: [id])
+  oficinaId Int
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Comentario {
-  id           Int    @id @default(autoincrement())
-  usuario      Usuario @relation(fields: [usuarioId], references: [id])
-  usuarioId    Int
-  ticket       Ticket @relation(fields: [ticketId], references: [id])
-  ticketId     Int
-  comentario   String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int
+  ticket     Ticket   @relation(fields: [ticketId], references: [id])
+  ticketId   Int
+  comentario String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Aceptacion {
-  id           Int    @id @default(autoincrement())
-  usuario      Usuario @relation(fields: [usuarioId], references: [id])
-  usuarioId    Int
-  file         String
-  ticketId     Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId Int
+  file      String
+  ticketId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Cliente {
-  id           Int    @id @default(autoincrement())
-  nombre       String 
-  correo       String @unique
-  telefono     String
-  domicilio    String
-  tipoPersona  TipoPersona 
-  proyectos    Proyecto[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          Int         @id @default(autoincrement())
+  nombre      String
+  correo      String      @unique
+  telefono    String
+  domicilio   String
+  tipoPersona TipoPersona
+  proyectos   Proyecto[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 enum TipoPersona {
   FISICA
   MORAL
+}
+
+enum estadoProyecto {
+  NUEVO
+  EN_PROGRESO
+  FINALIZADO
 }

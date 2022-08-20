@@ -4,8 +4,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import forgotPasswordImage from '../public/images/forgot-image.jpg'
 import { getSession } from 'next-auth/react';
+import { InferGetServerSidePropsType } from "next";
 
-const forgot = () => {
+const forgot = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <Center sx={{
         marginTop: '100px',
@@ -32,18 +33,16 @@ const forgot = () => {
                         </Button>
 
                         <Center mt={"lg"}>
-                            <Anchor 
-                                component={Link} 
-                                href="/login" 
-                                underline={false}
+                            <Link href="/login">
                                 
-                            >
-                                ¿Ya tienes cuenta?
-                            </Anchor>
+                                <Anchor component='a' underline={false} >
+                                    ¿Ya tienes cuenta?
+                                </Anchor>
+                            </Link>
                         </Center>
                     
                     </Grid.Col>
-                </Grid>
+                </Grid> 
             
 
         </Card>

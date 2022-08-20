@@ -4,4 +4,5 @@ export * from './oficina.interface';
 export * from './proyecto.interface';
 export * from './role.interface';
 export * from './usuario.interface';
-
+export * from './pregunta.interface';
+export * from './cliente.interface';

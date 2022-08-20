@@ -1,5 +1,5 @@
 
-import { GetServerSideProps } from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Button, Card, Text, Title } from '@mantine/core';
 import Layout from '../../../components/Layout/Layout';
 import { prisma } from '../../../db';
@@ -9,6 +9,7 @@ import { prisma } from '../../../db';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
+   
    const cuestionario = await prisma.cuestionario.findMany({where: {id: Number(ctx.query.id)}});
 
   return {
@@ -18,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 }
 
-const index = () => {
+const index = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <Layout>
       <Card>

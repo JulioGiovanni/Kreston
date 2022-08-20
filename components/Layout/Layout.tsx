@@ -7,10 +7,13 @@ import Links from "./Links"
 import Brand from "./Brand"
 import MenuNavbar from "./MenuUser"
 
+ interface LayoutProps  {
+    children: React.ReactNode;
+    HeaderChildrenComponent?: React.ReactNode;
+    title?: string;
+ }
 
-
-
-const Layout: FC = ({children}) => {
+const Layout: FC<LayoutProps> = ({children,HeaderChildrenComponent,title }) => {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
@@ -23,7 +26,7 @@ const Layout: FC = ({children}) => {
         fixed
         style={{
             backgroundColor: colorScheme === "dark" ? "#1a1a1a" : "#fff",
-            paddingTop:'30px'
+            // paddingTop:'30px'
         }}
         navbar={
         <Navbar
@@ -57,8 +60,7 @@ const Layout: FC = ({children}) => {
         }
         header={
         <Header 
-            height={80} 
-            // padding="md"
+            height={90}
         >
         {/* Handle other responsive styles with MediaQuery component or createStyles function */}
             <div style={{ 
@@ -82,6 +84,7 @@ const Layout: FC = ({children}) => {
             <MenuNavbar/>
             {/* <SwitchTheme/> */}
             </div>
+            {HeaderChildrenComponent}
         </Header>
         }
     >   

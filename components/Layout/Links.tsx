@@ -2,93 +2,68 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Accordion, Button, useMantineTheme } from '@mantine/core'
+import { NavLink, Text, useMantineTheme } from '@mantine/core'
 
 import { AdminLinks } from '../../utils/ArrayLinks'
+import { IAccordionLinks } from '../../interfaces/links.interface';
+
+
 
 const Links = () => {
     const router = useRouter()
-    const theme = useMantineTheme()
+
+    const generalStyle = {
+        borderRadius: '10px',
+        margin: '5px 0',
+    }
+
   return (
     <>            
         {   
             AdminLinks.map((link) => {
             return(
                 link.accordion ?
-                <Accordion
-                    key={link.text +1}
-                    // initialItem={router.pathname.includes('/consultas') ? 0 : -1}
-                    chevron={<link.Icon/>}  
-                    styles={{
-                        label:{color: theme.colors.blue[2]},
-                        control:{
-                            padding: '0.5rem',
-                            display: 'flex',
-                            borderRadius: '50px',
-                            ':hover':{
-                                backgroundColor: theme.colors.blue[4],
-                            }
-                        },
-                        icon:{color: theme.colors.blue[5], marginLeft: '0.5rem'},
-                        item:{border: 'none'},
-                    
-                    }}
-                    disableChevronRotation
-                >
-                    <Accordion.Item value={link.text} color={theme.primaryColor}>
-                        {link.accordionLinks!.map((l:any) => {
-                            return(
-                                <Link href={l.link} passHref 
-                                    key={l.link}
-                                // style={style && style} 
-                                >
-                                    <Button 
-                                        variant='subtle' 
-                                        fullWidth
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'flex-start',
-                                            borderRadius: '50px',
-                                            margin:'10px 0',
-                                            backgroundColor: router.pathname === l.link ? theme.colors.indigo[5] : '',
-                                            color: router.pathname === l.link ? 'white' : '',
-                                            ':hover': {
-                                                backgroundColor: router.pathname === l.link ? theme.colors.indigo[4] : '',
-                                                color: router.pathname === l.link ? 'white' : '',
-                                            }
-                                        }}
-                                    >
-                                        {l.text}
-                                    </Button>
-                                </Link>
-                            )
-                        })}
-                    </Accordion.Item>
-                </Accordion> 
-                :
-                <Link href={link.link || "/"} passHref 
+                <NavLink
                     key={link.link}
+                    label={<Text weight={500} size="md" >{link.text}</Text>}
+                    icon={<link.Icon  size={18} />}
+                    childrenOffset={28}
+                    active={router.pathname.includes(link.link!)}
+                    defaultOpened={router.pathname.includes(link.link!)}
+                    variant="light"
+                    sx={generalStyle}
+                    color='gray'
                 >
-                     <Button 
-                        variant='subtle'
-                        fullWidth
-                        leftIcon={<link.Icon/>}
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            borderRadius: '50px',
-                            margin:'10px 0',
-                            backgroundColor: router.pathname === link.link ? theme.colors.indigo[5] : '',
-                            color: router.pathname === link.link ? 'white' : '',
-                            ':hover': {
-                                backgroundColor: router.pathname === link.link ? theme.colors.indigo[4] : '',
-                                color: router.pathname === link.link ? 'white' : '',
-                            }
-                        }}
+                    {link.accordionLinks!.map((l:IAccordionLinks) => {
+                        return(
+                            <Link href={l.link} passHref>
+                                <NavLink
+                                    key={l.link} 
+                                    label={<Text weight={500}  >{l.text}</Text>}
+                                    active={router.pathname == l.link}
+                                    variant="filled"
+                                    sx={{borderRadius: '10px'}}
+                                    color='gray'
+                                />
+                            </Link>
+                        )}
+                    )}
+
+                </NavLink>
+                :
+                <Link href={link.link!} passHref key={link.link}>
+                    <NavLink
+                        key={link.link}
+                        label={<Text weight={500} size="md" >{link.text}</Text>}
+                        icon={<link.Icon size={18}/>}
+                        active={router.pathname === link.link}
+                        variant="filled"
+                        sx={generalStyle}
+                        color='gray'
                     >
-                        {link.text}
-                    </Button>
+                    </NavLink>
                 </Link>
+
                 )
             })
         }
