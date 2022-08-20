@@ -14,7 +14,7 @@ interface Props {
   pageProps: any;
   colorScheme: any;
 }
-export default function App(props) {
+export default function App(props: Props) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme);
 
