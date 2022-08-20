@@ -51,8 +51,6 @@ const createNewPregunta = async (req: NextApiRequest, res: NextApiResponse<Data>
         pregunta: true,
         cuestionarioId: true,
         preguntaPadre: true,
-        createdAt: true,
-        updatedAt: true,
       },
     });
     return res.status(200).json({
