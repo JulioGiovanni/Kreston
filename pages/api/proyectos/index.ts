@@ -90,7 +90,7 @@ const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>
         fechaInicio: fechaInicio ?? new Date(),
         clienteId: cliente,
         createdAt: new Date(),
-        fechaFin: null,
+        fechaFin: '',
       },
       select: {
         id: true,
