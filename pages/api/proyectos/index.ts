@@ -79,17 +79,18 @@ const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>
         type: 'nombre',
       });
 
-    const proyecto = await prisma.proyecto.create({
+    const Proyecto = await prisma.proyecto.create({
       data: {
+        usuarioId: usuario,
+        areaId: area,
+        oficinaId: oficina,
         nombre,
         descripcion,
-        estado: estado ?? 'activo',
-        usuarioId: usuario,
-        oficinaId: oficina,
-        areaId: area,
+        estado,
         fechaInicio: fechaInicio ?? new Date(),
         clienteId: cliente,
         createdAt: new Date(),
+        fechaFin: null,
       },
       select: {
         id: true,
@@ -127,7 +128,7 @@ const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>
 
     return res.status(200).json({
       message: 'ok',
-      data: proyecto,
+      data: Proyecto,
     });
   } catch (error) {
     return res.status(500).json({
