@@ -1,8 +1,7 @@
-import axios from "axios";
-import { APIURL } from "../utils/GlobalVariables";
+import axios from 'axios';
+import { APIURL } from '../utils/GlobalVariables';
 
 export const RolApi = {
-    getAllRoles: async () => await axios.get(`/api/roles`),
-    createNewRol: async (nombre: string) => await axios.post(`${APIURL}/api/roles`, { nombre }),
-
-}
+  getAllRoles: async () => await axios.get(`/api/roles`),
+  createNewRol: async (nombre: string) => await axios.post(`/api/roles`, { nombre }),
+};

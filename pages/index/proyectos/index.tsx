@@ -81,7 +81,7 @@ export function Proyectos({
   });
   const onSubmitForm = async (values: any) => {
     try {
-      const oficina = await API.ProyectosApi.createNewProyecto(values);
+      const proyecto = await API.ProyectosApi.createNewProyecto(values);
       form.reset();
       setOpenedModal(false);
       removeError();

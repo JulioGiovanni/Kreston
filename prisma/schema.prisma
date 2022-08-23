@@ -74,6 +74,12 @@ model Proyecto {
   updatedAt     DateTime       @updatedAt
 }
 
+enum estadoProyecto {
+  NUEVO
+  EN_PROGRESO
+  FINALIZADO
+}
+
 model Cuestionario {
   id         Int        @id @default(autoincrement())
   proyecto   Proyecto   @relation(fields: [proyectoId], references: [id])
@@ -84,15 +90,27 @@ model Cuestionario {
 }
 
 model Pregunta {
-  id              Int          @id @default(autoincrement())
-  cuestionario    Cuestionario @relation(fields: [cuestionarioId], references: [id], onDelete: Cascade)
-  cuestionarioId  Int
-  pregunta        String
-  preguntaAnidada Pregunta?    @relation(name: "PreguntaAnidada", fields: [preguntaPadre], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  preguntaHijo    Pregunta[]   @relation(name: "PreguntaAnidada")
-  preguntaPadre   Int?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id                  Int          @id @default(autoincrement())
+  cuestionario        Cuestionario @relation(fields: [cuestionarioId], references: [id], onDelete: Cascade)
+  cuestionarioId      Int
+  pregunta            String
+  preguntaAnidada     Pregunta?    @relation(name: "PreguntaAnidada", fields: [preguntaPadre], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  preguntaHijo        Pregunta[]   @relation(name: "PreguntaAnidada")
+  preguntaPadre       Int?
+  posicion            Int
+  tipo                tipoPregunta @default(value: TEXTO)
+  valorAnidado        String?
+  posiblesRespuestas  Json?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+
+enum tipoPregunta {
+  SELECCION_UNICA
+  SELECCION_MULTIPLE
+  TEXTO
+  FECHA
+  BOOLEANO
 }
 
 model Respuesta {
@@ -168,8 +186,4 @@ enum TipoPersona {
   MORAL
 }
 
-enum estadoProyecto {
-  NUEVO
-  EN_PROGRESO
-  FINALIZADO
-}
+

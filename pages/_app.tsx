@@ -9,6 +9,7 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { AuthProvider } from '../context/auth/AuthProvider';
 import { ErrorsProvider } from '../context/Errors';
 import { DataProvider } from '../context/Data';
+import { PreguntasProvider } from '../context/Preguntas';
 interface Props {
   Component: any;
   pageProps: any;
@@ -40,18 +41,16 @@ export default function App(props: Props) {
       </Head>
       <SessionProvider>
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-          <MantineProvider
-            theme={{ colorScheme }}
-            withGlobalStyles
-            withNormalizeCSS
-          >
+          <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
             <AuthProvider>
               <DataProvider>
-                <NotificationsProvider>
-                  <ErrorsProvider>
-                    <Component {...pageProps} />
-                  </ErrorsProvider>
-                </NotificationsProvider>
+                <PreguntasProvider>
+                  <NotificationsProvider>
+                    <ErrorsProvider>
+                      <Component {...pageProps} />
+                    </ErrorsProvider>
+                  </NotificationsProvider>
+                </PreguntasProvider>
               </DataProvider>
             </AuthProvider>
           </MantineProvider>
