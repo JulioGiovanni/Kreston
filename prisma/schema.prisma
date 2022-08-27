@@ -85,8 +85,15 @@ model Cuestionario {
   proyecto   Proyecto   @relation(fields: [proyectoId], references: [id])
   proyectoId Int
   Preguntas  Pregunta[]
+  estado     estadoCuestionario @default(value: EN_ESPERA)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+}
+
+enum estadoCuestionario {
+  EN_ESPERA
+  APROBADO
+  RECHAZADO
 }
 
 model Pregunta {
