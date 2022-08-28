@@ -13,6 +13,7 @@ import { IRole } from '../../interfaces/role.interface';
 import proyectos from '../../pages/index/independencias/proyectos';
 import { ProyectosApi } from '../../API/ProyectoAPI';
 import { IProyecto } from '../../interfaces/proyecto.interface';
+import { useSession } from 'next-auth/react';
 
 export interface DataState {
   Usuarios: [];
@@ -36,9 +37,12 @@ interface Props {
 
 export const DataProvider: FC<Props> = ({ children }) => {
   const router = useRouter();
+  const { data, status } = useSession();
   const [state, dispatch] = useReducer(dataReducer, DATA_INITIAL_STATE); //Cambiar Reducer a minúsculas
 
   const setInitialData = async () => {
+    //Get the current session
+    if (status !== 'authenticated') return;
     const [usuarios, oficinas, areas, roles, proyectos] = await Promise.all([
       UserApi.getAllUsers(),
       OficinaApi.getAllOficinas(),
