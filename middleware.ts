@@ -8,17 +8,21 @@ async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (!session) {
     if (pathname.startsWith('/_next')) return NextResponse.next();
-    console.log(req.nextUrl);
+    if (pathname.startsWith('/api')) return NextResponse.next();
+    if (pathname.startsWith('/images')) return NextResponse.next();
     if (!pathname.startsWith('/auth')) {
       const url = req.nextUrl;
       url.pathname = '/auth/login';
-      // console.log(url);
-      return NextResponse.redirect(new URL('/auth/login', req.url));
-    } else {
-      return NextResponse.next();
+      console.log('redirect');
+      return NextResponse.redirect(url);
+    }
+  } else {
+    if (pathname.startsWith('/auth')) {
+      const url = req.nextUrl;
+      url.pathname = '/index/dashboard';
+      return NextResponse.redirect(url);
     }
   }
-  return NextResponse.next();
 }
 
 export default middleware;

@@ -87,7 +87,7 @@ const login = () => {
               </form>
 
               <Center mt={'lg'}>
-                <Link href="/forgot" passHref>
+                <Link href="/auth/forgot" passHref>
                   <Anchor component="a" underline={false}>
                     ¿Olvidaste tu contraseña?
                   </Anchor>

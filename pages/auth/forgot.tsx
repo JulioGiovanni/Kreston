@@ -33,7 +33,7 @@ const forgot = () => {
             </Button>
 
             <Center mt={'lg'}>
-              <Link href="/login">
+              <Link href="/auth/login">
                 <Anchor component="a" underline={false}>
                   ¿Ya tienes cuenta?
                 </Anchor>

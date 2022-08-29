@@ -1,6 +1,6 @@
-import NextAuth from 'next-auth'
+import NextAuth from 'next-auth';
 // import AppleProvider from 'next-auth/providers/apple'
-import Credentials from 'next-auth/providers/credentials'
+import Credentials from 'next-auth/providers/credentials';
 import { prisma } from '../../../db';
 // import FacebookProvider from 'next-auth/providers/facebook'
 // import GoogleProvider from 'next-auth/providers/google'
@@ -28,73 +28,65 @@ export default NextAuth({
     //   from: 'NextAuth.js <no-reply@example.com>'
     // }),
     Credentials({
-        name: 'Custom Login',
-        credentials: {
-            correo: {label: 'Correo', type: 'email', placeholder: 'correo@correo.com'},
-            contrasena: {label: 'Contraseña', type: 'password', placeholder: '********'}
-        },
-        async authorize(credentials:any){
-            return await NextAuthLogin(credentials!.correo,credentials!.password);
-        },
-    },)
-
+      name: 'Custom Login',
+      credentials: {
+        correo: { label: 'Correo', type: 'email', placeholder: 'correo@correo.com' },
+        contrasena: { label: 'Contraseña', type: 'password', placeholder: '********' },
+      },
+      async authorize(credentials: any) {
+        return await NextAuthLogin(credentials!.correo, credentials!.password);
+      },
+    }),
   ],
 
   //Custom Pages
-    pages: {
-        signIn: '/login',
-    },
-    session: {
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-        strategy: 'jwt',
-        updateAge: 1000 * 60 * 60 * 24 * 1, // 1 day
-    },    
+  pages: {
+    signIn: '/auth/login',
+  },
+  session: {
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    strategy: 'jwt',
+    updateAge: 1000 * 60 * 60 * 24 * 1, // 1 day
+  },
   //callbacks
-  callbacks:{
+  callbacks: {
+    async jwt({ token, account, user }: any) {
+      if (account) {
+        token.accessToken = account.access_token;
+        switch (account.type) {
+          case 'credentials':
+            token.user = user;
+            break;
 
-    async jwt({token,account,user}:any){
-
-        if(account){
-            token.accessToken = account.access_token;
-            switch(account.type){
-
-                case 'credentials':
-                    token.user = user;
-                    break;
-                
-                    default:
-                    break;
-            }
+          default:
+            break;
         }
+      }
 
-        return token;
+      return token;
     },
 
-    async session({session,token,user}:any){
-        
-        session.accessToken = token.accessToken;
-        session.user = token.user as any;
+    async session({ session, token, user }: any) {
+      session.accessToken = token.accessToken;
+      session.user = token.user as any;
 
-        return session;
-    }
+      return session;
+    },
+  },
+});
 
-  }
-})
+const NextAuthLogin = async (correo: string, contrasena: string) => {
+  const user = await prisma.usuario.findUnique({
+    where: {
+      correo,
+    },
+  });
 
-const NextAuthLogin = async (correo:string,contrasena:string) =>{
+  if (!user) return null;
 
-        const user = await prisma.usuario.findUnique({
-            where: {
-            correo,
-            },
-        });
-        
-        if (!user) return null;
-        
-        if(user.activo === false) return null;
-            
-        if (!bcrypt.compareSync(contrasena, user.contrasena! )) return null;
+  if (user.activo === false) return null;
 
-        return user;
+  if (!bcrypt.compareSync(contrasena, user.contrasena!)) return null;
 
-}
+  return user;
+};
