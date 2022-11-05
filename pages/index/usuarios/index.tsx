@@ -9,13 +9,7 @@ const UsuariosIndex = () => {
   const [openedModal, setOpenedModal] = useState(false);
 
   return (
-    <Layout
-      HeaderChildrenComponent={
-        <Button leftIcon={<FiPlus />} onClick={() => setOpenedModal(true)}>
-          <Text>Agregar usuario</Text>
-        </Button>
-      }
-    >
+    <>
       <Modal opened={openedModal} onClose={() => setOpenedModal(false)} title={'Agregar usuario'}>
         <NewUserForm setOpenedModal={setOpenedModal} />
       </Modal>
@@ -28,14 +22,9 @@ const UsuariosIndex = () => {
           </Button>
         </div>
         <Space h={30} />
-        {/* <Table highlightOnHover={true}>
-                <thead>{ths}</thead>
-                <tbody>{rows}</tbody>
-                <tfoot>{ths}</tfoot>
-            </Table> */}
         <ShowUsersTable2 />
       </Card>
-    </Layout>
+    </>
   );
 };
 

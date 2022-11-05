@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '../../../db';
+import prisma from '../../../db';
 
 type Data = {
   message?: string;

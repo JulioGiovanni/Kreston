@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 // import AppleProvider from 'next-auth/providers/apple'
 import Credentials from 'next-auth/providers/credentials';
-import { prisma } from '../../../db';
+import prisma from '../../../db';
 // import FacebookProvider from 'next-auth/providers/facebook'
 // import GoogleProvider from 'next-auth/providers/google'
 // import EmailProvider from 'next-auth/providers/email'
@@ -41,7 +41,7 @@ export default NextAuth({
 
   //Custom Pages
   pages: {
-    signIn: '/auth/login',
+    signIn: '/login',
   },
   session: {
     maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week

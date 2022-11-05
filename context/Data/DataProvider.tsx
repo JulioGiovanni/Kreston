@@ -10,7 +10,6 @@ import { IUsuario } from '../../interfaces/usuario.interface';
 import { IOficina } from '../../interfaces/oficina.interface';
 import { IArea } from '../../interfaces/area.interface';
 import { IRole } from '../../interfaces/role.interface';
-import proyectos from '../../pages/index/independencias/proyectos';
 import { ProyectosApi } from '../../API/ProyectoAPI';
 import { IProyecto } from '../../interfaces/proyecto.interface';
 import { useSession } from 'next-auth/react';
@@ -42,7 +41,11 @@ export const DataProvider: FC<Props> = ({ children }) => {
 
   const setInitialData = async () => {
     //Get the current session
-    if (status !== 'authenticated') return;
+    console.log('initial data');
+    if (status !== 'authenticated') {
+      console.log('No hay sesión');
+      return;
+    }
     const [usuarios, oficinas, areas, roles, proyectos] = await Promise.all([
       UserApi.getAllUsers(),
       OficinaApi.getAllOficinas(),
@@ -50,6 +53,7 @@ export const DataProvider: FC<Props> = ({ children }) => {
       RolApi.getAllRoles(),
       ProyectosApi.getAllProyectos(),
     ]);
+    console.log(usuarios.data.data);
 
     const AllUsers: IUsuario[] = usuarios.data.data;
     const AllOficinas: IOficina[] = oficinas.data.data;

@@ -14,7 +14,7 @@ const reset = () => {
               <Grid>
                 <Grid.Col span={12}>
                   <Center>
-                    <Image src={resetPasswordImage} />
+                    <Image src={resetPasswordImage} alt="Reset Password" />
                   </Center>
                 </Grid.Col>
                 <Grid.Col span={12}>

@@ -3,7 +3,7 @@ import { useListState } from '@mantine/hooks';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { Button, Card, Title, Divider } from '@mantine/core';
 import Layout from '../../../components/Layout/Layout';
-import { prisma } from '../../../db';
+import prisma from '../../../db';
 import { useContext, useEffect, useState } from 'react';
 import { ErrorsContext } from '../../../context/Errors/ErrorsContext';
 import { useForm } from '@mantine/form';

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { prisma } from '../../../db';
+import prisma from '../../../db';
 import bcrypt from 'bcryptjs';
 
 type Data = {
@@ -42,6 +42,7 @@ const getAllUsers = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         },
       },
     });
+
     return res.status(200).json({
       message: 'ok',
       data: users,
@@ -53,6 +54,7 @@ const getAllUsers = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     });
   }
 };
+
 const createNewUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     const { nombre, correo, contrasena, oficina, area, rol } = req.body.data;

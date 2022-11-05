@@ -1,10 +1,8 @@
 import React from 'react';
-import { Center, Grid, Card, PasswordInput, TextInput, Button, Space, Anchor } from '@mantine/core';
+import { Center, Grid, Card, TextInput, Button, Anchor } from '@mantine/core';
 import Image from 'next/image';
 import Link from 'next/link';
 import forgotPasswordImage from '../../public/images/forgot-image.jpg';
-import { getSession } from 'next-auth/react';
-import { InferGetServerSidePropsType } from 'next';
 
 const forgot = () => {
   return (
@@ -17,7 +15,7 @@ const forgot = () => {
         <Grid>
           <Grid.Col span={12}>
             <Center>
-              <Image src={forgotPasswordImage} />
+              <Image src={forgotPasswordImage} alt="Forgot Password" />
             </Center>
           </Grid.Col>
 
@@ -34,7 +32,7 @@ const forgot = () => {
 
             <Center mt={'lg'}>
               <Link href="/auth/login">
-                <Anchor component="a" underline={false}>
+                <Anchor component="button" underline={false}>
                   ¿Ya tienes cuenta?
                 </Anchor>
               </Link>

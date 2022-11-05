@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '../../../db';
-import { IProyecto } from '../../../interfaces/proyecto.interface';
-import proyectos from '../../index/independencias/proyectos';
+import prisma from '../../../db';
 
 type Data = {
   message?: string;
@@ -23,6 +21,28 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 const getAllProyectos = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
+    //Paginate response
+    const { page, limit, search, oficina, area, estado, cliente } = req.query;
+    const currentPage = page ? parseInt(page.toString()) : 1;
+    const perPage = limit ? parseInt(limit.toString()) : 10;
+    const offset = (currentPage - 1) * perPage;
+
+    const where = {
+      AND: [
+        {
+          OR: [
+            { nombre: { contains: search } },
+            { descripcion: { contains: search } },
+            { codigo: { contains: search } },
+          ],
+        },
+        { oficina: { contains: oficina } },
+        { area: { contains: area } },
+        { estado: { contains: estado } },
+        { cliente: { contains: cliente } },
+      ],
+    };
+
     const proyectos = await prisma.proyecto.findMany({});
     return res.status(200).json({
       message: 'ok',
@@ -86,11 +106,11 @@ const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>
         oficinaId: oficina,
         nombre,
         descripcion,
-        estado,
-        fechaInicio: fechaInicio ?? new Date(),
+        estado: estado || 'NUEVO',
+        fechaInicio: fechaInicio ? fechaInicio : new Date(),
         clienteId: cliente,
         createdAt: new Date(),
-        fechaFin: '',
+        fechaFin: null,
       },
       select: {
         id: true,

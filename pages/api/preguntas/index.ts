@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '../../../db';
+import prisma from '../../../db';
 import { IPregunta } from '../../../interfaces/pregunta.interface';
 
 type Data = {

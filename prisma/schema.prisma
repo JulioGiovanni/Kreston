@@ -7,13 +7,48 @@ generator client {
 }
 
 datasource db {
-  provider             = "mysql"
+  provider             = "postgresql"
   url                  = env("DATABASE_URL")
   referentialIntegrity = "prisma"
 }
 
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user Usuario @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model Usuario {
-  id             Int          @id @default(autoincrement())
+  id             String       @id @default(cuid())
   nombre         String
   correo         String       @unique
   contrasena     String
@@ -32,6 +67,8 @@ model Usuario {
   aceptaciones   Aceptacion[]
   createdAt      DateTime?    @default(now())
   updatedAt      DateTime?    @updatedAt
+  Account        Account[]
+  Session        Session[]
 }
 
 model Role {
@@ -56,7 +93,7 @@ model Oficina {
 model Proyecto {
   id            Int            @id @default(autoincrement())
   usuario       Usuario        @relation(fields: [usuarioId], references: [id])
-  usuarioId     Int
+  usuarioId     String
   area          Area           @relation(fields: [areaId], references: [id])
   areaId        Int
   oficina       Oficina        @relation(fields: [oficinaId], references: [id])
@@ -85,9 +122,11 @@ model Cuestionario {
   proyecto   Proyecto   @relation(fields: [proyectoId], references: [id])
   proyectoId Int
   Preguntas  Pregunta[]
-  estado     estadoCuestionario @default(value: EN_ESPERA)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+
+  usuariosAsignados String[]
+  estado            estadoCuestionario @default(value: EN_ESPERA)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 }
 
 enum estadoCuestionario {
@@ -97,19 +136,19 @@ enum estadoCuestionario {
 }
 
 model Pregunta {
-  id                  Int          @id @default(autoincrement())
-  cuestionario        Cuestionario @relation(fields: [cuestionarioId], references: [id], onDelete: Cascade)
-  cuestionarioId      Int
-  pregunta            String
-  preguntaAnidada     Pregunta?    @relation(name: "PreguntaAnidada", fields: [preguntaPadre], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  preguntaHijo        Pregunta[]   @relation(name: "PreguntaAnidada")
-  preguntaPadre       Int?
-  posicion            Int
-  tipo                tipoPregunta @default(value: TEXTO)
-  valorAnidado        String?
-  posiblesRespuestas  Json?
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
+  id                 Int          @id @default(autoincrement())
+  cuestionario       Cuestionario @relation(fields: [cuestionarioId], references: [id], onDelete: Cascade)
+  cuestionarioId     Int
+  pregunta           String
+  preguntaAnidada    Pregunta?    @relation(name: "PreguntaAnidada", fields: [preguntaPadre], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  preguntaHijo       Pregunta[]   @relation(name: "PreguntaAnidada")
+  preguntaPadre      Int?
+  posicion           Int
+  tipo               tipoPregunta @default(value: TEXTO)
+  valorAnidado       String?
+  posiblesRespuestas Json?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 }
 
 enum tipoPregunta {
@@ -133,9 +172,9 @@ model Respuesta {
 model Ticket {
   id                 Int          @id @default(autoincrement())
   usuarioPregunta    Usuario      @relation(name: "UsuarioPregunta", fields: [usuarioPreguntaId], references: [id])
-  usuarioPreguntaId  Int
+  usuarioPreguntaId  String
   usuarioRespuesta   Usuario?     @relation(name: "UsuarioRespuesta", fields: [usuarioRespuestaId], references: [id])
-  usuarioRespuestaId Int?
+  usuarioRespuestaId String?
   titulo             String
   descripcion        String
   estado             String
@@ -158,7 +197,7 @@ model Area {
 model Comentario {
   id         Int      @id @default(autoincrement())
   usuario    Usuario  @relation(fields: [usuarioId], references: [id])
-  usuarioId  Int
+  usuarioId  String
   ticket     Ticket   @relation(fields: [ticketId], references: [id])
   ticketId   Int
   comentario String
@@ -169,7 +208,7 @@ model Comentario {
 model Aceptacion {
   id        Int      @id @default(autoincrement())
   usuario   Usuario  @relation(fields: [usuarioId], references: [id])
-  usuarioId Int
+  usuarioId String
   file      String
   ticketId  Int
   createdAt DateTime @default(now())
@@ -192,5 +231,3 @@ enum TipoPersona {
   FISICA
   MORAL
 }
-
-

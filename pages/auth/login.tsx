@@ -49,7 +49,7 @@ const login = () => {
         <Card shadow="md" p="lg" radius="sm">
           <Grid>
             <Grid.Col span={6}>
-              <Image src={loginImage} alt="Login" height={'400px'} />
+              <Image src={loginImage} alt="Login" height={400} />
             </Grid.Col>
             <Grid.Col span={6}>
               <Text size="xl" align="center">
@@ -88,7 +88,7 @@ const login = () => {
 
               <Center mt={'lg'}>
                 <Link href="/auth/forgot" passHref>
-                  <Anchor component="a" underline={false}>
+                  <Anchor component="button" underline={false}>
                     ¿Olvidaste tu contraseña?
                   </Anchor>
                 </Link>
