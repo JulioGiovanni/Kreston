@@ -1,9 +1,5 @@
-import React from 'react'
+const AreaDetail = (props) => {
+  return <div>AreaDetail</div>;
+};
 
-const AreaDetail = () => {
-  return (
-    <div>AreaDetail</div>
-  )
-}
-
-export default AreaDetail
+export default AreaDetail;

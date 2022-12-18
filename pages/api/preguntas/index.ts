@@ -92,7 +92,6 @@ const updateMultiplePositionsPregunta = async (req: NextApiRequest, res: NextApi
       data: preguntas,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: 'error',
       data: error,

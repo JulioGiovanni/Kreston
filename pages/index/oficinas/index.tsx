@@ -1,3 +1,5 @@
+'use client';
+
 import { FiPlus } from 'react-icons/fi';
 import {
   Avatar,
@@ -16,14 +18,16 @@ import { useContext, useState } from 'react';
 import prisma from '../../../db';
 import Layout from '../../../components/Layout/Layout';
 import { useForm } from '@mantine/form';
-import { API } from '../../../API';
-import { ErrorsContext } from '../../../context/Errors';
-import { DataContext } from '../../../context/Data/DataContext';
 
-const index = () => {
+import { ErrorsContext } from '../../../context/Errors';
+import { createNewOficina } from '../../../services/oficina.service';
+import { useAllOffice } from '../../../hooks/useOffice';
+
+const index = (props) => {
+  const { Oficinas, isLoading, error } = useAllOffice();
   const [openedModal, setOpenedModal] = useState(false);
   const { setNewError, removeError } = useContext(ErrorsContext);
-  const { Oficinas, setNewData } = useContext(DataContext);
+
   const { colorScheme } = useMantineColorScheme();
   const form = useForm({
     initialValues: {
@@ -33,11 +37,10 @@ const index = () => {
   });
   const onSubmitForm = async (values: any) => {
     try {
-      const newOficina = await API.OficinaApi.createNewOficina(values);
+      const newOficina = await createNewOficina(values);
       const Oficina = newOficina.data.data;
       form.reset();
       removeError();
-      setNewData(Oficina, 'Oficinas');
       setOpenedModal(false);
     } catch (error: any) {
       setNewError(error.response.data.message, error.response.data.type);
@@ -77,47 +80,52 @@ const index = () => {
         </Button>
       </div>
       <Space h={30} />
+      {isLoading ? (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Title order={3}>Cargando...</Title>
+        </div>
+      ) : (
+        <Grid>
+          {Oficinas.map((area: any) => {
+            //Get the first letter of every word in the name
+            const initials = area.nombre
+              .split(' ')
+              .map((word: any) => word[0])
+              .join('');
 
-      <Grid>
-        {Oficinas.map((area: any) => {
-          //Get the first letter of every word in the name
-          const initials = area.nombre
-            .split(' ')
-            .map((word: any) => word[0])
-            .join('');
+            return (
+              <Grid.Col sm={12} md={6} lg={4}>
+                <Card style={{ height: 150, padding: 40 }}>
+                  <Card.Section>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Title order={3}>{area.nombre}</Title>
 
-          return (
-            <Grid.Col sm={12} md={6} lg={4}>
-              <Card style={{ height: 150, padding: 40 }}>
-                <Card.Section>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Title order={3}>{area.nombre}</Title>
+                      <Avatar radius="xl" size={'lg'}>
+                        <div
+                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                        >
+                          <Text color={colorScheme == 'dark' ? 'white' : 'black'} weight={'bold'}>
+                            {initials}
+                          </Text>
+                          <Text size="xs" color={'dimmed'}>
+                            {area.oficina}
+                          </Text>
+                        </div>
+                      </Avatar>
+                    </div>
+                  </Card.Section>
 
-                    <Avatar radius="xl" size={'lg'}>
-                      <div
-                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-                      >
-                        <Text color={colorScheme == 'dark' ? 'white' : 'black'} weight={'bold'}>
-                          {initials}
-                        </Text>
-                        <Text size="xs" color={'dimmed'}>
-                          {area.oficina}
-                        </Text>
-                      </div>
-                    </Avatar>
-                  </div>
-                </Card.Section>
-
-                <Card.Section mt={20}>
-                  <Link href={`/oficinas/${area.id}`} passHref>
-                    <Button fullWidth>Ver Más</Button>
-                  </Link>
-                </Card.Section>
-              </Card>
-            </Grid.Col>
-          );
-        })}
-      </Grid>
+                  <Card.Section mt={20}>
+                    <Link href={`/oficinas/${area.id}`} passHref>
+                      <Button fullWidth>Ver Más</Button>
+                    </Link>
+                  </Card.Section>
+                </Card>
+              </Grid.Col>
+            );
+          })}
+        </Grid>
+      )}
     </Layout>
   );
 };

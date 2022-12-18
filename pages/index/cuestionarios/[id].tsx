@@ -1,3 +1,4 @@
+'use client';
 import { useListState } from '@mantine/hooks';
 
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
@@ -8,10 +9,10 @@ import { useContext, useEffect, useState } from 'react';
 import { ErrorsContext } from '../../../context/Errors/ErrorsContext';
 import { useForm } from '@mantine/form';
 import { PreguntasContext } from '../../../context/Preguntas/PreguntasContext';
-import { PreguntaApi } from '../../../API/PreguntaApi';
 
 import ModalNewPregunta from '../../../components/Preguntas/ModalNewPregunta';
 import PreguntasDraggable from '../../../components/Preguntas/Draggable';
+import { createNewPregunta } from '../../../services/pregunta.service';
 
 // You should use getServerSideProps when:
 // - Only if you need to pre-render a page whose data must be fetched at request time
@@ -65,7 +66,7 @@ const index = (props: InferGetServerSidePropsType<typeof getServerSideProps>) =>
     try {
       values.posicion = preguntas.length + 1;
 
-      const pregunta = await PreguntaApi.createNewPregunta(values);
+      const pregunta = await createNewPregunta(values);
       agregarPregunta(pregunta.data.data);
       form.reset();
     } catch (error: any) {

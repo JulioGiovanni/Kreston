@@ -1,12 +1,11 @@
-import React from 'react'
+'use client';
+import React from 'react';
 
 const ShowUsersTable = () => {
-  return (
-    <div>ShowUsersTable</div>
-  )
-}
+  return <div>ShowUsersTable</div>;
+};
 
-export default ShowUsersTable
+export default ShowUsersTable;
 // import React, { useState } from 'react';
 // import {
 //   createStyles,
@@ -123,8 +122,6 @@ export default ShowUsersTable
 //   const [sortBy, setSortBy] = useState<keyof RowData>(null);
 //   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
-
-
 //   const initialValues = {
 //     name:'',
 //     email:'',
@@ -137,7 +134,6 @@ export default ShowUsersTable
 //         email: (value) => value.trim().length > 2,
 //       },
 //     });
-
 
 //   const setSorting = (field: keyof RowData) => {
 //     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -153,7 +149,7 @@ export default ShowUsersTable
 //   };
 
 //   const rows = values.map((row,index) => {
-    
+
 //     return(
 
 //       <tr key={row.correo}>
@@ -166,7 +162,7 @@ export default ShowUsersTable
 //           <Checkbox checked={row.activo} onChange={ (event) => {
 //               handlers.setItemProp(index, 'activo', event.currentTarget.checked)
 //               row.activo ? API.UserApi.deleteUser(row.id) : API.UserApi.reactiveUser(row.id)
-//               }} 
+//               }}
 //             />
 //           </td>
 //         <td>

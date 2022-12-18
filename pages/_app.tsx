@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { getCookie, setCookies } from 'cookies-next';
 import { SessionProvider } from 'next-auth/react';
@@ -5,7 +6,6 @@ import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { ErrorsProvider } from '../context/Errors';
-import { DataProvider } from '../context/Data';
 import { PreguntasProvider } from '../context/Preguntas';
 import { AuthProvider } from '../context/auth';
 
@@ -14,7 +14,7 @@ interface Props {
   pageProps: any;
   colorScheme: any;
 }
-export default function App(props: Props) {
+export default function App(props) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme);
 
@@ -42,15 +42,13 @@ export default function App(props: Props) {
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
           <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
             <AuthProvider>
-              <DataProvider>
-                <PreguntasProvider>
-                  <NotificationsProvider>
-                    <ErrorsProvider>
-                      <Component {...pageProps} />
-                    </ErrorsProvider>
-                  </NotificationsProvider>
-                </PreguntasProvider>
-              </DataProvider>
+              <PreguntasProvider>
+                <NotificationsProvider>
+                  <ErrorsProvider>
+                    <Component {...pageProps} />
+                  </ErrorsProvider>
+                </NotificationsProvider>
+              </PreguntasProvider>
             </AuthProvider>
           </MantineProvider>
         </ColorSchemeProvider>

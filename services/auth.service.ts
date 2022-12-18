@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const auth = {
-  login: (username: string, password: string) => {
-    return axios.post('/login', { username, password });
-  },
-};
+export const login = async (correo: string, contrasena: string) =>
+  await axios.post(`/api/auth/login`, { correo, contrasena });
+
+export const logout = async () => await axios.post(`/api/auth/logout`);
+export const validate = async () => await axios.get(`/api/auth/jwt`);

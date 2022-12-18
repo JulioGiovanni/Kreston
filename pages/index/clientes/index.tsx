@@ -1,16 +1,15 @@
+'use client';
 import { Button, Card, Modal, Select, Space, Text, TextInput, Title, Table } from '@mantine/core';
 import { FC, useState, useContext } from 'react';
-import { FiEdit, FiPlus, FiEye } from 'react-icons/fi';
-import NewUserForm from '../../../components/Users/NewUserForm';
+import { FiPlus } from 'react-icons/fi';
 import Layout from '../../../components/Layout/Layout';
-import { ShowUsersTable2 } from '../../../components/Users/ShowUsersTable2';
+
 import { useForm } from '@mantine/form';
-import { DataContext } from '../../../context/Data/DataContext';
+
 import { ErrorsContext } from '../../../context/Errors/ErrorsContext';
-import { ClienteApi } from '../../../API/ClienteAPI';
+import { createNewCliente } from '../../../services/cliente.service';
 
 const Clientes: FC = (props) => {
-  const { setNewData } = useContext(DataContext);
   const { setNewError } = useContext(ErrorsContext);
   const [openedModal, setOpenedModal] = useState(false);
   const form = useForm({
@@ -25,7 +24,7 @@ const Clientes: FC = (props) => {
 
   const onSubmitForm = async (values: any) => {
     try {
-      const newCliente = await ClienteApi.createNewCliente(values);
+      const newCliente = await createNewCliente(values);
       const Cliente = newCliente.data.data;
       form.reset();
 
@@ -38,13 +37,7 @@ const Clientes: FC = (props) => {
   };
 
   return (
-    <Layout
-    // HeaderChildrenComponent={
-    //   <Button leftIcon={<FiPlus />} onClick={() => setOpenedModal(true)}>
-    //     <Text>Agregar usuario</Text>
-    //   </Button>
-    // }
-    >
+    <Layout>
       <Modal opened={openedModal} onClose={() => setOpenedModal(false)} title={'Agregar Cliente'}>
         <form onSubmit={form.onSubmit(onSubmitForm)}>
           <TextInput

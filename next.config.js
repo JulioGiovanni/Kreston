@@ -1,11 +1,9 @@
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
-
-module.exports = withBundleAnalyzer({
-  trailingSlash: true,
-  reactStrictMode: true,
-  eslint: {
-    ignoreDuringBuilds: true,
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    appDir: true,
+    serverComponentsExternalPackages: ['prisma'],
   },
-});
+};
+
+module.exports = nextConfig;

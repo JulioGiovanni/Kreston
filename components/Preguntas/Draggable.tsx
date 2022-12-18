@@ -3,7 +3,7 @@ import { IconGripVertical } from '@tabler/icons';
 import { showNotification } from '@mantine/notifications';
 import { Cross1Icon } from '@modulz/radix-icons';
 import { createStyles, Text } from '@mantine/core';
-import { PreguntaApi } from '../../API/PreguntaApi';
+import { updatePositionPregunta } from '../../services/pregunta.service';
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -74,10 +74,10 @@ const PreguntasDraggable = ({ handlers, reorder, state }: any) => {
           handlers.reorder({ from: source.index, to: destination?.index || 0 });
           //TODO: Crear botón para guardar cambios y no actualizar las preguntas cada que se mueve una pregunta
           const newOrder = reorder(state, source.index, destination?.index || 0);
-          const response = await PreguntaApi.updatePositionPregunta(newOrder);
-          console.log(response);
+          const response = await updatePositionPregunta(newOrder);
+          // console.log(response);
         } catch (error) {
-          console.log(error);
+          // console.log(error);
           showNotification({
             title: 'Ocurrió un error',
             message:

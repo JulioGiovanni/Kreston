@@ -36,33 +36,33 @@ const Links = () => {
           >
             {link.accordionLinks!.map((l: IAccordionLinks) => {
               return (
-                <Link href={l.link} passHref>
-                  <NavLink
-                    key={l.link}
-                    label={<Text weight={500}>{l.text}</Text>}
-                    active={router.pathname == l.link}
-                    variant="filled"
-                    sx={{ borderRadius: '10px' }}
-                  />
-                </Link>
+                <NavLink
+                  component={Link}
+                  href={l.link}
+                  key={l.link}
+                  label={<Text weight={500}>{l.text}</Text>}
+                  active={router.pathname == l.link}
+                  variant="filled"
+                  sx={{ borderRadius: '10px' }}
+                />
               );
             })}
           </NavLink>
         ) : (
-          <Link href={link.link!} passHref key={link.link}>
-            <NavLink
-              key={link.link}
-              label={
-                <Text weight={500} size="md">
-                  {link.text}
-                </Text>
-              }
-              icon={<link.Icon size={18} />}
-              active={router.pathname === link.link}
-              variant="filled"
-              sx={generalStyle}
-            ></NavLink>
-          </Link>
+          <NavLink
+            component={Link}
+            href={link.link!}
+            key={link.link}
+            label={
+              <Text weight={500} size="md">
+                {link.text}
+              </Text>
+            }
+            icon={<link.Icon size={18} />}
+            active={router.pathname === link.link}
+            variant="filled"
+            sx={generalStyle}
+          />
         );
       })}
     </>

@@ -4,9 +4,9 @@ import { Welcome } from '../../components/Welcome/Welcome';
 
 const dashboard = () => {
   return (
-    <>
+    <Layout>
       <Welcome />
-    </>
+    </Layout>
   );
 };
 

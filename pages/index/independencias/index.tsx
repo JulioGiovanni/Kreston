@@ -9,14 +9,11 @@ import proyectos from './proyectos';
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx);
 
-  console.log(session?.user);
-
   const proyectos = await prisma.proyecto.findMany({
     where: {
       usuarioId: session.user.id,
     },
   });
-  console.log(proyectos);
   return {
     props: {
       proyectos: JSON.parse(JSON.stringify(proyectos)),
@@ -25,7 +22,6 @@ export const getServerSideProps = async (ctx: any) => {
 };
 
 const index = ({ proyectos }: any) => {
-  console.log(proyectos);
   return (
     <Layout>
       <Card style={{ height: 400 }}>
