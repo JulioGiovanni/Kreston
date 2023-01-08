@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import {
   createStyles,
   Table,
@@ -27,6 +27,8 @@ import { useAllAreas } from '../../../hooks/useArea';
 import { useAllProyectos } from '../../../hooks/useProyecto';
 import { useAllOffice } from '../../../hooks/useOffice';
 import { useAllClient } from '../../../hooks/useClient';
+import { IProyecto } from '../../../interfaces';
+import Loading from '../../../components/UI/Loading';
 
 const useStyles = createStyles((theme) => ({
   rowSelected: {
@@ -37,7 +39,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function Proyectos(props) {
+const Proyectos: FC = (props) => {
   const [openedModal, setOpenedModal] = useState(false);
   const { setNewError, removeError } = useContext(ErrorsContext);
   const { Usuarios, isLoading: UsLoading, error: UsError } = useAllUsers();
@@ -45,8 +47,6 @@ export function Proyectos(props) {
   const { Proyectos, isLoading: PrLoading, error: PrError } = useAllProyectos();
   const { Oficinas, isLoading: OfLoading, error: OfError } = useAllOffice();
   const { Clientes, isLoading: ClLoading, error: ClError } = useAllClient();
-
-  console.log('Clientes is Loading: ', ClLoading);
   let rows = [];
   const form = useForm({
     initialValues: {
@@ -72,20 +72,20 @@ export function Proyectos(props) {
     }
   };
   if (!PrLoading) {
-    rows = Proyectos.map((item: any) => {
+    rows = Proyectos.map((proyecto: IProyecto) => {
       return (
-        <tr key={item.id}>
-          <td>{item.nombre}</td>
-          <td>{item.descripcion}</td>
+        <tr key={proyecto.id}>
+          <td>{proyecto.nombre}</td>
+          <td>{proyecto.descripcion}</td>
           <td>
             <Group spacing="sm">
               <Text size="sm" weight={500}>
-                {item.usuario.nombre}
+                {proyecto.usuario?.nombre}
               </Text>
             </Group>
           </td>
-          <td>{item.area.nombre}</td>
-          <td>{item.oficina.nombre}</td>
+          <td>{proyecto.area?.nombre}</td>
+          <td>{proyecto.oficina?.nombre}</td>
         </tr>
       );
     });
@@ -93,10 +93,8 @@ export function Proyectos(props) {
 
   return (
     <Layout>
-      {UsLoading && ArLoading && PrLoading && ClLoading && OfLoading ? (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Title order={3}>Cargando...</Title>
-        </div>
+      {UsLoading || ArLoading || ClLoading || OfLoading || PrLoading ? (
+        <Loading />
       ) : (
         <>
           <Modal
@@ -210,6 +208,6 @@ export function Proyectos(props) {
       )}
     </Layout>
   );
-}
+};
 
 export default Proyectos;

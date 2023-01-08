@@ -1,10 +1,8 @@
 import { Card, Tabs } from '@mantine/core';
-import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
 import Layout from '../../../components/Layout/Layout';
 import prisma from '../../../db';
-import { IUsuario } from '../../../interfaces';
-import proyectos from './proyectos';
+import { InferGetServerSidePropsType } from "next";
 
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx);
@@ -21,7 +19,7 @@ export const getServerSideProps = async (ctx: any) => {
   };
 };
 
-const index = ({ proyectos }: any) => {
+const index = ({ proyectos }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <Layout>
       <Card style={{ height: 400 }}>

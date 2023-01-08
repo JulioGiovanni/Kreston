@@ -1,7 +1,7 @@
 import { Modal, Select, TextInput, Button, Space } from '@mantine/core';
 import React from 'react';
 
-const ModalNewPregunta = ({ openedModal, setOpenedModal, form }: any) => {
+const ModalNewPregunta = ({ openedModal, setOpenedModal, form, onSubmit }: any) => {
   return (
     <>
       <Modal
@@ -9,7 +9,7 @@ const ModalNewPregunta = ({ openedModal, setOpenedModal, form }: any) => {
         onClose={() => setOpenedModal(false)}
         title="Crear nueva pregunta"
       >
-        <form onSubmit={form.handleSubmit}>
+        <form onSubmit={form.onSubmit(onSubmit)}>
           <TextInput
             label="Pregunta"
             name="Pregunta"
@@ -22,17 +22,17 @@ const ModalNewPregunta = ({ openedModal, setOpenedModal, form }: any) => {
             placeholder="Seleccione un tipo de pregunta"
             data={[
               { value: 'TEXTO', label: 'Texto' },
-              { value: 'SELECCION', label: 'Selección' },
-              { value: 'BOOLEANO', label: 'Si/No' },
+              { value: 'SELECCION_MULTIPLE', label: 'Selección' },
+              { value: 'SELECCION_UNICA', label: 'Si/No' },
             ]}
             {...form.getInputProps('tipoPregunta')}
           />
-          {form.getInputProps('tipoPregunta').value === 'SELECCION' && (
+          {form.getInputProps('tipoPregunta').value === 'SELECCION_MULTIPLE' && (
             <TextInput
               label="Opciones"
               name="opciones"
               placeholder="Escriba las opciones separadas por comas"
-              {...form.getInputProps('opciones')}
+              {...form.getInputProps('posiblesRespuestas')}
             />
           )}
           <Space my={30} />

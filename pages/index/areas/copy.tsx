@@ -10,6 +10,7 @@ import {
   Title,
   Modal,
   TextInput,
+  Center,
   Select,
   useMantineColorScheme,
 } from '@mantine/core';
@@ -17,22 +18,21 @@ import Link from 'next/link';
 import { useState, useContext, FC } from 'react';
 import Layout from '../../../components/Layout/Layout';
 import { useForm } from '@mantine/form';
-
+import useSWRMutation from 'swr/mutation';
 import { ErrorsContext } from '../../../context/Errors';
 
-import { createNewArea, getAllAreas } from '../../../services/area.service';
+import { createNewArea } from '../../../services/area.service';
 import { useAllAreas } from '../../../hooks/useArea';
 import { useAllOffice } from '../../../hooks/useOffice';
 import Loading from '../../../components/UI/Loading';
-import HeaderApp from '../../../components/UI/HeaderApp';
 
-export const Areas: FC = (props) => {
+const Areas: FC = (props) => {
   const [openedModal, setOpenedModal] = useState(false);
   const { colorScheme } = useMantineColorScheme();
   const { setNewError, removeError } = useContext(ErrorsContext);
-  const { Areas, isLoading: ArLoading, error: ArError, mutate } = useAllAreas();
+  const { Areas, isLoading: ArLoading, error: ArError } = useAllAreas();
   const { Oficinas, isLoading: OfLoading, error: OfError } = useAllOffice();
-
+  const { trigger, isMutating } = useSWRMutation('/api/areas', sendRequest);
   const form = useForm({
     initialValues: {
       nombre: '',
@@ -40,20 +40,18 @@ export const Areas: FC = (props) => {
     },
   });
 
-  //TODO: Verificar si hay alguna otra manera de hacer swr mutate sin esto
-  const createAreaSWR = async (values: any) => {
-    await createNewArea(values);
-    return await getAllAreas();
-  };
+  async function sendRequest(url: string, { arg }: any) {
+    return fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(arg.arg),
+    });
+  }
 
   const onSubmitForm = async (values: any) => {
     try {
-      mutate(createAreaSWR(values), {
-        optimisticData: [...Areas, values],
-        populateCache: true,
-        revalidate: false,
-        rollbackOnError: true,
-      });
+      // const newArea = await createNewArea(values);
+      // const Area = newArea.data.data;
+      trigger({ arg: values });
       form.reset();
       removeError();
 
@@ -65,7 +63,7 @@ export const Areas: FC = (props) => {
   };
   return (
     <Layout>
-      {ArLoading || OfLoading ? (
+      {ArLoading || isMutating || OfLoading ? (
         <Loading />
       ) : (
         <>
@@ -94,12 +92,13 @@ export const Areas: FC = (props) => {
               </Button>
             </form>
           </Modal>
-          <HeaderApp
-            title="Áreas"
-            openModalFunction={() => setOpenedModal(true)}
-            buttonTitle="Agregar área"
-            Icon={FiPlus}
-          />
+
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Title order={2}>Áreas</Title>
+            <Button leftIcon={<FiPlus />} onClick={() => setOpenedModal(true)}>
+              <Text>Agregar área</Text>
+            </Button>
+          </div>
           <Space h={30} />
 
           <Grid>
@@ -111,7 +110,7 @@ export const Areas: FC = (props) => {
                 .join('');
               return (
                 <Grid.Col sm={12} md={6} lg={4} key={area.id}>
-                  <Card style={{ height: 150, padding: 40 }} withBorder>
+                  <Card style={{ height: 150, padding: 40 }}>
                     <Card.Section>
                       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>

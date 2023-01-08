@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import prisma from '../../../db';
-import bcrypt from 'bcryptjs';
 
 type Data = {
   message?: string;
@@ -28,10 +27,8 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {}
 const deactivateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { id } = req.query;
   try {
-    //convert the id to number
-    const idNumber = Number(id);
     const user = await prisma.usuario.update({
-      where: { id: idNumber },
+      where: { id },
       data: {
         activo: false,
       },
@@ -49,11 +46,12 @@ const deactivateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) =
 };
 const reactivateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { id } = req.query;
+
   try {
     //convert the id to number
-    const idNumber = Number(id);
+
     const user = await prisma.usuario.update({
-      where: { id: idNumber },
+      where: { id },
       data: {
         activo: true,
       },

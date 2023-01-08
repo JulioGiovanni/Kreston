@@ -43,7 +43,14 @@ const getAllProyectos = async (req: NextApiRequest, res: NextApiResponse<Data>) 
       ],
     };
 
-    const proyectos = await prisma.proyecto.findMany({});
+    const proyectos = await prisma.proyecto.findMany({
+      include: {
+        usuario: true,
+        oficina: true,
+        area: true,
+        cliente: true,
+      },
+    });
     return res.status(200).json({
       message: 'ok',
       data: proyectos,

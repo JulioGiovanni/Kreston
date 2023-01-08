@@ -3,13 +3,11 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
   provider             = "postgresql"
   url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
 }
 
 model Account {
@@ -67,6 +65,7 @@ model Usuario {
   aceptaciones   Aceptacion[]
   createdAt      DateTime?    @default(now())
   updatedAt      DateTime?    @updatedAt
+  cuestionarios  Cuestionario[]
   Account        Account[]
   Session        Session[]
 }
@@ -122,8 +121,7 @@ model Cuestionario {
   proyecto   Proyecto   @relation(fields: [proyectoId], references: [id])
   proyectoId Int
   Preguntas  Pregunta[]
-
-  usuariosAsignados String[]
+  usuariosAsignados Usuario[]
   estado            estadoCuestionario @default(value: EN_ESPERA)
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
@@ -143,7 +141,7 @@ model Pregunta {
   preguntaAnidada    Pregunta?    @relation(name: "PreguntaAnidada", fields: [preguntaPadre], references: [id], onDelete: NoAction, onUpdate: NoAction)
   preguntaHijo       Pregunta[]   @relation(name: "PreguntaAnidada")
   preguntaPadre      Int?
-  posicion           Int
+  posicion           Int?
   tipo               tipoPregunta @default(value: TEXTO)
   valorAnidado       String?
   posiblesRespuestas Json?

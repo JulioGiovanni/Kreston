@@ -9,6 +9,8 @@ type Data = {
 
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
+    case 'GET':
+      return getAllPreguntasFromCuestionario(req, res);
     case 'PUT':
       return updatePregunta(req, res);
 
@@ -17,6 +19,25 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
       break;
   }
 }
+
+const getAllPreguntasFromCuestionario = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  try {
+    const preguntas = await prisma.pregunta.findMany({
+      where: {
+        cuestionarioId: Number(req.query.id),
+      },
+    });
+    return res.status(200).json({
+      message: 'ok',
+      data: preguntas,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'error',
+      data: error,
+    });
+  }
+};
 
 const updatePregunta = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {

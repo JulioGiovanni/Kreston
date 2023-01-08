@@ -9,21 +9,25 @@ type Data = {
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
     case 'GET':
-      return getAllAreas(req, res);
+      return getAllCuestionarios(req, res);
     case 'POST':
-      return createNewArea(req, res);
+      return createNewCuestionario(req, res);
     default:
       res.status(405).json({ message: 'Method not allowed' });
       break;
   }
 }
 
-const getAllAreas = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const getAllCuestionarios = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
-    const areas = await prisma.area.findMany({});
+    const cuestionarios = await prisma.cuestionario.findMany({
+      include: {
+        proyecto: true,
+      },
+    });
     return res.status(200).json({
       message: 'ok',
-      data: areas,
+      data: cuestionarios,
     });
   } catch (error) {
     return res.status(500).json({
@@ -32,38 +36,19 @@ const getAllAreas = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     });
   }
 };
-const createNewArea = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const createNewCuestionario = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
-    const { nombre, oficina } = req.body.data;
-    if (!nombre)
-      return res.status(400).json({ message: 'El nombre del área es requrido', type: 'nombre' });
-    if (!oficina)
-      return res.status(400).json({ message: 'Debe seleccionar una oficina', type: 'oficina' });
+    const { usuarios, proyecto } = req.body.data;
 
-    const found = await prisma.area.findFirst({
-      where: {
-        nombre: nombre,
-        oficina: {
-          id: oficina,
-        },
-      },
-    });
-
-    if (found)
-      return res
-        .status(400)
-        .json({ message: 'El área ya existe para esa oficina', type: 'nombre' });
-
-    const area = await prisma.area.create({
+    const cuestionario = await prisma.cuestionario.create({
       data: {
-        nombre,
-        oficinaId: oficina,
-        createdAt: new Date(),
+        proyectoId: proyecto,
+        usuariosAsignados: usuarios,
       },
     });
     return res.status(200).json({
       message: 'ok',
-      data: area,
+      data: cuestionario,
     });
   } catch (error) {
     return res.status(500).json({

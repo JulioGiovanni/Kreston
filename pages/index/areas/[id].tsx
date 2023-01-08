@@ -1,4 +1,5 @@
-const AreaDetail = (props) => {
+import { FC } from 'react';
+const AreaDetail: FC = () => {
   return <div>AreaDetail</div>;
 };
 

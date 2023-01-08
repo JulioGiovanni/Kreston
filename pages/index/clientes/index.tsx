@@ -8,10 +8,15 @@ import { useForm } from '@mantine/form';
 
 import { ErrorsContext } from '../../../context/Errors/ErrorsContext';
 import { createNewCliente } from '../../../services/cliente.service';
+import { ICliente } from '../../../interfaces/cliente.interface';
+import { useAllClient } from '../../../hooks/useClient';
+import HeaderApp from '../../../components/UI/HeaderApp';
 
 const Clientes: FC = (props) => {
   const { setNewError } = useContext(ErrorsContext);
   const [openedModal, setOpenedModal] = useState(false);
+  const { Clientes, isLoading, error } = useAllClient();
+  let rows: any = [];
   const form = useForm({
     initialValues: {
       nombre: '',
@@ -35,6 +40,20 @@ const Clientes: FC = (props) => {
       form.setFieldError(error.response.data.type, error.response.data.message);
     }
   };
+
+  if (Clientes && Clientes.length > 0) {
+    rows = Clientes.map((row: ICliente, index: any) => {
+      return (
+        <tr key={row.id}>
+          <td>{row.nombre}</td>
+          <td>{row.correo}</td>
+          <td>{row.telefono}</td>
+          <td>{row.domicilio}</td>
+          <td>{row.tipoPersona}</td>
+        </tr>
+      );
+    });
+  }
 
   return (
     <Layout>
@@ -89,12 +108,12 @@ const Clientes: FC = (props) => {
       </Modal>
 
       <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Title order={2}>Usuarios</Title>
-          <Button leftIcon={<FiPlus />} onClick={() => setOpenedModal(true)}>
-            <Text>Agregar Cliente</Text>
-          </Button>
-        </div>
+        <HeaderApp
+          title="Clientes"
+          openModalFunction={() => setOpenedModal(true)}
+          buttonTitle="Agregar Cliente"
+          Icon={FiPlus}
+        />
 
         <Space h={30} />
 
@@ -109,17 +128,7 @@ const Clientes: FC = (props) => {
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Juan</td>
-              <td>
-                <a
-                  href="mailto:
-                "
-                />
-              </td>
-            </tr>
-          </tbody>
+          <tbody>{rows}</tbody>
         </Table>
       </Card>
     </Layout>

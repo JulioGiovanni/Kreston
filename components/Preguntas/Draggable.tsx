@@ -1,71 +1,18 @@
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { IconGripVertical } from '@tabler/icons';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { showNotification } from '@mantine/notifications';
 import { Cross1Icon } from '@modulz/radix-icons';
-import { createStyles, Text } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { updatePositionPregunta } from '../../services/pregunta.service';
 
-const useStyles = createStyles((theme) => ({
-  item: {
-    display: 'flex',
-    alignItems: 'center',
-    borderRadius: theme.radius.md,
-    border: `1px solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
-    }`,
-    padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
-    paddingLeft: theme.spacing.xl - theme.spacing.md, // to offset drag handle
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
-    marginBottom: theme.spacing.sm,
-  },
-
-  itemDragging: {
-    boxShadow: theme.shadows.sm,
-  },
-
-  symbol: {
-    fontSize: 30,
-    fontWeight: 700,
-    width: 60,
-  },
-
-  dragHandle: {
-    ...theme.fn.focusStyles(),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[6],
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-  },
-}));
+import ItemDraggable from './ItemDraggable';
 
 const PreguntasDraggable = ({ handlers, reorder, state }: any) => {
-  const { classes, cx } = useStyles();
+  const rootQuestions = state?.filter((item: any) => !item.preguntaPadre);
+  const subQuestions = state?.filter((item: any) => item.preguntaPadre);
 
-  const items = state.map((item: any, index: number) => (
-    <Draggable key={item.id} index={index} draggableId={item.id.toString()}>
-      {(provided, snapshot) => (
-        <div
-          className={cx(classes.item, { [classes.itemDragging]: snapshot.isDragging })}
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-        >
-          <div {...provided.dragHandleProps} className={classes.dragHandle}>
-            <IconGripVertical size={18} stroke={1.5} />
-          </div>
-          {/* <Text className={classes.symbol}>{item.symbol}</Text> */}
-          <div>
-            <Text>{item.pregunta}</Text>
-            {/* <Text color="dimmed" size="sm">
-                  Position: {item.position} • Mass: {item.mass}
-                </Text> */}
-          </div>
-        </div>
-      )}
-    </Draggable>
-  ));
+  const items = rootQuestions?.map((item: any, index: number) => {
+    return <ItemDraggable item={item} index={index} subQuestions={subQuestions} />;
+  });
 
   return (
     <DragDropContext
@@ -97,6 +44,9 @@ const PreguntasDraggable = ({ handlers, reorder, state }: any) => {
           </div>
         )}
       </Droppable>
+      <Button color="green" fullWidth>
+        Guardar cambios
+      </Button>
     </DragDropContext>
   );
 };

@@ -10,8 +10,6 @@ type Data = {
 
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
-    case 'GET':
-      return getAllPreguntasFromCuestionario(req, res);
     case 'POST':
       return createNewPregunta(req, res);
     case 'PUT':
@@ -22,32 +20,30 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   }
 }
 
-const getAllPreguntasFromCuestionario = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  try {
-    const areas = await prisma.area.findMany({});
-    return res.status(200).json({
-      message: 'ok',
-      data: areas,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: 'error',
-      data: error,
-    });
-  }
-};
 const createNewPregunta = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  console.log(req.body);
   try {
-    const { pregunta, cuestionarioId, preguntaPadre, posicion } = req.body;
+    const {
+      pregunta,
+      cuestionarioId,
+      preguntaPadre,
+      posicion,
+      tipoPregunta,
+      valorAnidado,
+      posiblesRespuestas,
+    } = req.body;
     if (!pregunta)
       return res.status(400).json({ message: 'La pregunta es requerida', type: 'nombre' });
 
     const newPregunta = await prisma.pregunta.create({
       data: {
         pregunta,
-        cuestionarioId,
+        cuestionarioId: Number(cuestionarioId),
+        tipo: tipoPregunta,
         preguntaPadre: preguntaPadre ?? null,
         posicion: posicion,
+        valorAnidado: valorAnidado ?? null,
+        posiblesRespuestas: posiblesRespuestas ?? {},
       },
       select: {
         id: true,
@@ -61,6 +57,7 @@ const createNewPregunta = async (req: NextApiRequest, res: NextApiResponse<Data>
       data: newPregunta,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: 'error',
       data: error,

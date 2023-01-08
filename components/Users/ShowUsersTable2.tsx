@@ -1,17 +1,31 @@
-import React, { useContext } from 'react';
-import useSWR from 'swr';
-import { Table, Checkbox, Title } from '@mantine/core';
-import { useListState } from '@mantine/hooks';
-import { deleteUser, reactiveUser } from '../../services/usuarios.service';
+import { Checkbox, Table, Title } from '@mantine/core';
 import { IUsuario } from '../../interfaces';
 import { useAllUsers } from '../../hooks/useUser';
+import { useListState } from '@mantine/hooks';
+import { deleteUser, reactiveUser } from '../../services/usuarios.service';
+import Loading from '../UI/Loading';
+import { Error } from '../UI/Error';
+import { useEffect } from 'react';
+import { preload } from 'swr';
 
+const fetcher = (url: string) =>
+  fetch(url).then(async (res: any) => {
+    const data = await res.json();
+    return data.data;
+  });
+
+// Preload the resource before rendering the User component below,
+// this prevents potential waterfalls in your application.
+// You can also start preloading when hovering the button or link, too.
+preload('/api/users', fetcher);
 export function ShowUsersTable2() {
   const { Usuarios, isLoading, error } = useAllUsers();
-  console.log(Usuarios);
+
   let rows: any = [];
 
-  // const [values, handlers] = useListState(Usuarios);
+  const [values, handlers] = useListState<IUsuario>([]);
+
+  // handlers.setState(Usuarios);
 
   const ths = (
     <tr>
@@ -35,8 +49,13 @@ export function ShowUsersTable2() {
       </td>
     </tr>
   );
+
+  useEffect(() => {
+    handlers.setState(Usuarios);
+  }, [isLoading, Usuarios]);
+
   if (Usuarios && Usuarios.length > 0) {
-    rows = Usuarios.map((row: IUsuario, index: any) => {
+    rows = values?.map((row: IUsuario, index: number) => {
       return (
         <tr key={row.id}>
           <td>{row.nombre}</td>
@@ -44,25 +63,24 @@ export function ShowUsersTable2() {
           <td>{row.rol?.nombre}</td>
           <td>{row.oficina?.nombre}</td>
           <td>{row.area?.nombre}</td>
-          {/* <td>
+          <td>
             <Checkbox
               checked={row.activo}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                //  handlers.setItemProp(index, 'activo', event.currentTarget.checked)
                 handlers.setItemProp(index, 'activo', event.currentTarget.checked);
                 row.activo ? deleteUser(row.id) : reactiveUser(row.id);
               }}
             />
-          </td> */}
+          </td>
         </tr>
       );
     });
   }
 
   return error ? (
-    <Title order={5}>Ha ocurrido un error, intente más tarde</Title>
+    <Error />
   ) : isLoading ? (
-    <Title order={3}>Cargando...</Title>
+    <Loading />
   ) : (
     Usuarios && (
       <Table highlightOnHover>

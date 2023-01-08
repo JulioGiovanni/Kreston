@@ -14,7 +14,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import Link from 'next/link';
-import { useContext, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import prisma from '../../../db';
 import Layout from '../../../components/Layout/Layout';
 import { useForm } from '@mantine/form';
@@ -22,8 +22,9 @@ import { useForm } from '@mantine/form';
 import { ErrorsContext } from '../../../context/Errors';
 import { createNewOficina } from '../../../services/oficina.service';
 import { useAllOffice } from '../../../hooks/useOffice';
+import Loading from '../../../components/UI/Loading';
 
-const index = (props) => {
+const Oficinas: FC = (props) => {
   const { Oficinas, isLoading, error } = useAllOffice();
   const [openedModal, setOpenedModal] = useState(false);
   const { setNewError, removeError } = useContext(ErrorsContext);
@@ -81,9 +82,7 @@ const index = (props) => {
       </div>
       <Space h={30} />
       {isLoading ? (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Title order={3}>Cargando...</Title>
-        </div>
+        <Loading />
       ) : (
         <Grid>
           {Oficinas.map((area: any) => {
@@ -130,4 +129,4 @@ const index = (props) => {
   );
 };
 
-export default index;
+export default Oficinas;

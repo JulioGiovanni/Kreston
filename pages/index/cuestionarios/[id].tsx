@@ -5,46 +5,39 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { Button, Card, Title, Divider } from '@mantine/core';
 import Layout from '../../../components/Layout/Layout';
 import prisma from '../../../db';
-import { useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { ErrorsContext } from '../../../context/Errors/ErrorsContext';
 import { useForm } from '@mantine/form';
 import { PreguntasContext } from '../../../context/Preguntas/PreguntasContext';
 
 import ModalNewPregunta from '../../../components/Preguntas/ModalNewPregunta';
 import PreguntasDraggable from '../../../components/Preguntas/Draggable';
-import { createNewPregunta } from '../../../services/pregunta.service';
+import { createNewPregunta, getAllPreguntas } from '../../../services/pregunta.service';
+import { useRouter } from 'next/router';
+import { UsePregunta } from '../../../hooks/usePregunta';
+import Loading from '../../../components/UI/Loading';
+import HeaderApp from '../../../components/UI/HeaderApp';
 
-// You should use getServerSideProps when:
-// - Only if you need to pre-render a page whose data must be fetched at request time
+const Preguntas: FC = (props) => {
+  //Get the id of the questionary based on the url
+  const router = useRouter();
+  const { id } = router.query;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const preguntas = await prisma.pregunta.findMany({
-    where: { cuestionarioId: Number(ctx.query.id) },
-    orderBy: { posicion: 'asc' },
-  });
-
-  return {
-    props: {
-      preguntas: JSON.parse(JSON.stringify(preguntas)),
-      cuestionarioId: Number(ctx.query.id),
-    },
-  };
-};
-
-const index = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { setNewError } = useContext(ErrorsContext);
   const { preguntas, traerPreguntas, agregarPregunta } = useContext(PreguntasContext);
+  const { Preguntas, isLoading: PrLoading, error: PrError } = UsePregunta(Number(id));
 
-  const [state, handlers] = useListState(preguntas);
+  const [state, handlers] = useListState(Preguntas);
+
   const [openedModal, setOpenedModal] = useState(false);
 
   useEffect(() => {
-    traerPreguntas(props.preguntas);
-  }, []);
+    traerPreguntas(Preguntas);
+  }, [PrLoading, Preguntas]);
 
   useEffect(() => {
-    handlers.setState(preguntas);
-  }, [preguntas]);
+    handlers.setState(Preguntas);
+  }, [PrLoading, Preguntas]);
 
   const reorder = (list: any[], startIndex: number, endIndex: number) => {
     const result = Array.from(list);
@@ -57,19 +50,21 @@ const index = (props: InferGetServerSidePropsType<typeof getServerSideProps>) =>
   const form = useForm({
     initialValues: {
       pregunta: '',
-      cuestionarioId: props.cuestionarioId,
+      cuestionarioId: id,
       preguntaPadre: null,
       posicion: 1,
+      tipoPregunta: '',
+      valorAnidado: '',
+      posiblesRespuestas: [],
     },
   });
   const onSubmit = async (values: any) => {
     try {
       values.posicion = preguntas.length + 1;
-
-      const pregunta = await createNewPregunta(values);
-      agregarPregunta(pregunta.data.data);
-      form.reset();
+      agregarPregunta(values);
+      // form.reset();
     } catch (error: any) {
+      console.log(error);
       setNewError(error.response.data.message, error.response.data.type);
       form.setFieldError(error.response.data.type, error.response.data.message);
     }
@@ -77,22 +72,27 @@ const index = (props: InferGetServerSidePropsType<typeof getServerSideProps>) =>
 
   return (
     <Layout>
-      <Card>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Title order={2}>Cuestionario: </Title>
-          <Button onClick={() => setOpenedModal(true)}>Crear nueva pregunta</Button>
-        </div>
-        <ModalNewPregunta
-          openedModal={openedModal}
-          setOpenedModal={setOpenedModal}
-          onSubmit={onSubmit}
-          form={form}
-        />
-        <Divider my={30} />
-        <PreguntasDraggable state={state} handlers={handlers} reorder={reorder} />
-      </Card>
+      {PrLoading ? (
+        <Loading />
+      ) : (
+        <Card>
+          <HeaderApp
+            title="Cuestionario"
+            openModalFunction={() => setOpenedModal(true)}
+            buttonTitle="Crear nueva pregunta"
+          />
+          <ModalNewPregunta
+            openedModal={openedModal}
+            setOpenedModal={setOpenedModal}
+            onSubmit={onSubmit}
+            form={form}
+          />
+          <Divider my={30} />
+          <PreguntasDraggable state={state} handlers={handlers} reorder={reorder} />
+        </Card>
+      )}
     </Layout>
   );
 };
 
-export default index;
+export default Preguntas;
