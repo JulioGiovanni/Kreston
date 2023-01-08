@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { FC, useContext } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import loginImage from '../../public/images/login-image.png';
@@ -18,7 +18,7 @@ import { useForm } from '@mantine/form';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
-const login = () => {
+const Login: FC = () => {
   const router = useRouter();
   const { message } = useContext(AuthContext);
   const form = useForm({
@@ -49,7 +49,7 @@ const login = () => {
         <Card shadow="md" p="lg" radius="sm">
           <Grid>
             <Grid.Col span={6}>
-              <Image src={loginImage} alt="Login" height={400} />
+              <Image src={loginImage} alt="Login" height={300} />
             </Grid.Col>
             <Grid.Col span={6}>
               <Text size="xl" align="center">
@@ -101,4 +101,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

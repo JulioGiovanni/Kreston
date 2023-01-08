@@ -9,12 +9,12 @@ import { ErrorsProvider } from '../context/Errors';
 import { PreguntasProvider } from '../context/Preguntas';
 import { AuthProvider } from '../context/auth';
 
-interface Props {
+interface AppProps {
   Component: any;
   pageProps: any;
   colorScheme: any;
 }
-export default function App(props) {
+export default function App(props:AppProps) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme);
 
