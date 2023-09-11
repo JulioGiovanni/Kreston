@@ -1,15 +1,12 @@
-import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { NavLink, Text, useMantineTheme } from '@mantine/core';
+import { NavLink, Text } from '@mantine/core';
 
 import { AdminLinks } from '../../utils/ArrayLinks';
 import { IAccordionLinks } from '../../interfaces/links.interface';
-import { useColorScheme } from '@mantine/hooks';
 
 const Links = () => {
   const router = useRouter();
-  //   const colorScheme = useColorScheme();
   const generalStyle = {
     borderRadius: '10px',
     margin: '5px 0',
