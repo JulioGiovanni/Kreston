@@ -1,4 +1,3 @@
-'use client';
 import { Button, Card, Modal, Select, Space, Text, TextInput, Title, Table } from '@mantine/core';
 import { FC, useState, useContext } from 'react';
 import { FiPlus } from 'react-icons/fi';

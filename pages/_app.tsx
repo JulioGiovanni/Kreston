@@ -1,4 +1,3 @@
-'use client';
 import { FC, useState } from 'react';
 import { getCookie, setCookies } from 'cookies-next';
 import { SessionProvider } from 'next-auth/react';

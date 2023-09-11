@@ -17,8 +17,8 @@ interface UserEditFormProps {
 
 const NewUserForm: FC<UserEditFormProps> = ({ setOpenedModal }) => {
   const { Areas, isLoading: ArLoading, isError: ArError } = queryAreas();
-  const { Oficinas, isLoading: OfLoading, isError: OfError } = useAllOffice();
-  const { Roles, isLoading: RoLoading, isError: RoError } = useAllRoles();
+  const { Oficinas, isLoading: OfLoading, error: OfError } = useAllOffice();
+  const { Roles, isLoading: RoLoading, error: RoError } = useAllRoles();
   const { setNewError, removeError } = useContext(ErrorsContext);
   const isMobile = useMediaQuery('(max-width: 755px');
 
@@ -45,7 +45,7 @@ const NewUserForm: FC<UserEditFormProps> = ({ setOpenedModal }) => {
       oficina: 0,
     },
   });
-  
+
   return (
     <>
       {ArLoading || OfLoading || RoLoading ? (

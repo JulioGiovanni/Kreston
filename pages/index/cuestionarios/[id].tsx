@@ -1,4 +1,3 @@
-'use client';
 import { useListState } from '@mantine/hooks';
 
 import { Card, Divider } from '@mantine/core';

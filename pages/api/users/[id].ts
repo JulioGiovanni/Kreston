@@ -25,7 +25,7 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {};
 
 const deactivateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { id } = req.query;
+  const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
   try {
     const user = await prisma.usuario.update({
       where: { id },
@@ -45,11 +45,9 @@ const deactivateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) =
   }
 };
 const reactivateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { id } = req.query;
+  const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
 
   try {
-    //convert the id to number
-
     const user = await prisma.usuario.update({
       where: { id },
       data: {
