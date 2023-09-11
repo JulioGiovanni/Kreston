@@ -14,18 +14,22 @@ import {
 } from '@mantine/core';
 import Link from 'next/link';
 import { useState, useContext, FC } from 'react';
-import Layout from '../../../components/Layout/Layout';
+import Layout from '../../components/Layout/Layout';
 import { useForm } from '@mantine/form';
-import { ErrorsContext } from '../../../context/Errors';
-import { queryAreas } from '../../../ReactQuery/Areas';
-import { useAllOffice } from '../../../ReactQuery/Oficinas';
-import Loading from '../../../components/UI/Loading';
 
-const Areas: FC = (props) => {
+import { ErrorsContext } from '../../context/Errors';
+
+import { createNewArea, getAllAreas } from '../../services/area.service';
+import { queryAreas } from '../../ReactQuery/Areas';
+import { useAllOffice } from '../../ReactQuery/Oficinas';
+import Loading from '../../components/UI/Loading';
+import HeaderApp from '../../components/UI/HeaderApp';
+
+export const Areas: FC = (props) => {
   const [openedModal, setOpenedModal] = useState(false);
   const { colorScheme } = useMantineColorScheme();
   const { setNewError, removeError } = useContext(ErrorsContext);
-  const { Areas, isLoading: ArLoading, isError: ArError } = queryAreas();
+  const { Areas, isLoading: ArLoading, isError } = queryAreas();
   const { Oficinas, isLoading: OfLoading, error: OfError } = useAllOffice();
 
   const form = useForm({
@@ -37,9 +41,6 @@ const Areas: FC = (props) => {
 
   const onSubmitForm = async (values: any) => {
     try {
-      // const newArea = await createNewArea(values);
-      // const Area = newArea.data.data;
-
       form.reset();
       removeError();
 
@@ -80,13 +81,12 @@ const Areas: FC = (props) => {
               </Button>
             </form>
           </Modal>
-
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Title order={2}>Áreas</Title>
-            <Button leftIcon={<FiPlus />} onClick={() => setOpenedModal(true)}>
-              <Text>Agregar área</Text>
-            </Button>
-          </div>
+          <HeaderApp
+            title="Áreas"
+            openModalFunction={() => setOpenedModal(true)}
+            buttonTitle="Agregar área"
+            Icon={FiPlus}
+          />
           <Space h={30} />
 
           <Grid>
@@ -98,7 +98,7 @@ const Areas: FC = (props) => {
                 .join('');
               return (
                 <Grid.Col sm={12} md={6} lg={4} key={area.id}>
-                  <Card style={{ height: 150, padding: 40 }}>
+                  <Card style={{ height: 150, padding: 40 }} withBorder>
                     <Card.Section>
                       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>

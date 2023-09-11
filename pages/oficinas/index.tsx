@@ -13,14 +13,13 @@ import {
 } from '@mantine/core';
 import Link from 'next/link';
 import { FC, useContext, useState } from 'react';
-import prisma from '../../../db';
-import Layout from '../../../components/Layout/Layout';
+import Layout from '../../components/Layout/Layout';
 import { useForm } from '@mantine/form';
 
-import { ErrorsContext } from '../../../context/Errors';
-import { createNewOficina } from '../../../services/oficina.service';
-import { useAllOffice } from '../../../ReactQuery/Oficinas';
-import Loading from '../../../components/UI/Loading';
+import { ErrorsContext } from '../../context/Errors';
+import { createNewOficina } from '../../services/oficina.service';
+import { useAllOffice } from '../../ReactQuery/Oficinas';
+import Loading from '../../components/UI/Loading';
 
 const Oficinas: FC = (props) => {
   const { Oficinas, isLoading, error } = useAllOffice();

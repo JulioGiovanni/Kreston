@@ -16,18 +16,18 @@ import {
   Space,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import Layout from '../../../components/Layout/Layout';
+import Layout from '../../components/Layout/Layout';
 import { FiPlus } from 'react-icons/fi';
-import { ErrorsContext } from '../../../context/Errors';
+import { ErrorsContext } from '../../context/Errors';
 import { useForm } from '@mantine/form';
-import { createNewProyecto } from '../../../services/proyecto.service';
-import { queryAreas } from '../../../ReactQuery/Areas';
-import { useAllProyectos } from '../../../ReactQuery/Proyectos';
-import { useAllOffice } from '../../../ReactQuery/Oficinas';
-import { queryClientes } from '../../../ReactQuery/Clientes';
-import { IProyecto } from '../../../interfaces';
-import Loading from '../../../components/UI/Loading';
-import { queryUsers } from '../../../ReactQuery/Usuarios';
+import { createNewProyecto } from '../../services/proyecto.service';
+import { queryAreas } from '../../ReactQuery/Areas';
+import { useAllProyectos } from '../../ReactQuery/Proyectos';
+import { useAllOffice } from '../../ReactQuery/Oficinas';
+import { queryClientes } from '../../ReactQuery/Clientes';
+import { IProyecto } from '../../interfaces';
+import Loading from '../../components/UI/Loading';
+import { queryUsers } from '../../ReactQuery/Usuarios';
 import { QueryClient } from '@tanstack/react-query';
 
 const useStyles = createStyles((theme) => ({

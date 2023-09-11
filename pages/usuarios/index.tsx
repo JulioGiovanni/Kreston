@@ -1,11 +1,11 @@
 import { Button, Card, Modal, Space, Text, Title } from '@mantine/core';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { FiEdit, FiPlus, FiEye } from 'react-icons/fi';
-import NewUserForm from '../../../components/Users/NewUserForm';
-import { ShowUsersTable2 } from '../../../components/Users/ShowUsersTable2';
-import Layout from '../../../components/Layout/Layout';
+import NewUserForm from '../../components/Users/NewUserForm';
+import { ShowUsersTable2 } from '../../components/Users/ShowUsersTable2';
+import Layout from '../../components/Layout/Layout';
 
-const UsuariosIndex = () => {
+const UsuariosIndex: FC = () => {
   const [openedModal, setOpenedModal] = useState(false);
 
   return (

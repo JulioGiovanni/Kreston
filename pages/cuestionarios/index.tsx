@@ -1,16 +1,16 @@
 import { FC, useState } from 'react';
 import { Button, Card, Modal, Select, Space, Table, Text, Title, MultiSelect } from '@mantine/core';
 import { FiPlus } from 'react-icons/fi';
-import Layout from '../../../components/Layout/Layout';
+import Layout from '../../components/Layout/Layout';
 import { useForm } from '@mantine/form';
-import { useCuestionario } from '../../../ReactQuery/Cuestionario';
-import { useAllProyectos } from '../../../ReactQuery/Proyectos';
-import { ICuestionario } from '../../../interfaces/cuestionario.interface';
-import { IUsuario } from '../../../interfaces/usuario.interface';
-import { createNewCuestionario } from '../../../services/cuestionario.service';
-import Loading from '../../../components/UI/Loading';
+import { useCuestionario } from '../../ReactQuery/Cuestionario';
+import { useAllProyectos } from '../../ReactQuery/Proyectos';
+import { ICuestionario } from '../../interfaces/cuestionario.interface';
+import { IUsuario } from '../../interfaces/usuario.interface';
+import { createNewCuestionario } from '../../services/cuestionario.service';
+import Loading from '../../components/UI/Loading';
 import { useRouter } from 'next/router';
-import { queryUsers } from '../../../ReactQuery/Usuarios';
+import { queryUsers } from '../../ReactQuery/Usuarios';
 
 const Cuestionario: FC = (props) => {
   const { Cuestionario, isLoading: CuLoading, error } = useCuestionario();

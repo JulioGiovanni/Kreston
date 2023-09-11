@@ -14,17 +14,17 @@ import { IArrayLinks } from '../interfaces/links.interface';
 
 export const AdminLinks: IArrayLinks[] = [
   {
-    link: '/index/dashboard',
+    link: '/dashboard',
     text: 'Inicio',
     Icon: FiHome,
   },
   {
-    link: '/index/aceptacion',
+    link: '/aceptacion',
     text: 'Aceptación Y Continuidad',
     Icon: FiCheck,
   },
   {
-    link: '/index/independencias',
+    link: '/independencias',
     text: 'Independencia',
     Icon: FiFolder,
   },
@@ -32,55 +32,55 @@ export const AdminLinks: IArrayLinks[] = [
     text: 'Consultas',
     Icon: FiInfo,
     accordion: true,
-    link: '/index/consultas',
+    link: '/consultas',
     accordionLinks: [
       {
-        link: '/index/consultas/crear',
+        link: '/consultas/crear',
         text: ' Crear',
       },
       {
-        link: '/index/consultas/aprobadas',
+        link: '/consultas/aprobadas',
         text: ' Aprobadas',
       },
       {
-        link: '/index/consultas/rechazadas',
+        link: '/consultas/rechazadas',
         text: ' Rechazadas',
       },
       {
-        link: '/index/consultas/espera',
+        link: '/consultas/espera',
         text: ' En espera',
       },
     ],
   },
   {
-    link: '/index/usuarios',
+    link: '/usuarios',
     text: 'Usuarios',
     Icon: FiUser,
   },
   {
-    link: '/index/areas',
+    link: '/areas',
     text: 'Áreas',
     Icon: FiSquare,
   },
   {
-    link: '/index/oficinas',
+    link: '/oficinas',
     text: 'Oficinas',
     Icon: FiBriefcase,
   },
   {
     text: 'Cuestionario',
     Icon: FiClipboard,
-    link: '/index/cuestionarios',
+    link: '/cuestionarios',
   },
   {
     text: 'Proyectos',
     Icon: FiArchive,
-    link: '/index/proyectos',
+    link: '/proyectos',
   },
   {
     text: 'Clientes',
     Icon: FiUsers,
-    link: '/index/clientes',
+    link: '/clientes',
   },
 ];
 

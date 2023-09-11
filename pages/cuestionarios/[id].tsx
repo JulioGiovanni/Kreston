@@ -1,19 +1,19 @@
 import { useListState } from '@mantine/hooks';
 
 import { Card, Divider } from '@mantine/core';
-import Layout from '../../../components/Layout/Layout';
+import Layout from '../../components/Layout/Layout';
 import { FC, useContext, useEffect, useState } from 'react';
-import { ErrorsContext } from '../../../context/Errors/ErrorsContext';
+import { ErrorsContext } from '../../context/Errors/ErrorsContext';
 import { useForm } from '@mantine/form';
 
-import ModalNewPregunta from '../../../components/Preguntas/ModalNewPregunta';
-import PreguntasDraggable from '../../../components/Preguntas/Draggable';
-import { createNewPregunta, getAllPreguntas } from '../../../services/pregunta.service';
+import ModalNewPregunta from '../../components/Preguntas/ModalNewPregunta';
+import PreguntasDraggable from '../../components/Preguntas/Draggable';
+import { createNewPregunta, getAllPreguntas } from '../../services/pregunta.service';
 import { useRouter } from 'next/router';
-import { UsePregunta } from '../../../ReactQuery/Preguntas';
-import Loading from '../../../components/UI/Loading';
-import HeaderApp from '../../../components/UI/HeaderApp';
-import { IPregunta } from '../../../interfaces/pregunta.interface';
+import { UsePregunta } from '../../ReactQuery/Preguntas';
+import Loading from '../../components/UI/Loading';
+import HeaderApp from '../../components/UI/HeaderApp';
+import { IPregunta } from '../../interfaces/pregunta.interface';
 
 const Preguntas: FC = (props) => {
   //Get the id of the questionary based on the url

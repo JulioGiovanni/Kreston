@@ -1,16 +1,16 @@
 import { Button, Card, Modal, Select, Space, Text, TextInput, Title, Table } from '@mantine/core';
 import { FC, useState, useContext } from 'react';
 import { FiPlus } from 'react-icons/fi';
-import Layout from '../../../components/Layout/Layout';
+import Layout from '../../components/Layout/Layout';
 
 import { useForm } from '@mantine/form';
 
-import { ErrorsContext } from '../../../context/Errors/ErrorsContext';
-import { createNewCliente } from '../../../services/cliente.service';
-import { ICliente } from '../../../interfaces/cliente.interface';
-import HeaderApp from '../../../components/UI/HeaderApp';
-import { queryClientes } from '../../../ReactQuery/Clientes';
-import Loading from '../../../components/UI/Loading';
+import { ErrorsContext } from '../../context/Errors/ErrorsContext';
+import { createNewCliente } from '../../services/cliente.service';
+import { ICliente } from '../../interfaces/cliente.interface';
+import HeaderApp from '../../components/UI/HeaderApp';
+import { queryClientes } from '../../ReactQuery/Clientes';
+import Loading from '../../components/UI/Loading';
 import { QueryClient, useMutation } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();

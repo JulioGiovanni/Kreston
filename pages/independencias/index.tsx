@@ -1,10 +1,8 @@
 import { Card, Tabs } from '@mantine/core';
-import { getSession } from 'next-auth/react';
 import { FC } from 'react';
-import Layout from '../../../components/Layout/Layout';
-import prisma from '../../../db';
+import Layout from '../../components/Layout/Layout';
 
-const Independencias: FC = () => {
+const Independencias: FC = (props) => {
   return (
     <Layout>
       <Card style={{ height: '88vh' }}>
