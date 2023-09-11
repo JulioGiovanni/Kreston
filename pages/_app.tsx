@@ -8,13 +8,17 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { ErrorsProvider } from '../context/Errors';
 import { PreguntasProvider } from '../context/Preguntas';
 import { AuthProvider } from '../context/auth';
+import { ModalsProvider } from '@mantine/modals';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+const queryClient = new QueryClient();
 interface AppProps {
   Component: any;
   pageProps: any;
   colorScheme: any;
 }
-export default function App(props:AppProps) {
+export default function App(props: AppProps) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme);
 
@@ -39,19 +43,24 @@ export default function App(props:AppProps) {
           /> */}
       </Head>
       <SessionProvider>
-        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-          <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-            <AuthProvider>
-              <PreguntasProvider>
-                <NotificationsProvider>
-                  <ErrorsProvider>
-                    <Component {...pageProps} />
-                  </ErrorsProvider>
-                </NotificationsProvider>
-              </PreguntasProvider>
-            </AuthProvider>
-          </MantineProvider>
-        </ColorSchemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+            <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+              <ModalsProvider>
+                <AuthProvider>
+                  <PreguntasProvider>
+                    <NotificationsProvider>
+                      <ErrorsProvider>
+                        <Component {...pageProps} />
+                        <ReactQueryDevtools />
+                      </ErrorsProvider>
+                    </NotificationsProvider>
+                  </PreguntasProvider>
+                </AuthProvider>
+              </ModalsProvider>
+            </MantineProvider>
+          </ColorSchemeProvider>
+        </QueryClientProvider>
       </SessionProvider>
     </>
   );

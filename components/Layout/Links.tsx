@@ -59,7 +59,7 @@ const Links = () => {
               </Text>
             }
             icon={<link.Icon size={18} />}
-            active={router.pathname === link.link}
+            active={router.pathname.includes(link.link!)}
             variant="filled"
             sx={generalStyle}
           />

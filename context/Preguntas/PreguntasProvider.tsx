@@ -36,7 +36,6 @@ export const PreguntasProvider: FC<Props> = ({ children }) => {
     } catch (error) {
       //TODO: Agregar error al state de errores
       //NOTE - Quizá con un toast de error
-      console.log(error);
     }
   };
 

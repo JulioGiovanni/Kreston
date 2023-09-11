@@ -46,7 +46,7 @@ const Layout: FC<LayoutProps> = ({ children, HeaderChildrenComponent, title }) =
           // padding={{sm:"md","lg":"md"}}
           hiddenBreakpoint="sm"
           hidden={!opened}
-          width={{ sm: 250, lg: 300 }}
+          width={{ sm: 200, lg: 200 }}
         >
           <Navbar.Section ml={-10} mr={-10} sx={{ paddingLeft: 20, paddingRight: 20 }}>
             <Space h={20} />

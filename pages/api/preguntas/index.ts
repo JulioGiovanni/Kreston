@@ -12,8 +12,6 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
     case 'POST':
       return createNewPregunta(req, res);
-    case 'PUT':
-      return updateMultiplePositionsPregunta(req, res);
     default:
       res.status(405).json({ message: 'Method not allowed' });
       break;
@@ -58,37 +56,6 @@ const createNewPregunta = async (req: NextApiRequest, res: NextApiResponse<Data>
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({
-      message: 'error',
-      data: error,
-    });
-  }
-};
-
-const updatePositionPregunta = async (id: number, posicion: number) => {
-  try {
-    const pregunta = await prisma.pregunta.update({
-      where: { id },
-      data: { posicion },
-    });
-  } catch (error) {
-    return error;
-  }
-};
-
-const updateMultiplePositionsPregunta = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  try {
-    const data = req.body;
-    const preguntas = await Promise.all(
-      data.map((pregunta: IPregunta, index: number) =>
-        updatePositionPregunta(pregunta.id, index + 1)
-      )
-    );
-    return res.status(200).json({
-      message: 'ok',
-      data: preguntas,
-    });
-  } catch (error) {
     return res.status(500).json({
       message: 'error',
       data: error,

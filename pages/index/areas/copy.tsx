@@ -10,7 +10,6 @@ import {
   Title,
   Modal,
   TextInput,
-  Center,
   Select,
   useMantineColorScheme,
 } from '@mantine/core';
@@ -18,21 +17,18 @@ import Link from 'next/link';
 import { useState, useContext, FC } from 'react';
 import Layout from '../../../components/Layout/Layout';
 import { useForm } from '@mantine/form';
-import useSWRMutation from 'swr/mutation';
 import { ErrorsContext } from '../../../context/Errors';
-
-import { createNewArea } from '../../../services/area.service';
-import { useAllAreas } from '../../../hooks/useArea';
-import { useAllOffice } from '../../../hooks/useOffice';
+import { queryAreas } from '../../../ReactQuery/Areas';
+import { useAllOffice } from '../../../ReactQuery/Oficinas';
 import Loading from '../../../components/UI/Loading';
 
 const Areas: FC = (props) => {
   const [openedModal, setOpenedModal] = useState(false);
   const { colorScheme } = useMantineColorScheme();
   const { setNewError, removeError } = useContext(ErrorsContext);
-  const { Areas, isLoading: ArLoading, error: ArError } = useAllAreas();
+  const { Areas, isLoading: ArLoading, isError: ArError } = queryAreas();
   const { Oficinas, isLoading: OfLoading, error: OfError } = useAllOffice();
-  const { trigger, isMutating } = useSWRMutation('/api/areas', sendRequest);
+
   const form = useForm({
     initialValues: {
       nombre: '',
@@ -40,18 +36,11 @@ const Areas: FC = (props) => {
     },
   });
 
-  async function sendRequest(url: string, { arg }: any) {
-    return fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(arg.arg),
-    });
-  }
-
   const onSubmitForm = async (values: any) => {
     try {
       // const newArea = await createNewArea(values);
       // const Area = newArea.data.data;
-      trigger({ arg: values });
+
       form.reset();
       removeError();
 
@@ -63,7 +52,7 @@ const Areas: FC = (props) => {
   };
   return (
     <Layout>
-      {ArLoading || isMutating || OfLoading ? (
+      {ArLoading || OfLoading ? (
         <Loading />
       ) : (
         <>

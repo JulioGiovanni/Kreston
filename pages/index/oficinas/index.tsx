@@ -21,7 +21,7 @@ import { useForm } from '@mantine/form';
 
 import { ErrorsContext } from '../../../context/Errors';
 import { createNewOficina } from '../../../services/oficina.service';
-import { useAllOffice } from '../../../hooks/useOffice';
+import { useAllOffice } from '../../../ReactQuery/Oficinas';
 import Loading from '../../../components/UI/Loading';
 
 const Oficinas: FC = (props) => {
@@ -85,19 +85,19 @@ const Oficinas: FC = (props) => {
         <Loading />
       ) : (
         <Grid>
-          {Oficinas.map((area: any) => {
+          {Oficinas.map((oficina: any) => {
             //Get the first letter of every word in the name
-            const initials = area.nombre
+            const initials = oficina.nombre
               .split(' ')
               .map((word: any) => word[0])
               .join('');
 
             return (
-              <Grid.Col sm={12} md={6} lg={4}>
+              <Grid.Col sm={12} md={6} lg={4} key={oficina.id}>
                 <Card style={{ height: 150, padding: 40 }}>
                   <Card.Section>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Title order={3}>{area.nombre}</Title>
+                      <Title order={3}>{oficina.nombre}</Title>
 
                       <Avatar radius="xl" size={'lg'}>
                         <div
@@ -107,7 +107,7 @@ const Oficinas: FC = (props) => {
                             {initials}
                           </Text>
                           <Text size="xs" color={'dimmed'}>
-                            {area.oficina}
+                            {oficina.oficina}
                           </Text>
                         </div>
                       </Avatar>
@@ -115,7 +115,7 @@ const Oficinas: FC = (props) => {
                   </Card.Section>
 
                   <Card.Section mt={20}>
-                    <Link href={`/oficinas/${area.id}`} passHref>
+                    <Link href={`/oficinas/${oficina.id}`} passHref>
                       <Button fullWidth>Ver Más</Button>
                     </Link>
                   </Card.Section>

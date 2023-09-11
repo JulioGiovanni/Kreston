@@ -1,28 +1,13 @@
 import { Card, Tabs } from '@mantine/core';
 import { getSession } from 'next-auth/react';
+import { FC } from 'react';
 import Layout from '../../../components/Layout/Layout';
 import prisma from '../../../db';
-import { InferGetServerSidePropsType } from "next";
 
-export const getServerSideProps = async (ctx: any) => {
-  const session = await getSession(ctx);
-
-  const proyectos = await prisma.proyecto.findMany({
-    where: {
-      usuarioId: session.user.id,
-    },
-  });
-  return {
-    props: {
-      proyectos: JSON.parse(JSON.stringify(proyectos)),
-    },
-  };
-};
-
-const index = ({ proyectos }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Independencias: FC = () => {
   return (
     <Layout>
-      <Card style={{ height: 400 }}>
+      <Card style={{ height: '88vh' }}>
         <Tabs color={'dark'} defaultValue="Proyectos" variant="pills">
           <Tabs.List grow position="center">
             <Tabs.Tab value="Proyectos">Proyectos</Tabs.Tab>
@@ -34,4 +19,4 @@ const index = ({ proyectos }: InferGetServerSidePropsType<typeof getServerSidePr
   );
 };
 
-export default index;
+export default Independencias;

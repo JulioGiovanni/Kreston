@@ -6,9 +6,9 @@ import { useForm } from '@mantine/form';
 import { ErrorsContext } from '../../context/Errors/ErrorsContext';
 
 import { createNewUser } from '../../services/usuarios.service';
-import { useAllAreas } from '../../hooks/useArea';
-import { useAllOffice } from '../../hooks/useOffice';
-import { useAllRoles } from '../../hooks/useRol';
+import { queryAreas } from '../../ReactQuery/Areas';
+import { useAllOffice } from '../../ReactQuery/Oficinas';
+import { useAllRoles } from '../../ReactQuery/Rol';
 import Loading from '../UI/Loading';
 
 interface UserEditFormProps {
@@ -16,9 +16,9 @@ interface UserEditFormProps {
 }
 
 const NewUserForm: FC<UserEditFormProps> = ({ setOpenedModal }) => {
-  const { Areas, isLoading: ArLoading, error: ArError } = useAllAreas();
-  const { Oficinas, isLoading: OfLoading, error: OfError } = useAllOffice();
-  const { Roles, isLoading: RoLoading, error: RoError } = useAllRoles();
+  const { Areas, isLoading: ArLoading, isError: ArError } = queryAreas();
+  const { Oficinas, isLoading: OfLoading, isError: OfError } = useAllOffice();
+  const { Roles, isLoading: RoLoading, isError: RoError } = useAllRoles();
   const { setNewError, removeError } = useContext(ErrorsContext);
   const isMobile = useMediaQuery('(max-width: 755px');
 
@@ -45,7 +45,7 @@ const NewUserForm: FC<UserEditFormProps> = ({ setOpenedModal }) => {
       oficina: 0,
     },
   });
-
+  
   return (
     <>
       {ArLoading || OfLoading || RoLoading ? (
@@ -73,7 +73,6 @@ const NewUserForm: FC<UserEditFormProps> = ({ setOpenedModal }) => {
             name="nombre"
             id="nombre"
             placeholder="Juan Pérez"
-            style={{ minWidth: isMobile ? 220 : 300 }}
             variant="default"
             {...form.getInputProps('nombre')}
           />
@@ -90,7 +89,6 @@ const NewUserForm: FC<UserEditFormProps> = ({ setOpenedModal }) => {
             name="correo"
             id="correo"
             placeholder="email@email.com"
-            style={{ minWidth: isMobile ? 220 : 300, marginTop: 15 }}
             variant="default"
             {...form.getInputProps('correo')}
           />
@@ -101,7 +99,6 @@ const NewUserForm: FC<UserEditFormProps> = ({ setOpenedModal }) => {
             name="contrasena"
             id="contrasena"
             placeholder="*******"
-            style={{ minWidth: isMobile ? 220 : 300, marginTop: 15 }}
             variant="default"
             {...form.getInputProps('contrasena')}
           />

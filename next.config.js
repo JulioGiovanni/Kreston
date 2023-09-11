@@ -1,8 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-    serverComponentsExternalPackages: ['prisma'],
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/index/dashboard',
+        permanent: true,
+      },
+    ];
   },
 };
 

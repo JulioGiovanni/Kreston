@@ -1,9 +1,23 @@
-import { ActionIcon, createStyles, Text } from '@mantine/core';
-import { PlusIcon } from '@modulz/radix-icons';
+import {
+  ActionIcon,
+  createStyles,
+  Popover,
+  Text,
+  Button,
+  TextInput,
+  Select,
+  Space,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { PlusIcon, Cross2Icon } from '@modulz/radix-icons';
 import { IconGripVertical } from '@tabler/icons';
 import { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import PreguntaAnidada from './PreguntaAnidada';
+import { IPregunta } from '../../interfaces/pregunta.interface';
+import { openModal, closeAllModals } from '@mantine/modals';
+import ModalEditPregunta from './ModalEditPregunta';
+import { useForm } from '@mantine/form';
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -50,16 +64,23 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+const editModal = (item: IPregunta) =>
+  openModal({
+    title: 'Editar Pregunta:',
+    children: <ModalEditPregunta item={item} closeModal={closeAllModals} />,
+  });
+
 const ItemDraggable = ({ item, index, subQuestions }: any) => {
+  const [opened, { close, open }] = useDisclosure(false);
   const { classes, cx } = useStyles();
   const subQuestion = subQuestions.find(
-    (subQuestion: any) => subQuestion?.preguntaPadre === item.id
+    (subQuestion: any) => subQuestion?.preguntaPadre === item?.id
   );
   const found = subQuestion ? true : false;
   const [preguntaAnidada, setPreguntaAnidada] = useState(found);
 
   return (
-    <Draggable key={item.id} index={index} draggableId={item.id.toString()}>
+    <Draggable key={item?.id} index={index} draggableId={item?.id.toString()}>
       {(provided, snapshot) => (
         <div
           className={cx(classes.item, { [classes.itemDragging]: snapshot.isDragging })}
@@ -75,27 +96,33 @@ const ItemDraggable = ({ item, index, subQuestions }: any) => {
           {/* Element */}
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              {/* <div onClick={() => console.log('click')}> */}
-              <Text onClick={() => console.log('click')}>{item.pregunta}</Text>
-              {/* </div> */}
+              <Button fullWidth variant="subtle" onClick={() => editModal(item)}>
+                <Text>{item?.pregunta}</Text>
+              </Button>
 
-              <ActionIcon
-                onClick={() => setPreguntaAnidada(!preguntaAnidada)}
-                color="green"
-                variant="filled"
-                size="sm"
-                radius="md"
-              >
-                <PlusIcon />
-              </ActionIcon>
+              <Popover width={'auto'} position="bottom" withArrow shadow="md" opened={opened}>
+                <Popover.Target>
+                  <ActionIcon
+                    onClick={() => setPreguntaAnidada(!preguntaAnidada)}
+                    color={preguntaAnidada ? 'red' : 'green'}
+                    variant="filled"
+                    size="sm"
+                    radius="lg"
+                    onMouseEnter={open}
+                    onMouseLeave={close}
+                  >
+                    {preguntaAnidada ? <Cross2Icon /> : <PlusIcon />}
+                  </ActionIcon>
+                </Popover.Target>
+                <Popover.Dropdown sx={{ pointerEvents: 'none' }}>
+                  <Text size="sm">Crear sub pregunta</Text>
+                </Popover.Dropdown>
+              </Popover>
             </div>
 
             <div>
               {preguntaAnidada && (
-                <PreguntaAnidada
-                  subQuestion={subQuestion}
-                  setPreguntaAnidada={setPreguntaAnidada}
-                />
+                <PreguntaAnidada preguntaPadre={item} subQuestion={subQuestion} />
               )}
             </div>
           </div>

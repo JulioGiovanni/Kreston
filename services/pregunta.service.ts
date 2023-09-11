@@ -6,7 +6,12 @@ export const getAllPreguntas = async (id: number) => {
 
   return data.data;
 };
-export const createNewPregunta = (pregunta: IPregunta) => axios.post('/api/preguntas', pregunta);
+export const createNewPregunta = async (pregunta: IPregunta) => {
+  const data = await axios.post('/api/preguntas', pregunta);
+  return data.data;
+};
 export const updatePregunta = (pregunta: IPregunta) =>
-  axios.put(`/api/preguntas/${pregunta.id}`, pregunta);
-export const updatePositionPregunta = (data: IPregunta[]) => axios.put(`/api/preguntas/`, data);
+  axios.patch(`/api/preguntas/${pregunta.id}`, pregunta);
+export const updatePositionPregunta = (data: IPregunta[]) =>
+  axios.put(`/api/preguntas/${data[0].cuestionarioId}`, data);
+export const deletePregunta = (id: number) => axios.delete(`/api/preguntas/${id}`);

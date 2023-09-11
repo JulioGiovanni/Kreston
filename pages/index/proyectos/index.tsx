@@ -22,13 +22,14 @@ import { FiPlus } from 'react-icons/fi';
 import { ErrorsContext } from '../../../context/Errors';
 import { useForm } from '@mantine/form';
 import { createNewProyecto } from '../../../services/proyecto.service';
-import { useAllUsers } from '../../../hooks/useUser';
-import { useAllAreas } from '../../../hooks/useArea';
-import { useAllProyectos } from '../../../hooks/useProyecto';
-import { useAllOffice } from '../../../hooks/useOffice';
-import { useAllClient } from '../../../hooks/useClient';
+import { queryAreas } from '../../../ReactQuery/Areas';
+import { useAllProyectos } from '../../../ReactQuery/Proyectos';
+import { useAllOffice } from '../../../ReactQuery/Oficinas';
+import { queryClientes } from '../../../ReactQuery/Clientes';
 import { IProyecto } from '../../../interfaces';
 import Loading from '../../../components/UI/Loading';
+import { queryUsers } from '../../../ReactQuery/Usuarios';
+import { QueryClient } from '@tanstack/react-query';
 
 const useStyles = createStyles((theme) => ({
   rowSelected: {
@@ -42,11 +43,11 @@ const useStyles = createStyles((theme) => ({
 const Proyectos: FC = (props) => {
   const [openedModal, setOpenedModal] = useState(false);
   const { setNewError, removeError } = useContext(ErrorsContext);
-  const { Usuarios, isLoading: UsLoading, error: UsError } = useAllUsers();
-  const { Areas, isLoading: ArLoading, error: ArError } = useAllAreas();
+  const { Usuarios, isLoading: UsLoading, isError: UsError } = queryUsers();
+  const { Areas, isLoading: ArLoading, isError: ArError } = queryAreas();
   const { Proyectos, isLoading: PrLoading, error: PrError } = useAllProyectos();
   const { Oficinas, isLoading: OfLoading, error: OfError } = useAllOffice();
-  const { Clientes, isLoading: ClLoading, error: ClError } = useAllClient();
+  const { Clientes, isLoading: ClLoading, isError: ClError } = queryClientes();
   let rows = [];
   const form = useForm({
     initialValues: {

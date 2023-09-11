@@ -37,6 +37,7 @@ const getAllCuestionarios = async (req: NextApiRequest, res: NextApiResponse<Dat
   }
 };
 const createNewCuestionario = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  console.log(req.body.data);
   try {
     const { usuarios, proyecto } = req.body.data;
 
@@ -51,6 +52,7 @@ const createNewCuestionario = async (req: NextApiRequest, res: NextApiResponse<D
       data: cuestionario,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: 'error',
       data: error,

@@ -21,8 +21,8 @@ import { useForm } from '@mantine/form';
 import { ErrorsContext } from '../../../context/Errors';
 
 import { createNewArea, getAllAreas } from '../../../services/area.service';
-import { useAllAreas } from '../../../hooks/useArea';
-import { useAllOffice } from '../../../hooks/useOffice';
+import { queryAreas } from '../../../ReactQuery/Areas';
+import { useAllOffice } from '../../../ReactQuery/Oficinas';
 import Loading from '../../../components/UI/Loading';
 import HeaderApp from '../../../components/UI/HeaderApp';
 
@@ -30,7 +30,7 @@ export const Areas: FC = (props) => {
   const [openedModal, setOpenedModal] = useState(false);
   const { colorScheme } = useMantineColorScheme();
   const { setNewError, removeError } = useContext(ErrorsContext);
-  const { Areas, isLoading: ArLoading, error: ArError, mutate } = useAllAreas();
+  const { Areas, isLoading: ArLoading, isError } = queryAreas();
   const { Oficinas, isLoading: OfLoading, error: OfError } = useAllOffice();
 
   const form = useForm({
@@ -40,20 +40,8 @@ export const Areas: FC = (props) => {
     },
   });
 
-  //TODO: Verificar si hay alguna otra manera de hacer swr mutate sin esto
-  const createAreaSWR = async (values: any) => {
-    await createNewArea(values);
-    return await getAllAreas();
-  };
-
   const onSubmitForm = async (values: any) => {
     try {
-      mutate(createAreaSWR(values), {
-        optimisticData: [...Areas, values],
-        populateCache: true,
-        revalidate: false,
-        rollbackOnError: true,
-      });
       form.reset();
       removeError();
 
