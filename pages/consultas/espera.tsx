@@ -1,8 +1,7 @@
-import React from 'react';
-import Layout from '../../components/Layout/Layout';
+import { FC } from 'react';
 
-const Espera = () => {
-  return <Layout>Espera</Layout>;
+const Espera: FC = () => {
+  return <>Espera</>;
 };
 
 export default Espera;

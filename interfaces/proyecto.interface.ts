@@ -1,4 +1,4 @@
-import { IUsuario, IArea, IOficina } from './';
+import { IUsuario, IArea, IOficina, ICliente } from './';
 export interface IProyecto {
   id: number;
   usuarioId: number;
@@ -13,6 +13,7 @@ export interface IProyecto {
   fechaInicio: string;
   fechaFin: string;
   clienteId: number;
+  cliente?: ICliente;
   createdAt: string;
   updatedAt: string;
 }

@@ -2,23 +2,13 @@ import { FC, useContext } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import loginImage from '../../public/images/login-image.png';
-import {
-  Center,
-  Grid,
-  Card,
-  PasswordInput,
-  TextInput,
-  Button,
-  Space,
-  Anchor,
-  Text,
-} from '@mantine/core';
+import { Center, Card, PasswordInput, TextInput, Button, Space, Anchor, Text } from '@mantine/core';
 import { AuthContext } from '../../context/auth/AuthContext';
 import { useForm } from '@mantine/form';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
-const Login: FC = () => {
+const Login: FC = (props) => {
   const router = useRouter();
   const { message } = useContext(AuthContext);
   const form = useForm({
@@ -26,11 +16,6 @@ const Login: FC = () => {
       correo: '',
       password: '',
     },
-
-    // validationRules: {
-    //     correo: (value) => value.trim().length > 5,
-    //     password: (value) => value.trim().length >= 6,
-    // }
   });
   const errorMessageType = message?.split('_')[0];
   const errorMessage = message?.split('_')[1];
@@ -40,63 +25,57 @@ const Login: FC = () => {
   const onSubmitForm = async ({ correo, password }: any) => {
     await signIn('credentials', { correo, password });
     form.reset();
-    router.replace('/index/dashboard');
+    router.replace('/dashboard');
   };
 
   return (
-    <Center style={{ marginTop: '150px' }}>
-      <div style={{ width: '800px' }}>
-        <Card shadow="md" p="lg" radius="sm">
-          <Grid>
-            <Grid.Col span={6}>
-              <Image src={loginImage} alt="Login" height={300} />
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Text size="xl" align="center">
-                <b>Bienvenido</b>
-              </Text>
-              <Text size="xl" align="center">
-                Inicie Sesión para continuar
-              </Text>
+    <Center mx={'auto'}>
+      <Card shadow="md" p="lg" radius="sm">
+        <div style={{ display: 'flex', gap: '50px' }}>
+          <Image src={loginImage} alt="Login" height={500} />
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+            <Text fz={35}>
+              <b>Bienvenido</b>
+            </Text>
+            <Text fz={30}>Inicie Sesión para continuar</Text>
 
-              <form onSubmit={form.onSubmit(onSubmitForm)}>
-                <TextInput
-                  // icon={<MailIcon />}
-                  label="Correo"
-                  placeholder="email@email.com"
-                  radius="sm"
-                  required
-                  {...form.getInputProps('correo')}
-                  // onChange={(event) => form.setFieldValue('correo', event.currentTarget.value)}
-                  error={form.errors.correo || (errorMessageCorreo && errorMessage)}
-                />
-                <Space h="md" />
-                <PasswordInput
-                  placeholder="Contraseña"
-                  label="Contraseña"
-                  radius="sm"
-                  required
-                  {...form.getInputProps('password')}
-                  // onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                  error={form.errors.password || (errorMessageContrasena && errorMessage)}
-                />
+            <form onSubmit={form.onSubmit(onSubmitForm)}>
+              <TextInput
+                // icon={<MailIcon />}
+                label="Correo"
+                placeholder="email@email.com"
+                radius="sm"
+                size="lg"
+                required
+                {...form.getInputProps('correo')}
+                error={form.errors.correo || (errorMessageCorreo && errorMessage)}
+              />
+              <Space h="md" />
+              <PasswordInput
+                placeholder="Contraseña"
+                label="Contraseña"
+                radius="sm"
+                size="lg"
+                required
+                {...form.getInputProps('password')}
+                error={form.errors.password || (errorMessageContrasena && errorMessage)}
+              />
 
-                <Button color="green" radius="sm" fullWidth mt="lg" type="submit">
-                  Iniciar Sesión
-                </Button>
-              </form>
+              <Button size="md" color="green" radius="sm" fullWidth mt="lg" type="submit">
+                Iniciar Sesión
+              </Button>
+            </form>
 
-              <Center mt={'lg'}>
-                <Link href="/auth/forgot" passHref>
-                  <Anchor component="button" underline={false}>
-                    ¿Olvidaste tu contraseña?
-                  </Anchor>
-                </Link>
-              </Center>
-            </Grid.Col>
-          </Grid>
-        </Card>
-      </div>
+            <Center mt={'lg'}>
+              <Link href="/auth/forgot" passHref>
+                <Anchor component="button" size={'xl'} underline="never">
+                  ¿Olvidaste tu contraseña?
+                </Anchor>
+              </Link>
+            </Center>
+          </div>
+        </div>
+      </Card>
     </Center>
   );
 };

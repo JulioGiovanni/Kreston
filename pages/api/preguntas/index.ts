@@ -19,7 +19,6 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 }
 
 const createNewPregunta = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  console.log(req.body);
   try {
     const {
       pregunta,
@@ -55,7 +54,6 @@ const createNewPregunta = async (req: NextApiRequest, res: NextApiResponse<Data>
       data: newPregunta,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: 'error',
       data: error,

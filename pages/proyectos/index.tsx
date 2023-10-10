@@ -1,212 +1,122 @@
 import React, { FC, useContext, useState } from 'react';
-import {
-  createStyles,
-  Table,
-  Checkbox,
-  ScrollArea,
-  Group,
-  Avatar,
-  Text,
-  Card,
-  Title,
-  Button,
-  Modal,
-  TextInput,
-  Select,
-  Space,
-} from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
-import Layout from '../../components/Layout/Layout';
+import { Table, Group, Text, Card, Modal, Space } from '@mantine/core';
 import { FiPlus } from 'react-icons/fi';
 import { ErrorsContext } from '../../context/Errors';
-import { useForm } from '@mantine/form';
-import { createNewProyecto } from '../../services/proyecto.service';
-import { queryAreas } from '../../ReactQuery/Areas';
-import { useAllProyectos } from '../../ReactQuery/Proyectos';
-import { useAllOffice } from '../../ReactQuery/Oficinas';
-import { queryClientes } from '../../ReactQuery/Clientes';
-import { IProyecto } from '../../interfaces';
-import Loading from '../../components/UI/Loading';
-import { queryUsers } from '../../ReactQuery/Usuarios';
-import { QueryClient } from '@tanstack/react-query';
+import {
+  queryAreas,
+  queryProyectos,
+  queryOficinas,
+  queryClientes,
+  queryUsers,
+  performSearch,
+  mutateProyectos,
+} from '../../ReactQuery/';
 
-const useStyles = createStyles((theme) => ({
-  rowSelected: {
-    backgroundColor:
-      theme.colorScheme === 'dark'
-        ? theme.fn.rgba(theme.colors[theme.primaryColor][7], 0.2)
-        : theme.colors[theme.primaryColor][0],
-  },
-}));
+import { IProyecto } from '../../interfaces';
+import LoadingTable from '../../components/common/loaders/LoadingTable';
+import EmptyComponent from '../../components/common/Empty';
+import { ButtonTypes } from '../../interfaces/form.interface';
+import HeaderApp from '../../components/UI/HeaderApp';
+import { FormGenerator } from '../../components/common/FormGenerator';
+import { generateProyectosForm } from '../../utils/forms/Proyecto.form';
+import { proyectoSchema } from '../../schemas/proyectoSchema';
+import Error from '../../components/UI/Error';
+import { createNewProyecto } from '../../services/proyecto.service';
 
 const Proyectos: FC = (props) => {
+  const [Nombre, setNombre] = useState('');
   const [openedModal, setOpenedModal] = useState(false);
   const { setNewError, removeError } = useContext(ErrorsContext);
   const { Usuarios, isLoading: UsLoading, isError: UsError } = queryUsers();
   const { Areas, isLoading: ArLoading, isError: ArError } = queryAreas();
-  const { Proyectos, isLoading: PrLoading, error: PrError } = useAllProyectos();
-  const { Oficinas, isLoading: OfLoading, error: OfError } = useAllOffice();
+  const { Proyectos, isLoading: PrLoading, isError: PrError } = queryProyectos();
+  const { Oficinas, isLoading: OfLoading, isError: OfError } = queryOficinas();
   const { Clientes, isLoading: ClLoading, isError: ClError } = queryClientes();
+  const stillLoading = UsLoading || ArLoading || ClLoading || OfLoading || PrLoading;
+  const anyError = UsError || ArError || ClError || OfError || PrError;
   let rows = [];
-  const form = useForm({
-    initialValues: {
-      usuario: '',
-      oficina: '',
-      area: '',
-      nombre: '',
-      descripcion: '',
-      estado: '',
-      cliente: '',
-      fechaInicio: '',
-    },
-  });
-  const onSubmitForm = async (values: any) => {
-    try {
-      const proyecto = await createNewProyecto(values);
-      form.reset();
-      setOpenedModal(false);
-      removeError();
-    } catch (error: any) {
-      setNewError(error.response.data.message, error.response.data.type);
-      form.setFieldError(error.response.data.type, error.response.data.message);
-    }
-  };
+
   if (!PrLoading) {
     rows = Proyectos.map((proyecto: IProyecto) => {
       return (
-        <tr key={proyecto.id}>
-          <td>{proyecto.nombre}</td>
-          <td>{proyecto.descripcion}</td>
-          <td>
-            <Group spacing="sm">
-              <Text size="sm" weight={500}>
+        <Table.Tr key={proyecto.id}>
+          <Table.Td>{proyecto.nombre}</Table.Td>
+          <Table.Td>{proyecto.cliente?.nombre}</Table.Td>
+          <Table.Td>
+            <Group>
+              <Text size="sm" fw={500}>
                 {proyecto.usuario?.nombre}
               </Text>
             </Group>
-          </td>
-          <td>{proyecto.area?.nombre}</td>
-          <td>{proyecto.oficina?.nombre}</td>
-        </tr>
+          </Table.Td>
+          <Table.Td>{proyecto.area?.nombre}</Table.Td>
+          <Table.Td>{proyecto.oficina?.nombre}</Table.Td>
+        </Table.Tr>
       );
     });
   }
-
   return (
-    <Layout>
-      {UsLoading || ArLoading || ClLoading || OfLoading || PrLoading ? (
-        <Loading />
-      ) : (
-        <>
-          <Modal
-            opened={openedModal}
-            onClose={() => setOpenedModal(false)}
-            title={'Agregar Proyecto'}
-          >
-            {/* Usuario,nombre,descripción y estado */}
-            <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <TextInput
-                label="Nombre del proyecto"
-                name="nombre"
-                {...form.getInputProps('nombre')}
-                required
-              />
-              <TextInput
-                label="Descripción"
-                name="descripcion"
-                {...form.getInputProps('descripcion')}
-                required
-              />
-              <Select
-                data={Clientes.map((cliente: any) => ({
-                  label: cliente.nombre,
-                  value: cliente.id,
-                }))}
-                label="Seleccione un cliente para este proyecto"
-                name="area"
-                {...form.getInputProps('cliente')}
-                required
-              />
-              <Select
-                data={Usuarios.map((user: any) => ({ label: user.nombre, value: user.id }))}
-                label="Seleccione un usuario para este proyecto"
-                name="usuario"
-                {...form.getInputProps('usuario')}
-                required
-              />
-              <Select
-                data={Oficinas.map((oficina: any) => ({
-                  label: oficina.nombre,
-                  value: oficina.id,
-                }))}
-                label="Seleccione una oficina para este proyecto"
-                name="oficina"
-                {...form.getInputProps('oficina')}
-                required
-              />
-              <Select
-                data={Areas.map((area: any) => ({ label: area.nombre, value: area.id }))}
-                label="Seleccione un area para este proyecto"
-                name="area"
-                {...form.getInputProps('area')}
-                required
-              />
-              <DatePicker
-                description="Si no se selecciona una fecha, se creara con la fecha actual"
-                label="Fecha de inicio de proyecto"
-                placeholder="Selecciona una fecha"
-                {...form.getInputProps('fechaInicio')}
-              />
-              <Select
-                description="Si no se selecciona un estado, se tomará por defecto el estado NUEVO"
-                data={[
-                  { label: 'Nuevo', value: 'NUEVO' },
-                  { label: 'En Progreso', value: 'EN_PROGRESO' },
-                  { label: 'Finalizado', value: 'FINALIZADO' },
-                ]}
-                label="Seleccione un estado para este proyecto"
-                name="estado"
-                {...form.getInputProps('estado')}
-              />
-              <Button my="md" fullWidth type="submit" color="primary">
-                Crear Proyecto
-              </Button>
-            </form>
-          </Modal>
+    <>
+      {anyError && <Error />}
+      <Modal opened={openedModal} onClose={() => setOpenedModal(false)} title={'Agregar Proyecto'}>
+        <FormGenerator
+          fields={generateProyectosForm(Clientes, Usuarios, Oficinas, Areas)}
+          formSchema={proyectoSchema}
+          buttons={[
+            {
+              label: 'Cancelar',
+              type: ButtonTypes.RESET,
+              disabled: false,
+            },
+            {
+              label: 'Guardar',
+              type: ButtonTypes.SUBMIT,
+              disabled: false,
+            },
+          ]}
+          mutationFn={createNewProyecto}
+          mutationKey={'createProyecto'}
+          mutationInterface={{}}
+          setOpenedModal={setOpenedModal}
+          loading={stillLoading}
+        />
+      </Modal>
 
-          <Card>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Title order={2}>Proyectos</Title>
-              <Button leftIcon={<FiPlus />} onClick={() => setOpenedModal(true)}>
-                <Text>Crear un nuevo proyecto</Text>
-              </Button>
-            </div>
-            <Space h="lg" />
-            <ScrollArea>
-              <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
-                <thead>
-                  <tr>
-                    {/* <th style={{ width: 40 }}>
-                    <Checkbox
-                      onChange={toggleAll}
-                      checked={selection.length === data.length}
-                      indeterminate={selection.length > 0 && selection.length !== data.length}
-                      transitionDuration={0}
-                    />
-                  </th> */}
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Usuario</th>
-                    <th>Área</th>
-                    <th>Oficina</th>
-                  </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-              </Table>
-            </ScrollArea>
-          </Card>
-        </>
-      )}
-    </Layout>
+      <Card style={{ height: '90vh' }}>
+        <HeaderApp
+          title="Proyectos"
+          input
+          searchPlaceholder="Buscar Proyecto"
+          searchLabel="Buscar Proyecto"
+          searchFunction={performSearch}
+          setSearchValue={setNombre}
+          openModalFunction={() => setOpenedModal(true)}
+          buttonTitle="Agregar Proyecto"
+          searchValue={Nombre}
+          Icon={FiPlus}
+          loading={stillLoading}
+        />
+        <Space h={30} />
+        {UsLoading || ArLoading || ClLoading || OfLoading || PrLoading ? (
+          <LoadingTable />
+        ) : Proyectos.length === 0 && !PrLoading ? (
+          <EmptyComponent />
+        ) : (
+          <Table highlightOnHover verticalSpacing="sm" fs={'lg'}>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Nombre</Table.Th>
+                <Table.Th>Cliente</Table.Th>
+                <Table.Th>Usuario</Table.Th>
+                <Table.Th>Área</Table.Th>
+                <Table.Th>Oficina</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+        )}
+      </Card>
+    </>
   );
 };
 

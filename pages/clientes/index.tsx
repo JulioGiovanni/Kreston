@@ -1,157 +1,163 @@
-import { Button, Card, Modal, Select, Space, Text, TextInput, Title, Table } from '@mantine/core';
-import { FC, useState, useContext } from 'react';
+//React
+import { FC, useState } from 'react';
+
+//Mantine
+import { Card, Modal, Space, Table, Pagination, Select } from '@mantine/core';
+
+//React Icons
 import { FiPlus } from 'react-icons/fi';
-import Layout from '../../components/Layout/Layout';
 
-import { useForm } from '@mantine/form';
-
-import { ErrorsContext } from '../../context/Errors/ErrorsContext';
-import { createNewCliente } from '../../services/cliente.service';
+//Interfaces
 import { ICliente } from '../../interfaces/cliente.interface';
+
+//Components
 import HeaderApp from '../../components/UI/HeaderApp';
-import { queryClientes } from '../../ReactQuery/Clientes';
-import Loading from '../../components/UI/Loading';
-import { QueryClient, useMutation } from '@tanstack/react-query';
 
-const queryClient = new QueryClient();
+//React Query
+import { queryClientesPaginated, queryUsers, performSearch } from '../../ReactQuery';
+
+//Utils
+import { clienteSchema } from '../../schemas/clienteSchema';
+import { ButtonTypes } from '../../interfaces/form.interface';
+import { FormGenerator } from '../../components/common/FormGenerator';
+import LoadingTable from '../../components/common/loaders/LoadingTable';
+import EmptyComponent from '../../components/common/Empty';
+import { generateClienteForm } from '../../utils/forms/Cliente.form';
+
+import { createNewCliente } from '../../services/cliente.service';
+
 const Clientes: FC = (props) => {
-  const { setNewError } = useContext(ErrorsContext);
+  const [Nombre, setNombre] = useState('');
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+
   const [openedModal, setOpenedModal] = useState(false);
-  const { Clientes, isLoading, isError } = queryClientes();
+  const { Clientes, isLoading, isError, total } = queryClientesPaginated(Nombre, page, perPage);
+  const {
+    Usuarios: Socios,
+    isLoading: SociosLoading,
+    isError: SociosError,
+  } = queryUsers(undefined, 3);
+  const {
+    Usuarios: Gerentes,
+    isLoading: GerentesLoading,
+    isError: GerentesError,
+  } = queryUsers(undefined, 2);
+
+  const stillLoading = isLoading || SociosLoading || GerentesLoading;
+  const anyError = isError || SociosError || GerentesError;
   let rows: any = [];
-  const form = useForm({
-    initialValues: {
-      nombre: '',
-      correo: '',
-      telefono: 0,
-      domicilio: '',
-      tipoPersona: '',
-    },
-  });
-
-  const mutateClientes = useMutation({
-    mutationFn: (newCliente: ICliente) => createNewCliente(newCliente),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['clientes'],
-        exact: true,
-      });
-    },
-  });
-
-  const onSubmitForm = async (values: any) => {
-    try {
-      mutateClientes.mutate(values);
-      form.reset();
-
-      setOpenedModal(false);
-    } catch (error: any) {
-      setNewError(error.response.data.message, error.response.data.type);
-      form.setFieldError(error.response.data.type, error.response.data.message);
-    }
-  };
 
   if (Clientes && Clientes.length > 0) {
     rows = Clientes.map((row: ICliente, index: any) => {
       return (
-        <tr key={row.id}>
-          <td>{row.nombre}</td>
-          <td>{row.correo}</td>
-          <td>{row.telefono}</td>
-          <td>{row.domicilio}</td>
-          <td>{row.tipoPersona}</td>
-        </tr>
+        <Table.Tr key={row.id}>
+          <Table.Td>{row.nombre}</Table.Td>
+          <Table.Td>{row.correo}</Table.Td>
+          <Table.Td>{row.telefono}</Table.Td>
+          <Table.Td>{row.domicilio}</Table.Td>
+          <Table.Td>{row.tipoPersona}</Table.Td>
+        </Table.Tr>
       );
     });
   }
 
   return (
-    <Layout>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <>
-          <Modal
-            opened={openedModal}
-            onClose={() => setOpenedModal(false)}
-            title={'Agregar Cliente'}
-          >
-            <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <TextInput
-                label="Nombre"
-                name="name"
-                type="text"
-                placeholder="Nombre"
-                required
-                {...form.getInputProps('nombre')}
-              />
-              <TextInput
-                label="Correo"
-                name="correo"
-                type="text"
-                placeholder="Correo"
-                required
-                {...form.getInputProps('correo')}
-              />
-              <TextInput
-                label="telefono"
-                name="telefono"
-                type="number"
-                placeholder="Teléfono"
-                {...form.getInputProps('telefono')}
-              />
-              <TextInput
-                label="Domicilio"
-                name="domicilio"
-                type="text"
-                placeholder="Domicilio"
-                required
-                {...form.getInputProps('domicilio')}
-              />
-              <Select
-                label="Tipo de persona"
-                name="tipoPersona"
-                placeholder="Tipo de persona"
-                required
-                data={[
-                  { value: 'FISICA', label: 'Física' },
-                  { value: 'MORAL', label: 'Moral' },
-                ]}
-                {...form.getInputProps('tipoPersona')}
-              />
-              <Button type="submit" fullWidth mt={'lg'}>
-                <Text> Crear nuevo cliente </Text>
-              </Button>
-            </form>
-          </Modal>
+    <>
+      <Modal opened={openedModal} onClose={() => setOpenedModal(false)} title={'Agregar Cliente'}>
+        <FormGenerator
+          fields={generateClienteForm(Socios, Gerentes)}
+          formSchema={clienteSchema}
+          buttons={[
+            {
+              label: 'Cancelar',
+              type: ButtonTypes.RESET,
+              disabled: false,
+            },
+            {
+              label: 'Guardar',
+              type: ButtonTypes.SUBMIT,
+              disabled: false,
+            },
+          ]}
+          loading={stillLoading}
+          setOpenedModal={setOpenedModal}
+          mutationFn={createNewCliente}
+          mutationInterface={{}}
+          mutationKey={'clientes'}
+        />
+      </Modal>
 
-          <Card>
-            <HeaderApp
-              title="Clientes"
-              openModalFunction={() => setOpenedModal(true)}
-              buttonTitle="Agregar Cliente"
-              Icon={FiPlus}
-            />
+      <Card style={{ height: '90vh' }}>
+        <HeaderApp
+          loading={stillLoading}
+          title="Clientes"
+          input
+          searchPlaceholder="Buscar cliente"
+          searchLabel="Buscar cliente"
+          searchFunction={performSearch}
+          setSearchValue={setNombre}
+          openModalFunction={() => setOpenedModal(true)}
+          buttonTitle="Agregar Cliente"
+          searchValue={Nombre}
+          Icon={FiPlus}
+        />
 
-            <Space h={30} />
-
-            <Table highlightOnHover>
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Correo</th>
-                  <th>Teléfono</th>
-                  <th>Domicilio</th>
-                  <th>Tipo de persona</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>{rows}</tbody>
+        <Space h={30} />
+        {stillLoading ? (
+          <LoadingTable />
+        ) : Clientes.length === 0 && !stillLoading ? (
+          <EmptyComponent />
+        ) : (
+          // <DataTable
+          //   withBorder
+          //   withColumnBorders
+          //   highlightOnHover
+          //   fontSize={14}
+          //   striped
+          //   records={Clientes}
+          //   columns={Clientes.keys.map((key: any) => {
+          //     return {
+          //       accessor: key,
+          //     };
+          //   })}
+          // />
+          <div>
+            <Table highlightOnHover fs={'lg'}>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Nombre</Table.Th>
+                  <Table.Th>Correo</Table.Th>
+                  <Table.Th>Teléfono</Table.Th>
+                  <Table.Th>Domicilio</Table.Th>
+                  <Table.Th>Tipo de persona</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
             </Table>
-          </Card>
-        </>
-      )}
-    </Layout>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Pagination value={page} onChange={setPage} total={Math.ceil(total / perPage)} />
+              <Select
+                onChange={(value) => {
+                  if (value! > total && page > 1) {
+                    setPage(page - 1);
+                    setPerPage(parseInt(value!));
+                  }
+                  return setPerPage(parseInt(value!));
+                }}
+                value={perPage.toString()}
+                data={[
+                  { value: '10', label: '10' },
+                  { value: '20', label: '20' },
+                  { value: '50', label: '50' },
+                  { value: '100', label: '100' },
+                ]}
+              />
+            </div>
+          </div>
+        )}
+      </Card>
+    </>
   );
 };
 

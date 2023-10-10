@@ -1,8 +1,7 @@
-import React from 'react';
-import Layout from '../../components/Layout/Layout';
+import { FC } from 'react';
 
-const Aprobadas = () => {
-  return <Layout>Aprobadas</Layout>;
+const Aprobadas: FC = () => {
+  return <>Aprobadas</>;
 };
 
 export default Aprobadas;

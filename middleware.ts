@@ -3,7 +3,6 @@ import { getToken } from 'next-auth/jwt';
 
 async function middleware(req: NextRequest) {
   const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  // console.log(session?.user.id); Obtener el id del usuario
   const { pathname } = req.nextUrl;
   if (!session) {
     if (pathname.startsWith('/_next')) return NextResponse.next();
@@ -17,7 +16,7 @@ async function middleware(req: NextRequest) {
   } else {
     if (pathname.startsWith('/auth')) {
       const url = req.nextUrl;
-      url.pathname = '/index/dashboard';
+      url.pathname = '/dashboard';
       return NextResponse.redirect(url);
     }
   }

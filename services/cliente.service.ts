@@ -2,8 +2,26 @@ import axios from 'axios';
 import { ICliente } from '../interfaces';
 
 export const getAllClientes = async () => {
-  const { data } = await axios.get(`/api/clientes`);
-  return data.data;
+  let url = `/api/clientes`;
+  try {
+    const { data } = await axios.get(url);
+    return data.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllClientesPaginated = async (nombre?: string, page = 1, perPage = 10) => {
+  let url = `/api/clientes?page=${page}&perPage=${perPage}`;
+  if (nombre) {
+    url += `&nombre=${nombre}`;
+  }
+  try {
+    const { data } = await axios.get(url);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getCliente = async (id: Number) => {

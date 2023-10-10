@@ -28,7 +28,7 @@ export const queryArea = (id: string) => {
   };
 };
 
-export const mutateArea = async () => {
+export const mutateAreas = async () => {
   useMutation({
     mutationFn: (newArea: IArea) => createNewArea(newArea),
     onSuccess: () => {

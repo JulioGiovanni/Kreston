@@ -8,84 +8,62 @@ import {
   Text,
   Title,
   Modal,
-  TextInput,
-  Select,
   useMantineColorScheme,
 } from '@mantine/core';
 import Link from 'next/link';
 import { useState, useContext, FC } from 'react';
-import Layout from '../../components/Layout/Layout';
-import { useForm } from '@mantine/form';
 
 import { ErrorsContext } from '../../context/Errors';
 
 import { createNewArea, getAllAreas } from '../../services/area.service';
-import { queryAreas } from '../../ReactQuery/Areas';
-import { useAllOffice } from '../../ReactQuery/Oficinas';
-import Loading from '../../components/UI/Loading';
+import { mutateAreas, queryAreas } from '../../ReactQuery/Areas';
+import Loading from '../../components/common/loaders/Loading';
 import HeaderApp from '../../components/UI/HeaderApp';
+import { FormGenerator } from '../../components/common/FormGenerator';
+import { generateAreaForm } from '../../utils/forms/Area.form';
+import { areaSchema } from '../../schemas/areaSchema';
+import { ButtonTypes } from '../../interfaces/form.interface';
+import { onSubmitForm } from '../../utils/submitForm';
+import { queryOficinas } from '../../ReactQuery/Oficinas';
 
 export const Areas: FC = (props) => {
   const [openedModal, setOpenedModal] = useState(false);
   const { colorScheme } = useMantineColorScheme();
   const { setNewError, removeError } = useContext(ErrorsContext);
   const { Areas, isLoading: ArLoading, isError } = queryAreas();
-  const { Oficinas, isLoading: OfLoading, error: OfError } = useAllOffice();
+  const { Oficinas, isLoading: OfLoading, isError: OfError } = queryOficinas();
 
-  const form = useForm({
-    initialValues: {
-      nombre: '',
-      oficina: '',
-    },
-  });
+  const stillLoading = ArLoading || OfLoading;
 
-  const onSubmitForm = async (values: any) => {
-    try {
-      form.reset();
-      removeError();
-
-      setOpenedModal(false);
-    } catch (error: any) {
-      setNewError(error.response.data.message, error.response.data.type);
-      form.setFieldError(error.response.data.type, error.response.data.message);
-    }
-  };
   return (
-    <Layout>
+    <>
       {ArLoading || OfLoading ? (
         <Loading />
       ) : (
         <>
           <Modal opened={openedModal} onClose={() => setOpenedModal(false)} title={'Agregar área'}>
-            <form onSubmit={form.onSubmit(onSubmitForm)}>
-              <TextInput
-                label="Nombre"
-                name="name"
-                type="text"
-                placeholder="Nombre"
-                required
-                {...form.getInputProps('nombre')}
-              />
-              <Select
-                label="Oficina"
-                name="oficina"
-                data={Oficinas.map((oficina: any) => ({
-                  value: oficina.id,
-                  label: oficina.nombre,
-                }))}
-                {...form.getInputProps('oficina')}
-              />
-
-              <Button fullWidth my={'md'} type="submit">
-                Crear Nueva Área
-              </Button>
-            </form>
+            <FormGenerator
+              fields={generateAreaForm(Oficinas)}
+              formSubmitAction={onSubmitForm}
+              formSchema={areaSchema}
+              buttons={[
+                {
+                  label: 'Agregar',
+                  type: ButtonTypes.SUBMIT,
+                },
+              ]}
+              loading={stillLoading}
+              mutation={mutateAreas}
+              setOpenedModal={setOpenedModal}
+              setError={setNewError}
+            />
           </Modal>
           <HeaderApp
             title="Áreas"
             openModalFunction={() => setOpenedModal(true)}
             buttonTitle="Agregar área"
             Icon={FiPlus}
+            loading={stillLoading}
           />
           <Space h={30} />
 
@@ -97,7 +75,7 @@ export const Areas: FC = (props) => {
                 .map((word: any) => word[0])
                 .join('');
               return (
-                <Grid.Col sm={12} md={6} lg={4} key={area.id}>
+                <Grid.Col span={{ sm: 12, md: 6, lg: 4 }} key={area.id}>
                   <Card style={{ height: 150, padding: 40 }} withBorder>
                     <Card.Section>
                       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -116,7 +94,7 @@ export const Areas: FC = (props) => {
                               alignItems: 'center',
                             }}
                           >
-                            <Text color={colorScheme == 'dark' ? 'white' : 'dark'} weight={'bold'}>
+                            <Text color={colorScheme == 'dark' ? 'white' : 'dark'} fw={'bold'}>
                               {initials}
                             </Text>
                           </div>
@@ -125,7 +103,7 @@ export const Areas: FC = (props) => {
                     </Card.Section>
 
                     <Card.Section mt={20}>
-                      <Link href={`/index/areas/${area.id}`} passHref>
+                      <Link href={`/areas/${area.id}`} passHref>
                         <Button fullWidth>Ver Más</Button>
                       </Link>
                     </Card.Section>
@@ -136,7 +114,7 @@ export const Areas: FC = (props) => {
           </Grid>
         </>
       )}
-    </Layout>
+    </>
   );
 };
 

@@ -1,30 +1,65 @@
-import { Button, Card, Modal, Space, Text, Title } from '@mantine/core';
-import { FC, useState } from 'react';
-import { FiEdit, FiPlus, FiEye } from 'react-icons/fi';
-import NewUserForm from '../../components/Users/NewUserForm';
+import { FC, useContext, useState } from 'react';
+import { Card, Modal, Space } from '@mantine/core';
+import { FiPlus } from 'react-icons/fi';
+import { FormGenerator } from '../../components/common/FormGenerator';
+import HeaderApp from '../../components/UI/HeaderApp';
 import { ShowUsersTable2 } from '../../components/Users/ShowUsersTable2';
-import Layout from '../../components/Layout/Layout';
+import { ErrorsContext } from '../../context/Errors';
+import { ButtonTypes } from '../../interfaces/form.interface';
+import { queryAreas } from '../../ReactQuery/Areas';
+import { queryOficinas } from '../../ReactQuery/Oficinas';
+import { queryRoles } from '../../ReactQuery/Rol';
+import { mutateUsers, queryUsers } from '../../ReactQuery/Usuarios';
+import { performSearch } from '../../ReactQuery/utils';
+import { UsuarioSchema } from '../../schemas/usuario.Schema';
+import { generateUsuarioForm } from '../../utils/forms/Usuario.form';
 
-const UsuariosIndex: FC = () => {
+const UsuariosIndex: FC = (props) => {
+  const [Nombre, setNombre] = useState('');
   const [openedModal, setOpenedModal] = useState(false);
+  const { Usuarios, isLoading: UsLoading, isError: UsError } = queryUsers(Nombre);
+  const { Areas, isLoading: ArLoading, isError: ArError } = queryAreas();
+  const { Oficinas, isLoading: OfLoading, isError: OfError } = queryOficinas();
+  const { Roles, isLoading: RolLoading, isError: RolError } = queryRoles();
+  const { setNewError } = useContext(ErrorsContext);
 
+  const stillLoading = UsLoading || ArLoading || OfLoading || RolLoading;
+  const anyError = UsError || ArError || OfError || RolError;
   return (
-    <Layout>
+    <>
       <Modal opened={openedModal} onClose={() => setOpenedModal(false)} title={'Agregar usuario'}>
-        <NewUserForm setOpenedModal={setOpenedModal} />
+        <FormGenerator
+          loading={stillLoading}
+          fields={generateUsuarioForm(Areas, Oficinas, Roles)}
+          formSubmitAction={onSubmitForm}
+          formSchema={UsuarioSchema}
+          mutation={mutateUsers}
+          setOpenedModal={setOpenedModal}
+          setError={setNewError}
+          buttons={[
+            { type: ButtonTypes.BUTTON, label: 'Guardar' },
+            { type: ButtonTypes.RESET, label: 'Cancelar' },
+          ]}
+        />
       </Modal>
 
-      <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Title order={2}>Usuarios</Title>
-          <Button leftIcon={<FiPlus />} onClick={() => setOpenedModal(true)}>
-            <Text>Agregar usuario</Text>
-          </Button>
-        </div>
+      <Card style={{ height: '90vh' }}>
+        <HeaderApp
+          loading={stillLoading}
+          title="Usuarios"
+          input
+          searchPlaceholder="Buscar usuario"
+          searchFunction={performSearch}
+          searchValue={Nombre}
+          setSearchValue={setNombre}
+          openModalFunction={() => setOpenedModal(true)}
+          buttonTitle="Agregar usuario"
+          Icon={FiPlus}
+        />
         <Space h={30} />
         <ShowUsersTable2 />
       </Card>
-    </Layout>
+    </>
   );
 };
 

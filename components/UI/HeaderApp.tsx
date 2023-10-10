@@ -1,17 +1,50 @@
-import { Button, Title } from '@mantine/core';
+import { Button, TextInput, Title } from '@mantine/core';
+import { FiSearch } from 'react-icons/fi';
 import React from 'react';
+import { useForm } from 'react-hook-form';
 interface Props {
   title: string;
-  openModalFunction: () => void;
   buttonTitle: string;
   Icon?: any;
+  input?: boolean;
+  searchLabel?: string;
+  searchPlaceholder?: string;
+  searchValue?: string;
+  setSearchValue?: (value: string) => void;
+  openModalFunction: () => void;
+  searchFunction?: (nombre: string, setSearchValue: any) => void;
+  loading: boolean;
 }
 
 const HeaderApp = (props: Props) => {
+  const { register, getValues } = useForm({
+    defaultValues: {
+      nombre: props.searchValue,
+    },
+  });
+
+  const searchOnBlur = () => {
+    const searchValue = getValues('nombre');
+    props.searchFunction!(searchValue!, props.setSearchValue!);
+  };
+
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <Title order={2}>{props.title}: </Title>
-      <Button leftIcon={props.Icon ? <props.Icon /> : null} onClick={props.openModalFunction}>
+      {props.input && (
+        <TextInput
+          placeholder={props.searchPlaceholder}
+          label={props.searchLabel}
+          leftSection={<FiSearch />}
+          {...register('nombre')}
+          onBlur={searchOnBlur}
+        />
+      )}
+      <Button
+        loading={props.loading}
+        leftSection={props.Icon ? <props.Icon /> : null}
+        onClick={props.openModalFunction}
+      >
         {props.buttonTitle}
       </Button>
     </div>

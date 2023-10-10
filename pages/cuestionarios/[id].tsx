@@ -5,15 +5,16 @@ import Layout from '../../components/Layout/Layout';
 import { FC, useContext, useEffect, useState } from 'react';
 import { ErrorsContext } from '../../context/Errors/ErrorsContext';
 import { useForm } from '@mantine/form';
-
+import { queryPreguntas } from '../../ReactQuery';
 import ModalNewPregunta from '../../components/Preguntas/ModalNewPregunta';
 import PreguntasDraggable from '../../components/Preguntas/Draggable';
 import { createNewPregunta, getAllPreguntas } from '../../services/pregunta.service';
 import { useRouter } from 'next/router';
-import { UsePregunta } from '../../ReactQuery/Preguntas';
-import Loading from '../../components/UI/Loading';
+
+import Loading from '../../components/common/loaders/Loading';
 import HeaderApp from '../../components/UI/HeaderApp';
 import { IPregunta } from '../../interfaces/pregunta.interface';
+import { FiPlus } from 'react-icons/fi';
 
 const Preguntas: FC = (props) => {
   //Get the id of the questionary based on the url
@@ -21,7 +22,7 @@ const Preguntas: FC = (props) => {
   const { id } = router.query;
 
   const { setNewError } = useContext(ErrorsContext);
-  const { Preguntas, isLoading: PrLoading, error: PrError } = UsePregunta(Number(id));
+  const { Preguntas, isLoading: PrLoading, isError: PrError } = queryPreguntas(Number(id));
 
   const [state, handlers] = useListState<IPregunta>(Preguntas);
   const [openedModal, setOpenedModal] = useState(false);
@@ -66,7 +67,7 @@ const Preguntas: FC = (props) => {
   };
 
   return (
-    <Layout>
+    <>
       {PrLoading ? (
         <Loading />
       ) : (
@@ -75,6 +76,8 @@ const Preguntas: FC = (props) => {
             title="Cuestionario"
             openModalFunction={() => setOpenedModal(true)}
             buttonTitle="Crear nueva pregunta"
+            Icon={FiPlus}
+            loading={PrLoading}
           />
           <ModalNewPregunta
             openedModal={openedModal}
@@ -91,7 +94,7 @@ const Preguntas: FC = (props) => {
           />
         </Card>
       )}
-    </Layout>
+    </>
   );
 };
 

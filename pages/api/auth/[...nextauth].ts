@@ -80,6 +80,11 @@ const NextAuthLogin = async (correo: string, contrasena: string) => {
     where: {
       correo,
     },
+    include: {
+      rol: true,
+      oficina: true,
+      area: true,
+    },
   });
 
   if (!user) return null;

@@ -3,6 +3,7 @@ import {
   getCliente,
   createNewCliente,
   updateCliente,
+  getAllClientesPaginated,
 } from '../services/cliente.service';
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { ICliente } from '../interfaces';
@@ -13,9 +14,23 @@ export const queryClientes = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['clientes'],
     queryFn: () => getAllClientes(),
+    enabled: true,
   });
   return {
     Clientes: data,
+    isLoading,
+    isError,
+  };
+};
+export const queryClientesPaginated = (nombre?: string, page = 1, perPage = 10) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['clientes', { nombre, page, perPage }],
+    queryFn: () => getAllClientesPaginated(nombre, page, perPage),
+    enabled: true,
+  });
+  return {
+    Clientes: data?.data,
+    total: data?.total,
     isLoading,
     isError,
   };
@@ -41,4 +56,15 @@ export const mutateCliente = async (id: Number, Cliente: ICliente) => {
     },
   });
   mutation.mutate(Cliente);
+};
+export const mutateClientes = async (Cliente: ICliente) => {
+  return useMutation({
+    mutationFn: (newCliente: ICliente) => createNewCliente(newCliente),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['clientes'],
+        exact: true,
+      });
+    },
+  });
 };

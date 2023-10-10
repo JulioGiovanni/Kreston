@@ -18,11 +18,11 @@ import { useForm } from '@mantine/form';
 
 import { ErrorsContext } from '../../context/Errors';
 import { createNewOficina } from '../../services/oficina.service';
-import { useAllOffice } from '../../ReactQuery/Oficinas';
-import Loading from '../../components/UI/Loading';
+import { queryOficinas } from '../../ReactQuery/Oficinas';
+import Loading from '../../components/common/loaders/Loading';
 
 const Oficinas: FC = (props) => {
-  const { Oficinas, isLoading, error } = useAllOffice();
+  const { Oficinas, isLoading, isError } = queryOficinas();
   const [openedModal, setOpenedModal] = useState(false);
   const { setNewError, removeError } = useContext(ErrorsContext);
 
@@ -46,7 +46,7 @@ const Oficinas: FC = (props) => {
     }
   };
   return (
-    <Layout>
+    <>
       <Modal opened={openedModal} onClose={() => setOpenedModal(false)} title={'Agregar oficina'}>
         <form onSubmit={form.onSubmit(onSubmitForm)}>
           <TextInput
@@ -73,7 +73,7 @@ const Oficinas: FC = (props) => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Title order={2}>Oficinas</Title>
-        <Button leftIcon={<FiPlus />} onClick={() => setOpenedModal(true)}>
+        <Button leftSection={<FiPlus />} onClick={() => setOpenedModal(true)}>
           <Text>Agregar oficina</Text>
         </Button>
       </div>
@@ -90,7 +90,7 @@ const Oficinas: FC = (props) => {
               .join('');
 
             return (
-              <Grid.Col sm={12} md={6} lg={4} key={oficina.id}>
+              <Grid.Col span={{ sm: 12, md: 6, lg: 4 }} key={oficina.id}>
                 <Card style={{ height: 150, padding: 40 }}>
                   <Card.Section>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -100,7 +100,7 @@ const Oficinas: FC = (props) => {
                         <div
                           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                         >
-                          <Text color={colorScheme == 'dark' ? 'white' : 'black'} weight={'bold'}>
+                          <Text color={colorScheme == 'dark' ? 'white' : 'black'} fw={'bold'}>
                             {initials}
                           </Text>
                           <Text size="xs" color={'dimmed'}>
@@ -112,7 +112,11 @@ const Oficinas: FC = (props) => {
                   </Card.Section>
 
                   <Card.Section mt={20}>
-                    <Link href={`/oficinas/${oficina.id}`} passHref>
+                    <Link
+                      style={{ textDecoration: 'none' }}
+                      href={`/oficinas/${oficina.id}`}
+                      passHref
+                    >
                       <Button fullWidth>Ver Más</Button>
                     </Link>
                   </Card.Section>
@@ -122,7 +126,7 @@ const Oficinas: FC = (props) => {
           })}
         </Grid>
       )}
-    </Layout>
+    </>
   );
 };
 

@@ -1,8 +1,7 @@
-import React from 'react';
-import Layout from '../../components/Layout/Layout';
+import { FC } from 'react';
 
-const crear = () => {
-  return <Layout>crear</Layout>;
+const crear: FC = () => {
+  return <>crear</>;
 };
 
 export default crear;

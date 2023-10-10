@@ -1,26 +1,9 @@
-import useSWR from 'swr';
-
-export const UsePregunta = (id: number) => {
-  const { data, error, isLoading, mutate } = useSWR(
-    `/api/preguntas/${id}`,
-    (url) =>
-      fetch(url).then(async (response: any) => {
-        const data = await response.json();
-        return data.data;
-      }),
-    {
-      refreshInterval: 100,
-    }
-    // {
-    //   revalidateIfStale: false,
-    //   revalidateOnFocus: false,
-    //   revalidateOnReconnect: false,
-    // }
-  );
-  return {
-    Preguntas: data,
-    error,
-    isLoading,
-    mutate,
-  };
+import { useQuery } from '@tanstack/react-query';
+import { getAllPreguntas } from '../services/pregunta.service';
+export const queryPreguntas = (id: number) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['preguntas'],
+    queryFn: () => getAllPreguntas(id),
+  });
+  return { Preguntas: data, isLoading, isError };
 };

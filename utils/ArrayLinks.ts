@@ -20,8 +20,21 @@ export const AdminLinks: IArrayLinks[] = [
   },
   {
     link: '/aceptacion',
-    text: 'Aceptación Y Continuidad',
+    text: 'A Y C',
     Icon: FiCheck,
+    accordion: true,
+    tooltip: true,
+    tooltipText: 'Aceptación y Continuidad',
+    accordionLinks: [
+      {
+        link: '/aceptacion',
+        text: ' Aceptación',
+      },
+      {
+        link: '/continuidad',
+        text: ' Continuidad',
+      },
+    ],
   },
   {
     link: '/independencias',

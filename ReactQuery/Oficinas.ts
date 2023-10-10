@@ -1,11 +1,24 @@
-import useSWR from 'swr';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { getAllOficinas } from '../services/oficina.service';
 
-export const useAllOffice = () => {
-  const { data, error, isLoading } = useSWR('/api/oficinas', getAllOficinas);
+const queryClient = new QueryClient();
+export const queryOficinas = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['oficinas'],
+    queryFn: () => getAllOficinas(),
+  });
   return {
     Oficinas: data,
-    error,
     isLoading,
+    isError,
   };
+};
+
+export const mutateOficinas = async () => {
+  useMutation({
+    mutationFn: () => getAllOficinas(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['oficinas'] });
+    },
+  });
 };

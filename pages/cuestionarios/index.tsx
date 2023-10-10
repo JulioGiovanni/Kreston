@@ -1,62 +1,54 @@
 import { FC, useState } from 'react';
-import { Button, Card, Modal, Select, Space, Table, Text, Title, MultiSelect } from '@mantine/core';
+import { Card, Modal, Space, Table } from '@mantine/core';
 import { FiPlus } from 'react-icons/fi';
-import Layout from '../../components/Layout/Layout';
-import { useForm } from '@mantine/form';
-import { useCuestionario } from '../../ReactQuery/Cuestionario';
-import { useAllProyectos } from '../../ReactQuery/Proyectos';
+
 import { ICuestionario } from '../../interfaces/cuestionario.interface';
-import { IUsuario } from '../../interfaces/usuario.interface';
-import { createNewCuestionario } from '../../services/cuestionario.service';
-import Loading from '../../components/UI/Loading';
+import Loading from '../../components/common/loaders/Loading';
 import { useRouter } from 'next/router';
 import { queryUsers } from '../../ReactQuery/Usuarios';
+import { queryProyectos } from '../../ReactQuery/Proyectos';
+import { mutateCuestionarios, queryCuestionarios } from '../../ReactQuery/Cuestionario';
+import { FormGenerator } from '../../components/common/FormGenerator';
+import { generateCuestionarioForm } from '../../utils/forms/Cuestionario.form';
+import { cuestionarioSchema } from '../../schemas/cuestionarioSchema';
+import { ButtonTypes } from '../../interfaces/form.interface';
+import HeaderApp from '../../components/UI/HeaderApp';
+import LoadingTable from '../../components/common/loaders/LoadingTable';
+import { createNewCuestionario } from '../../services/cuestionario.service';
 
 const Cuestionario: FC = (props) => {
-  const { Cuestionario, isLoading: CuLoading, error } = useCuestionario();
-  const { Proyectos, isLoading: PrLoading } = useAllProyectos();
+  const { Cuestionarios, isLoading: CuLoading, isError } = queryCuestionarios();
+  const { Proyectos, isLoading: PrLoading } = queryProyectos();
   const { Usuarios, isLoading: UsLoading } = queryUsers();
   const [openedModal, setOpenedModal] = useState(false);
   const router = useRouter();
   let rows: any = [];
   const ths = (
-    <tr>
-      <th>Proyecto Asignado</th>
-      <th># Preguntas</th>
-    </tr>
+    <Table.Tr>
+      <Table.Th>Tipo de cuestionario</Table.Th>
+      <Table.Th># Preguntas</Table.Th>
+    </Table.Tr>
   );
-  if (Cuestionario && Cuestionario.length > 0 && !CuLoading) {
-    rows = Cuestionario?.map((item: ICuestionario) => {
+  if (Cuestionarios && Cuestionarios.length > 0 && !CuLoading) {
+    rows = Cuestionarios?.map((item: ICuestionario) => {
       return (
-        <tr
-          onClick={() => router.push(`/index/cuestionarios/${item.id}`)}
+        <Table.Tr
+          onClick={() => router.push(`/cuestionarios/${item.id}`)}
           key={item.id}
           style={{ cursor: 'pointer' }}
         >
-          <td>{item.proyecto.nombre}</td>
+          <Table.Td>{item.proyecto.nombre}</Table.Td>
           {/* <td>{item.}</td>
         <td>{item.pr}</td> */}
-        </tr>
+        </Table.Tr>
       );
     });
   }
 
-  const form = useForm({
-    initialValues: {
-      proyecto: '',
-      usuarios: '',
-    },
-  });
-
-  const onSubmitForm = async (values: any) => {
-    console.log(values);
-    await createNewCuestionario(values);
-  };
-
   return (
-    <Layout>
+    <>
       {CuLoading || PrLoading ? (
-        <Loading />
+        <LoadingTable />
       ) : (
         <>
           <Modal
@@ -64,48 +56,39 @@ const Cuestionario: FC = (props) => {
             onClose={() => setOpenedModal(false)}
             title={'Agregar nuevo cuestionario'}
           >
-            <form onSubmit={form.onSubmit(onSubmitForm)}>
-              {/* <TextInput label="Nombre" name="nombre" {...form.getInputProps('nombre')} /> */}
-              <Select
-                label="Proyecto"
-                name="proyecto"
-                data={Proyectos?.map((p: any) => {
-                  return { value: p.id, label: p.nombre };
-                })}
-                searchable
-                {...form.getInputProps('proyecto')}
-              />
-              {/*NOTE - If the app get too many users, we will need Elastic Search or something like
-              that*/}
-              <MultiSelect
-                data={Usuarios?.map((u: IUsuario) => ({ value: u.id, label: u.nombre }))}
-                label="Selecciona usuarios asignados a este cuestionario"
-                placeholder="Seleccione usuarios"
-                searchable
-                nothingFound="No se encontraron usuarios"
-                {...form.getInputProps('usuarios')}
-              />
-              <Button fullWidth type="submit" my="md">
-                Crear nuevo cuestionario
-              </Button>
-            </form>
+            <FormGenerator
+              fields={generateCuestionarioForm()}
+              formSchema={cuestionarioSchema}
+              loading={CuLoading}
+              buttons={[
+                {
+                  label: 'Crear cuestionario',
+                  type: ButtonTypes.SUBMIT,
+                },
+              ]}
+              setOpenedModal={setOpenedModal}
+              mutationInterface={{}}
+              mutationFn={createNewCuestionario}
+              mutationKey="cuestionarios"
+            />
           </Modal>
-          <Card>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Title order={2}>Cuestionarios</Title>
-              <Button leftIcon={<FiPlus />} onClick={() => setOpenedModal(true)}>
-                <Text>Crear nuevo cuestionario</Text>
-              </Button>
-            </div>
+          <Card style={{ height: '90vh' }}>
+            <HeaderApp
+              title="Cuestionarios"
+              openModalFunction={() => setOpenedModal(true)}
+              buttonTitle="Agregar cuestionario"
+              Icon={FiPlus}
+              loading={CuLoading}
+            />
             <Space h={30} />
             <Table highlightOnHover>
-              <thead>{ths}</thead>
-              <tbody>{rows}</tbody>
+              <Table.Thead>{ths}</Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
             </Table>
           </Card>
         </>
       )}
-    </Layout>
+    </>
   );
 };
 

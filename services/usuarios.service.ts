@@ -1,8 +1,15 @@
 import axios from 'axios';
 import { IUsuario } from '../interfaces/usuario.interface';
 
-export const getAllUsers = async () => {
-  const { data } = await axios.get(`/api/users`);
+export const getAllUsers = async (nombre?: string, rol?: number) => {
+  let url = `/api/users`;
+  if (nombre) {
+    url = `/api/users?nombre=${nombre}`;
+  }
+  if (rol) {
+    url = `/api/users?rol=${rol}`;
+  }
+  const { data } = await axios.get(url);
   return data.data;
 };
 export const createNewUser = async (data: any) => await axios.post(`/api/users`, { data });

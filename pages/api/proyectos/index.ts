@@ -1,11 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../db';
-
-type Data = {
-  message?: string;
-  data?: any;
-  type?: string;
-};
+import { Data } from '../../../server/types/jsonResponse.type';
 
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
@@ -14,45 +9,43 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
     case 'POST':
       return createNewProyecto(req, res);
     default:
-      res.status(405).json({ message: 'Method not allowed' });
+      res.status(405).json({ message: 'Method not allowed', data: null });
       break;
   }
 }
 
 const getAllProyectos = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
-    //Paginate response
-    const { page, limit, search, oficina, area, estado, cliente } = req.query;
-    const currentPage = page ? parseInt(page.toString()) : 1;
-    const perPage = limit ? parseInt(limit.toString()) : 10;
-    const offset = (currentPage - 1) * perPage;
-
-    const where = {
-      AND: [
-        {
-          OR: [
-            { nombre: { contains: search } },
-            { descripcion: { contains: search } },
-            { codigo: { contains: search } },
-          ],
-        },
-        { oficina: { contains: oficina } },
-        { area: { contains: area } },
-        { estado: { contains: estado } },
-        { cliente: { contains: cliente } },
-      ],
+    const { nombre, page = 1, perPage = 10 } = req.query;
+    const offset: any = (Number(page) - 1) * Number(perPage);
+    const take: number = Number(perPage);
+    const include = {
+      usuario: true,
+      oficina: true,
+      area: true,
+      cliente: true,
     };
-
+    let where = {};
+    if (nombre) {
+      where = {
+        nombre: {
+          contains: nombre.toString(),
+          mode: 'insensitive',
+        },
+      };
+    }
     const proyectos = await prisma.proyecto.findMany({
-      include: {
-        usuario: true,
-        oficina: true,
-        area: true,
-        cliente: true,
-      },
+      where,
+      include,
+      take,
+      skip: offset,
+    });
+    const total = await prisma.proyecto.count({
+      where,
     });
     return res.status(200).json({
       message: 'ok',
+      total,
       data: proyectos,
     });
   } catch (error) {
@@ -69,32 +62,40 @@ const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>
     if (!nombre)
       return res
         .status(400)
-        .json({ message: 'El nombre del proyecto es requerido', type: 'nombre' });
+        .json({ message: 'El nombre del proyecto es requerido', type: 'nombre', data: req.body });
     if (!descripcion)
-      return res
-        .status(400)
-        .json({ message: 'La descripción del proyecto es requrido', type: 'descripcion' });
+      return res.status(400).json({
+        message: 'La descripción del proyecto es requrido',
+        type: 'descripcion',
+        data: req.body,
+      });
     if (!usuario)
-      return res
-        .status(400)
-        .json({ message: 'El usuario de este proyecto es requrido', type: 'usuario' });
+      return res.status(400).json({
+        message: 'El usuario de este proyecto es requrido',
+        type: 'usuario',
+        data: req.body,
+      });
     if (!oficina)
-      return res
-        .status(400)
-        .json({ message: 'La oficina para este proyecto es requrido', type: 'oficina' });
+      return res.status(400).json({
+        message: 'La oficina para este proyecto es requrido',
+        type: 'oficina',
+        data: req.body,
+      });
     if (!area)
       return res
         .status(400)
-        .json({ message: 'El área de este proyecto es requrido', type: 'area' });
+        .json({ message: 'El área de este proyecto es requrido', type: 'area', data: req.body });
     if (!cliente)
-      return res
-        .status(400)
-        .json({ message: 'El cliente de este proyecto es requrido', type: 'cliente' });
+      return res.status(400).json({
+        message: 'El cliente de este proyecto es requrido',
+        type: 'cliente',
+        data: req.body,
+      });
 
     const found = await prisma.proyecto.findFirst({
       where: {
         oficina: {
-          id: oficina,
+          id: Number(oficina),
         },
         nombre,
       },
@@ -104,18 +105,19 @@ const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>
       return res.status(400).json({
         message: 'El nombre de este proyecto para la oficina seleccionada ya existe',
         type: 'nombre',
+        data: req.body,
       });
 
     const Proyecto = await prisma.proyecto.create({
       data: {
         usuarioId: usuario,
-        areaId: area,
-        oficinaId: oficina,
+        areaId: Number(area),
+        oficinaId: Number(oficina),
         nombre,
         descripcion,
         estado: estado || 'NUEVO',
         fechaInicio: fechaInicio ? fechaInicio : new Date(),
-        clienteId: cliente,
+        clienteId: Number(cliente),
         createdAt: new Date(),
         fechaFin: null,
       },
@@ -158,6 +160,7 @@ const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>
       data: Proyecto,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: 'error',
       data: error,

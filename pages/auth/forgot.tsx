@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Center, Grid, Card, TextInput, Button, Anchor } from '@mantine/core';
 import Image from 'next/image';
 import Link from 'next/link';
 import forgotPasswordImage from '../../public/images/forgot-image.jpg';
 
-const forgot = () => {
+const Forgot: FC = () => {
   return (
     <Center
-      sx={{
+      style={{
         marginTop: '100px',
       }}
     >
@@ -32,7 +32,7 @@ const forgot = () => {
 
             <Center mt={'lg'}>
               <Link href="/auth/login">
-                <Anchor component="button" underline={false}>
+                <Anchor component="button" underline={'never'}>
                   ¿Ya tienes cuenta?
                 </Anchor>
               </Link>
@@ -43,4 +43,4 @@ const forgot = () => {
     </Center>
   );
 };
-export default forgot;
+export default Forgot;

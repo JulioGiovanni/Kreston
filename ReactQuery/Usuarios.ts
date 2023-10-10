@@ -4,10 +4,20 @@ import { useQuery, useMutation, QueryClient } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
-export const queryUsers = () => {
+export const queryUsers = (nombre?: string, rol?: number) => {
+  let queryFn = () => getAllUsers();
+  let queryKey = ['users'];
+  if (nombre) {
+    queryKey = ['users', nombre];
+    queryFn = () => getAllUsers(nombre);
+  }
+  if (rol) {
+    queryKey = ['users', rol.toString()];
+    queryFn = () => getAllUsers(undefined, rol);
+  }
   const { data, isError, isLoading } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => getAllUsers(),
+    queryKey,
+    queryFn: () => queryFn(),
   });
 
   return {

@@ -3,9 +3,10 @@ import { IUsuario } from '../../interfaces';
 import { queryUsers } from '../../ReactQuery/Usuarios';
 import { useListState } from '@mantine/hooks';
 import { deleteUser, reactiveUser } from '../../services/usuarios.service';
-import Loading from '../UI/Loading';
-import { Error } from '../UI/Error';
+
 import { useEffect } from 'react';
+import Error from '../UI/Error';
+import LoadingTable from '../common/loaders/LoadingTable';
 
 export function ShowUsersTable2() {
   const { Usuarios, isLoading, isError } = queryUsers();
@@ -14,26 +15,26 @@ export function ShowUsersTable2() {
   const [values, handlers] = useListState<IUsuario>(Usuarios);
 
   const ths = (
-    <tr>
-      <td>
+    <Table.Tr>
+      <Table.Td>
         <Title order={3}>Nombre</Title>
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Title order={3}>Correo</Title>
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Title order={3}>Rol</Title>
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Title order={3}>Oficina</Title>
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Title order={3}>Área</Title>
-      </td>
-      <td>
+      </Table.Td>
+      <Table.Td>
         <Title order={3}>Activo</Title>
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 
   useEffect(() => {
@@ -43,13 +44,13 @@ export function ShowUsersTable2() {
   // if (Usuarios && Usuarios.length > 0) {
   rows = values?.map((usuario: IUsuario, index: number) => {
     return (
-      <tr key={usuario.id}>
-        <td>{usuario.nombre}</td>
-        <td>{usuario.correo}</td>
-        <td>{usuario.rol?.nombre}</td>
-        <td>{usuario.oficina?.nombre}</td>
-        <td>{usuario.area?.nombre}</td>
-        <td>
+      <Table.Tr key={usuario.id}>
+        <Table.Td>{usuario.nombre}</Table.Td>
+        <Table.Td>{usuario.correo}</Table.Td>
+        <Table.Td>{usuario.rol?.nombre}</Table.Td>
+        <Table.Td>{usuario.oficina?.nombre}</Table.Td>
+        <Table.Td>{usuario.area?.nombre}</Table.Td>
+        <Table.Td>
           <Checkbox
             checked={usuario.activo}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,8 +58,8 @@ export function ShowUsersTable2() {
               usuario.activo ? deleteUser(usuario.id) : reactiveUser(usuario.id);
             }}
           />
-        </td>
-      </tr>
+        </Table.Td>
+      </Table.Tr>
     );
   });
   // }
@@ -66,12 +67,12 @@ export function ShowUsersTable2() {
   return isError ? (
     <Error />
   ) : isLoading ? (
-    <Loading />
+    <LoadingTable />
   ) : (
     Usuarios && (
       <Table highlightOnHover>
-        <thead>{ths}</thead>
-        <tbody>{rows}</tbody>
+        <Table.Thead>{ths}</Table.Thead>
+        <Table.Tbody>{rows}</Table.Tbody>
       </Table>
     )
   );

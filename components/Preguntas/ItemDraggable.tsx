@@ -1,13 +1,4 @@
-import {
-  ActionIcon,
-  createStyles,
-  Popover,
-  Text,
-  Button,
-  TextInput,
-  Select,
-  Space,
-} from '@mantine/core';
+import { ActionIcon, Popover, Text, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { PlusIcon, Cross2Icon } from '@modulz/radix-icons';
 import { IconGripVertical } from '@tabler/icons';
@@ -17,52 +8,8 @@ import PreguntaAnidada from './PreguntaAnidada';
 import { IPregunta } from '../../interfaces/pregunta.interface';
 import { openModal, closeAllModals } from '@mantine/modals';
 import ModalEditPregunta from './ModalEditPregunta';
-import { useForm } from '@mantine/form';
-
-const useStyles = createStyles((theme) => ({
-  item: {
-    display: 'flex',
-    flexDirection: 'row',
-    borderRadius: theme.radius.md,
-    border: `1px solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
-    }`,
-    padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
-    paddingLeft: theme.spacing.xl - theme.spacing.md, // to offset drag handle
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
-    marginBottom: theme.spacing.sm,
-  },
-
-  itemDragging: {
-    boxShadow: theme.shadows.sm,
-  },
-
-  symbol: {
-    fontSize: 30,
-    fontWeight: 700,
-    width: 60,
-  },
-
-  dragHandle: {
-    ...theme.fn.focusStyles(),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[6],
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-  },
-
-  plusSymbol: {
-    ...theme.fn.focusStyles(),
-    fontSize: 30,
-    fontWeight: 700,
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[6],
-
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
-  },
-}));
+import classes from '../../styles/ItemDraggable.module.css';
+import cx from 'clsx';
 
 const editModal = (item: IPregunta) =>
   openModal({
@@ -72,7 +19,6 @@ const editModal = (item: IPregunta) =>
 
 const ItemDraggable = ({ item, index, subQuestions }: any) => {
   const [opened, { close, open }] = useDisclosure(false);
-  const { classes, cx } = useStyles();
   const subQuestion = subQuestions.find(
     (subQuestion: any) => subQuestion?.preguntaPadre === item?.id
   );
@@ -114,7 +60,7 @@ const ItemDraggable = ({ item, index, subQuestions }: any) => {
                     {preguntaAnidada ? <Cross2Icon /> : <PlusIcon />}
                   </ActionIcon>
                 </Popover.Target>
-                <Popover.Dropdown sx={{ pointerEvents: 'none' }}>
+                <Popover.Dropdown style={{ pointerEvents: 'none' }}>
                   <Text size="sm">Crear sub pregunta</Text>
                 </Popover.Dropdown>
               </Popover>

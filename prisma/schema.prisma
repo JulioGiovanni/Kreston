@@ -27,6 +27,8 @@ model Usuario {
   proyectos      Proyecto[]
   pregunta       Ticket[]       @relation("UsuarioPregunta")
   responder      Ticket[]       @relation("UsuarioRespuesta")
+  clientes       UsuarioCliente[] 
+  aceptacionAnual AceptacionAnual[]
   // cuestionarios  Cuestionario[]
 }
 
@@ -159,10 +161,39 @@ model Cliente {
   correo      String      @unique
   telefono    String
   domicilio   String
-  tipoPersona TipoPersona
+  tipoPersona String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   proyectos   Proyecto[]
+  usuarios    UsuarioCliente[]
+}
+
+// Definición de la relación muchos a muchos
+model UsuarioCliente {
+  id        Int      @id @default(autoincrement())
+  clienteId Int
+  usuarioId String
+
+  cliente   Cliente  @relation(fields: [clienteId], references: [id])
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+
+  @@unique([clienteId, usuarioId], name: "UniqueUserCliente")
+}
+
+model AceptacionAnual {
+  id        Int      @id @default(autoincrement())
+  year     Int
+  estadoAceptacion estadoAceptacion @default(EN_ESPERA)
+  usuarioId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+}
+
+enum estadoAceptacion {
+  ACEPTADO
+  RECHAZADO
+  EN_ESPERA
 }
 
 enum estadoProyecto {
@@ -189,3 +220,4 @@ enum TipoPersona {
   FISICA
   MORAL
 }
+
