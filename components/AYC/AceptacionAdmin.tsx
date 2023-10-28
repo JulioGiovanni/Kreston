@@ -4,10 +4,12 @@ import React from 'react';
 import AceptacionTablas from './AceptacionTablas';
 import AceptacionUsuario from './AceptacionUsuario';
 
+import '../../styles/Tabs.module.css';
+
 const AceptacionAdmin = () => {
   return (
     <>
-      <Card style={{ height: '90vh' }}>
+      <Card padding={'lg'} radius={'md'} withBorder>
         <Tabs defaultValue="Admin" variant={'pills'}>
           <Tabs.List grow>
             <Tabs.Tab value="Admin">Tablas</Tabs.Tab>

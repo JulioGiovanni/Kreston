@@ -1,6 +1,6 @@
 import { FC, useContext, useState } from 'react';
 import { Card, Modal, Space } from '@mantine/core';
-import { FiPlus } from 'react-icons/fi';
+import { FiMail, FiPlus } from 'react-icons/fi';
 import { FormGenerator } from '../../components/common/FormGenerator';
 import HeaderApp from '../../components/UI/HeaderApp';
 import { ShowUsersTable2 } from '../../components/Users/ShowUsersTable2';
@@ -13,6 +13,7 @@ import { mutateUsers, queryUsers } from '../../ReactQuery/Usuarios';
 import { performSearch } from '../../ReactQuery/utils';
 import { UsuarioSchema } from '../../schemas/usuario.Schema';
 import { generateUsuarioForm } from '../../utils/forms/Usuario.form';
+import { createNewUser } from '../../services/usuarios.service';
 
 const UsuariosIndex: FC = (props) => {
   const [Nombre, setNombre] = useState('');
@@ -29,21 +30,18 @@ const UsuariosIndex: FC = (props) => {
     <>
       <Modal opened={openedModal} onClose={() => setOpenedModal(false)} title={'Agregar usuario'}>
         <FormGenerator
-          loading={stillLoading}
           fields={generateUsuarioForm(Areas, Oficinas, Roles)}
-          formSubmitAction={onSubmitForm}
           formSchema={UsuarioSchema}
-          mutation={mutateUsers}
+          buttons={[{ type: ButtonTypes.BUTTON, label: 'Enviar Correo', Icon: FiMail }]}
+          mutationFn={createNewUser}
+          mutationKey={'users'}
+          mutationInterface={{}}
           setOpenedModal={setOpenedModal}
-          setError={setNewError}
-          buttons={[
-            { type: ButtonTypes.BUTTON, label: 'Guardar' },
-            { type: ButtonTypes.RESET, label: 'Cancelar' },
-          ]}
+          loading={stillLoading}
         />
       </Modal>
 
-      <Card style={{ height: '90vh' }}>
+      <Card padding={'lg'} radius={'md'} withBorder>
         <HeaderApp
           loading={stillLoading}
           title="Usuarios"

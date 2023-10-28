@@ -1,10 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../db';
-type Data = {
-  message?: string;
-  data?: any;
-  type?: string;
-};
+import { Data } from '../../../server/types/jsonResponse.type';
 
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
@@ -13,7 +9,7 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
     case 'POST':
       return createNewCuestionario(req, res);
     default:
-      res.status(405).json({ message: 'Method not allowed' });
+      res.status(405).json({ message: 'Method not allowed', data: null });
       break;
   }
 }
@@ -22,7 +18,7 @@ const getAllCuestionarios = async (req: NextApiRequest, res: NextApiResponse<Dat
   try {
     const cuestionarios = await prisma.cuestionario.findMany({
       include: {
-        proyecto: true,
+        Preguntas: {},
       },
     });
     return res.status(200).json({
@@ -38,12 +34,24 @@ const getAllCuestionarios = async (req: NextApiRequest, res: NextApiResponse<Dat
 };
 const createNewCuestionario = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
-    const { usuarios, proyecto } = req.body.data;
+    const { tipo } = req.body.data;
+
+    const cuestionarioExistente = await prisma.cuestionario.findFirst({
+      where: {
+        TipoCuestionario: tipo,
+      },
+    });
+    if (cuestionarioExistente) {
+      return res.status(400).json({
+        message: 'error',
+        type: 'tipo',
+        data: 'Ya existe un cuestionario con ese tipo',
+      });
+    }
 
     const cuestionario = await prisma.cuestionario.create({
       data: {
-        proyectoId: proyecto,
-        usuariosAsignados: usuarios,
+        TipoCuestionario: tipo,
       },
     });
     return res.status(200).json({

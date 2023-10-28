@@ -41,7 +41,9 @@ const HeaderApp = (props: Props) => {
         />
       )}
       <Button
+        variant="outline"
         loading={props.loading}
+        radius={'md'}
         leftSection={props.Icon ? <props.Icon /> : null}
         onClick={props.openModalFunction}
       >

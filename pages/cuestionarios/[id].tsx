@@ -1,45 +1,50 @@
 import { useListState } from '@mantine/hooks';
 
 import { Card, Divider } from '@mantine/core';
-import Layout from '../../components/Layout/Layout';
-import { FC, useContext, useEffect, useState } from 'react';
-import { ErrorsContext } from '../../context/Errors/ErrorsContext';
+import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
 import { queryPreguntas } from '../../ReactQuery';
 import ModalNewPregunta from '../../components/Preguntas/ModalNewPregunta';
 import PreguntasDraggable from '../../components/Preguntas/Draggable';
-import { createNewPregunta, getAllPreguntas } from '../../services/pregunta.service';
 import { useRouter } from 'next/router';
 
-import Loading from '../../components/common/loaders/Loading';
 import HeaderApp from '../../components/UI/HeaderApp';
 import { IPregunta } from '../../interfaces/pregunta.interface';
 import { FiPlus } from 'react-icons/fi';
+import LoadingTable from '../../components/common/loaders/LoadingTable';
+import { mutatePreguntas } from '../../ReactQuery/Preguntas';
+import { InferGetServerSidePropsType } from 'next';
 
-const Preguntas: FC = (props) => {
+export const getServerSideProps = async (context: any) => {
+  const id = context.params.id;
+  return {
+    props: {
+      id,
+    },
+  };
+};
+
+const Preguntas = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   //Get the id of the questionary based on the url
   const router = useRouter();
-  const { id } = router.query;
-
-  const { setNewError } = useContext(ErrorsContext);
-  const { Preguntas, isLoading: PrLoading, isError: PrError } = queryPreguntas(Number(id));
+  const { id } = props;
+  const {
+    data: Preguntas,
+    isLoading: PrLoading,
+    isError: PrError,
+    isFetching,
+  } = queryPreguntas(id);
+  const mutation = mutatePreguntas();
 
   const [state, handlers] = useListState<IPregunta>(Preguntas);
   const [openedModal, setOpenedModal] = useState(false);
 
-  useEffect(() => {
-    handlers.setState(rootQuestions);
-  }, [PrLoading, Preguntas]);
-  const rootQuestions = Preguntas?.filter((item: any) => !item.preguntaPadre);
+  const rootQuestions = Preguntas?.filter((item: IPregunta) => !item.preguntaPadre);
   const subQuestions = Preguntas?.filter((item: any) => item.preguntaPadre);
 
-  const reorder = (list: any[], startIndex: number, endIndex: number) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
-    return result;
-  };
+  useEffect(() => {
+    handlers.setState(rootQuestions);
+  }, [isFetching, Preguntas]);
 
   const form = useForm({
     initialValues: {
@@ -53,47 +58,43 @@ const Preguntas: FC = (props) => {
     },
   });
   const onSubmit = async (values: any) => {
-    try {
-      values.posicion = rootQuestions.length + 1;
-      const data = await createNewPregunta(values);
-      const newPregunta = data.data;
+    values.posicion = rootQuestions.length + 1;
+
+    mutation.mutate(values);
+    // const data = await createNewPregunta(values);
+    if (mutation.isSuccess) {
+      console.log('Mutation response', mutation.data);
+      const newPregunta = mutation.data;
       handlers.append(newPregunta);
       form.reset();
       setOpenedModal(false);
-    } catch (error: any) {
-      setNewError(error.response.data.message, error.response.data.type);
-      form.setFieldError(error.response.data.type, error.response.data.message);
     }
+    if (mutation.isError) throw mutation.error;
   };
 
   return (
     <>
-      {PrLoading ? (
-        <Loading />
-      ) : (
-        <Card>
-          <HeaderApp
-            title="Cuestionario"
-            openModalFunction={() => setOpenedModal(true)}
-            buttonTitle="Crear nueva pregunta"
-            Icon={FiPlus}
-            loading={PrLoading}
-          />
-          <ModalNewPregunta
-            openedModal={openedModal}
-            setOpenedModal={setOpenedModal}
-            onSubmit={onSubmit}
-            form={form}
-          />
-          <Divider my={30} />
-          <PreguntasDraggable
-            subQuestions={subQuestions}
-            state={state}
-            handlers={handlers}
-            reorder={reorder}
-          />
-        </Card>
-      )}
+      <Card padding={'lg'} radius={'md'} withBorder>
+        <HeaderApp
+          title="Cuestionario"
+          openModalFunction={() => setOpenedModal(true)}
+          buttonTitle="Crear nueva pregunta"
+          Icon={FiPlus}
+          loading={PrLoading}
+        />
+        <ModalNewPregunta
+          openedModal={openedModal}
+          setOpenedModal={setOpenedModal}
+          onSubmit={onSubmit}
+          form={form}
+        />
+        <Divider my={30} />
+        {PrLoading ? (
+          <LoadingTable />
+        ) : (
+          <PreguntasDraggable subQuestions={subQuestions} state={state} handlers={handlers} />
+        )}
+      </Card>
     </>
   );
 };

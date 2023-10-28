@@ -1,7 +1,7 @@
 import { ActionIcon, Popover, Text, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { PlusIcon, Cross2Icon } from '@modulz/radix-icons';
-import { IconGripVertical } from '@tabler/icons';
+import { IconGripVertical } from '@tabler/icons-react';
 import { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import PreguntaAnidada from './PreguntaAnidada';

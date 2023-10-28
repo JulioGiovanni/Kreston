@@ -68,19 +68,20 @@ model Proyecto {
   cliente       Cliente        @relation(fields: [clienteId], references: [id])
   oficina       Oficina        @relation(fields: [oficinaId], references: [id])
   usuario       Usuario        @relation(fields: [usuarioId], references: [id])
-  cuestionarios Cuestionario[]
   respuestas    Respuesta[]
 }
 
 model Cuestionario {
   id                Int                @id @default(autoincrement())
-  proyectoId        Int
-  estado            estadoCuestionario @default(EN_ESPERA)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  proyecto          Proyecto           @relation(fields: [proyectoId], references: [id])
+  TipoCuestionario TipoCuestionario
   Preguntas         Pregunta[]
-  usuariosAsignados Json
+}
+
+enum TipoCuestionario {
+  CUESTIONARIO_INDEPENDENCIA_PROYECTO
+  CUESTIONARIO_INDEPENDENCIA_ANUAL
+  CUESTIONARIO_ACEPTACION
+  CUESTIONARIO_CONTINUIDAD
 }
 
 model Pregunta {

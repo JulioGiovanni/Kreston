@@ -9,6 +9,7 @@ import {
   FiBriefcase,
   FiArchive,
   FiUsers,
+  FiAward,
 } from 'react-icons/fi';
 import { IArrayLinks } from '../interfaces/links.interface';
 
@@ -19,7 +20,6 @@ export const AdminLinks: IArrayLinks[] = [
     Icon: FiHome,
   },
   {
-    link: '/aceptacion',
     text: 'A Y C',
     Icon: FiCheck,
     accordion: true,
@@ -27,19 +27,29 @@ export const AdminLinks: IArrayLinks[] = [
     tooltipText: 'Aceptación y Continuidad',
     accordionLinks: [
       {
-        link: '/aceptacion',
+        link: '/ayc/aceptacion',
         text: ' Aceptación',
       },
       {
-        link: '/continuidad',
+        link: '/ayc/continuidad',
         text: ' Continuidad',
       },
     ],
   },
   {
-    link: '/independencias',
     text: 'Independencia',
     Icon: FiFolder,
+    accordion: true,
+    accordionLinks: [
+      {
+        link: '/independencia/anual',
+        text: ' Anual',
+      },
+      {
+        link: '/independencia/proyecto',
+        text: ' Proyecto',
+      },
+    ],
   },
   {
     text: 'Consultas',
@@ -94,6 +104,11 @@ export const AdminLinks: IArrayLinks[] = [
     text: 'Clientes',
     Icon: FiUsers,
     link: '/clientes',
+  },
+  {
+    text: 'Control de calidad',
+    Icon: FiAward,
+    link: '/calidad',
   },
 ];
 

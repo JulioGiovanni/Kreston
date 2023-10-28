@@ -2,9 +2,8 @@ import axios from 'axios';
 import { IPregunta } from '../interfaces';
 
 export const getAllPreguntas = async (id: number) => {
-  const data = await axios.get(`/api/preguntas/${id}`);
-
-  return data.data;
+  const response = await axios.get(`/api/preguntas/${id}`);
+  return response.data.data;
 };
 export const createNewPregunta = async (pregunta: IPregunta) => {
   const data = await axios.post('/api/preguntas', pregunta);

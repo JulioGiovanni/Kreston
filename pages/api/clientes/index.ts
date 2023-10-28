@@ -51,7 +51,8 @@ const getAllClientes = async (req: NextApiRequest, res: NextApiResponse<Data>) =
 };
 const createNewCliente = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
-    const { nombre, correo, telefono, domicilio, tipoPersona } = req.body;
+    const { nombre, correo, telefono, domicilio, tipoPersona, socioEncargado, gerenteEncargado } =
+      req.body;
     if (!nombre)
       return res
         .status(400)
@@ -72,6 +73,17 @@ const createNewCliente = async (req: NextApiRequest, res: NextApiResponse<Data>)
         .status(400)
         .json({ message: 'Ese cliente ya existe', type: 'nombre', data: req.body });
 
+    const foundCorreo = await prisma.cliente.findFirst({
+      where: {
+        correo,
+      },
+    });
+
+    if (foundCorreo)
+      return res
+        .status(400)
+        .json({ message: 'Ese correo ya existe', type: 'correo', data: req.body });
+
     const cliente = await prisma.cliente.create({
       data: {
         nombre,
@@ -90,6 +102,24 @@ const createNewCliente = async (req: NextApiRequest, res: NextApiResponse<Data>)
         tipoPersona: true,
         createdAt: true,
       },
+    });
+
+    socioEncargado.forEach(async (socio: string) => {
+      await prisma.usuarioCliente.create({
+        data: {
+          clienteId: cliente.id,
+          usuarioId: socio,
+        },
+      });
+    });
+
+    gerenteEncargado.forEach(async (gerente: string) => {
+      await prisma.usuarioCliente.create({
+        data: {
+          clienteId: cliente.id,
+          usuarioId: gerente,
+        },
+      });
     });
 
     return res.status(200).json({

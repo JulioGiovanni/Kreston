@@ -21,7 +21,7 @@ const PreguntasDraggable = ({ subQuestions, handlers, state }: any) => {
     }
   };
   const items = state?.map((item: any, index: number) => {
-    return <ItemDraggable item={item} index={index} subQuestions={subQuestions} />;
+    return <ItemDraggable key={item.id} item={item} index={index} subQuestions={subQuestions} />;
   });
 
   return (

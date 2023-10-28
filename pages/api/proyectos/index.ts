@@ -160,7 +160,6 @@ const createNewProyecto = async (req: NextApiRequest, res: NextApiResponse<Data>
       data: Proyecto,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: 'error',
       data: error,

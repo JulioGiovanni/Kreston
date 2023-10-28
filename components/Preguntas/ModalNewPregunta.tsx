@@ -1,7 +1,18 @@
 import { Modal, Select, TextInput, Button, Space } from '@mantine/core';
-import React from 'react';
 
-const ModalNewPregunta = ({ openedModal, setOpenedModal, form, onSubmit }: any) => {
+interface ModalNewPreguntaProps {
+  openedModal: boolean;
+  setOpenedModal: (opened: boolean) => void;
+  form: any;
+  onSubmit: any;
+}
+
+const ModalNewPregunta = ({
+  openedModal,
+  setOpenedModal,
+  form,
+  onSubmit,
+}: ModalNewPreguntaProps) => {
   return (
     <>
       <Modal
@@ -12,7 +23,7 @@ const ModalNewPregunta = ({ openedModal, setOpenedModal, form, onSubmit }: any) 
         <form onSubmit={form.onSubmit(onSubmit)}>
           <TextInput
             label="Pregunta"
-            name="Pregunta"
+            name="nombre"
             placeholder="Escriba una pregunta"
             {...form.getInputProps('pregunta')}
           />

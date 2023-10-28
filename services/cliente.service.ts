@@ -6,9 +6,7 @@ export const getAllClientes = async () => {
   try {
     const { data } = await axios.get(url);
     return data.data;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 export const getAllClientesPaginated = async (nombre?: string, page = 1, perPage = 10) => {
@@ -19,9 +17,7 @@ export const getAllClientesPaginated = async (nombre?: string, page = 1, perPage
   try {
     const { data } = await axios.get(url);
     return data;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 export const getCliente = async (id: Number) => {

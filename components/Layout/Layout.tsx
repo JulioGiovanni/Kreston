@@ -18,11 +18,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         breakpoint: 'sm',
       }}
       header={{
-        height: 90,
+        height: 60,
       }}
-      padding={{ sm: 'md', lg: 'md' }}
+      p={{ sm: '30px' }}
     >
-      <AppShell.Navbar>
+      <AppShell.Navbar p={{ sm: 'md' }}>
         <Links />
       </AppShell.Navbar>
 

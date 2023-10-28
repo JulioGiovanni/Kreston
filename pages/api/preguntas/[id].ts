@@ -24,10 +24,11 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 }
 
 const getAllPreguntasFromCuestionario = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
   try {
     const preguntas = await prisma.pregunta.findMany({
       where: {
-        cuestionarioId: Number(req.query.id),
+        cuestionarioId: Number(id),
       },
       orderBy: {
         posicion: 'asc',

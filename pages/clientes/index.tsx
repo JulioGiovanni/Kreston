@@ -88,7 +88,7 @@ const Clientes: FC = (props) => {
         />
       </Modal>
 
-      <Card style={{ height: '90vh' }}>
+      <Card padding={'lg'} radius={'md'} withBorder>
         <HeaderApp
           loading={stillLoading}
           title="Clientes"

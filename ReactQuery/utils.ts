@@ -12,6 +12,7 @@ export const performSearch = (query: string, setQuery: any) => {
 export function useGenericMutation<T>(
   mutationFn: (data: T) => Promise<any>,
   key: string,
+  form: any,
   options?: Parameters<typeof useMutation>[1]
 ) {
   const queryClient = useQueryClient();
@@ -19,6 +20,12 @@ export function useGenericMutation<T>(
   return useMutation((data: T) => mutationFn(data), {
     onSuccess: () => {
       queryClient.invalidateQueries([`${key}`]);
+    },
+    onError: (error: any) => {
+      form.setError(error.response.data.type, {
+        type: 'custom',
+        message: error.response.data.message,
+      });
     },
     ...options,
   });

@@ -3,11 +3,7 @@ import { Card, Modal, Space, Table } from '@mantine/core';
 import { FiPlus } from 'react-icons/fi';
 
 import { ICuestionario } from '../../interfaces/cuestionario.interface';
-import Loading from '../../components/common/loaders/Loading';
 import { useRouter } from 'next/router';
-import { queryUsers } from '../../ReactQuery/Usuarios';
-import { queryProyectos } from '../../ReactQuery/Proyectos';
-import { mutateCuestionarios, queryCuestionarios } from '../../ReactQuery/Cuestionario';
 import { FormGenerator } from '../../components/common/FormGenerator';
 import { generateCuestionarioForm } from '../../utils/forms/Cuestionario.form';
 import { cuestionarioSchema } from '../../schemas/cuestionarioSchema';
@@ -15,11 +11,11 @@ import { ButtonTypes } from '../../interfaces/form.interface';
 import HeaderApp from '../../components/UI/HeaderApp';
 import LoadingTable from '../../components/common/loaders/LoadingTable';
 import { createNewCuestionario } from '../../services/cuestionario.service';
+import { queryCuestionarios } from '../../ReactQuery';
 
 const Cuestionario: FC = (props) => {
   const { Cuestionarios, isLoading: CuLoading, isError } = queryCuestionarios();
-  const { Proyectos, isLoading: PrLoading } = queryProyectos();
-  const { Usuarios, isLoading: UsLoading } = queryUsers();
+
   const [openedModal, setOpenedModal] = useState(false);
   const router = useRouter();
   let rows: any = [];
@@ -37,9 +33,8 @@ const Cuestionario: FC = (props) => {
           key={item.id}
           style={{ cursor: 'pointer' }}
         >
-          <Table.Td>{item.proyecto.nombre}</Table.Td>
-          {/* <td>{item.}</td>
-        <td>{item.pr}</td> */}
+          <Table.Td>{item.TipoCuestionario}</Table.Td>
+          <Table.Td>{item.Preguntas?.length}</Table.Td>
         </Table.Tr>
       );
     });
@@ -47,7 +42,7 @@ const Cuestionario: FC = (props) => {
 
   return (
     <>
-      {CuLoading || PrLoading ? (
+      {CuLoading ? (
         <LoadingTable />
       ) : (
         <>
@@ -72,7 +67,7 @@ const Cuestionario: FC = (props) => {
               mutationKey="cuestionarios"
             />
           </Modal>
-          <Card style={{ height: '90vh' }}>
+          <Card padding={'lg'} radius={'md'} withBorder>
             <HeaderApp
               title="Cuestionarios"
               openModalFunction={() => setOpenedModal(true)}

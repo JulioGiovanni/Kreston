@@ -91,7 +91,7 @@ const Oficinas: FC = (props) => {
 
             return (
               <Grid.Col span={{ sm: 12, md: 6, lg: 4 }} key={oficina.id}>
-                <Card style={{ height: 150, padding: 40 }}>
+                <Card style={{ padding: 40 }}>
                   <Card.Section>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Title order={3}>{oficina.nombre}</Title>

@@ -1,11 +1,9 @@
-import { getCookie, setCookies } from 'cookies-next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout/Layout';
 import Providers from '../components/providers/providers';
 
 import '@mantine/carousel/styles.css';
-import '@mantine/code-highlight/styles.css';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/dropzone/styles.css';

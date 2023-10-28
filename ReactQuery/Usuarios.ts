@@ -4,6 +4,15 @@ import { useQuery, useMutation, QueryClient } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
+export const user_roles = {
+  ADMIN: 1,
+  GERENTE: 2,
+  SOCIO: 3,
+  ENCARGADO: 4,
+  SOCIO_CALIDAD: 5,
+  USUARIO: 6,
+};
+
 export const queryUsers = (nombre?: string, rol?: number) => {
   let queryFn = () => getAllUsers();
   let queryKey = ['users'];

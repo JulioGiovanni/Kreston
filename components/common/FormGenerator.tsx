@@ -25,7 +25,7 @@ interface formGeneratorProps {
   formSchema: any;
   buttons: IButton[];
   loading: boolean;
-  setOpenedModal: any;
+  setOpenedModal?: any;
   mutationInterface: any;
   mutationFn: (data: any) => Promise<any>;
   mutationKey: string;
@@ -201,29 +201,54 @@ const fieldGenerator = (field: IField, form: any) => {
   }
 };
 
-const buttonGenerator = (button: IButton) => {
+const buttonGenerator = (button: IButton, isLoading: boolean) => {
   switch (button.type) {
     case 'submit':
       return (
-        <Button key={button.label} color="green" type={button.type} disabled={button.disabled}>
+        <Button
+          loading={isLoading}
+          key={button.label}
+          color="green"
+          type={button.type}
+          disabled={button.disabled}
+        >
           {button.label}
         </Button>
       );
     case 'button':
       return (
-        <Button key={button.label} type={button.type} disabled={button.disabled}>
+        <Button
+          leftSection={button.Icon ? <button.Icon /> : null}
+          loading={isLoading}
+          key={button.label}
+          type={button.type}
+          disabled={button.disabled}
+        >
           {button.label}
         </Button>
       );
     case 'reset':
       return (
-        <Button key={button.label} color="red" type={button.type} disabled={button.disabled}>
+        <Button
+          leftSection={button.Icon ? <button.Icon /> : null}
+          loading={isLoading}
+          key={button.label}
+          color="red"
+          type={button.type}
+          disabled={button.disabled}
+        >
           {button.label}
         </Button>
       );
     default:
       return (
-        <Button key={button.label} type={button.type} disabled={button.disabled}>
+        <Button
+          leftSection={button.Icon ? <button.Icon /> : null}
+          loading={isLoading}
+          key={button.label}
+          type={button.type}
+          disabled={button.disabled}
+        >
           {button.label}
         </Button>
       );
@@ -240,11 +265,6 @@ export const FormGenerator: FC<formGeneratorProps> = ({
   mutationFn,
   mutationKey,
 }) => {
-  const { mutate, isLoading, isError, error } = useGenericMutation<typeof mutationInterface>(
-    (newData: typeof mutationInterface) => mutationFn(newData),
-    mutationKey
-  );
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: fields.reduce((acc, field) => {
@@ -254,19 +274,21 @@ export const FormGenerator: FC<formGeneratorProps> = ({
       };
     }, {}),
   });
+
+  const { mutate, isLoading, isError, error } = useGenericMutation<typeof mutationInterface>(
+    (newData: typeof mutationInterface) => mutationFn(newData),
+    mutationKey,
+    form
+  );
   return (
     <form
       onSubmit={form.handleSubmit(() => {
-        try {
-          mutate(form.getValues());
-          setOpenedModal(false);
-        } catch (error: any) {
-          console.log(error);
-          form.setError(error.response.data.type, {
-            type: 'custom',
-            message: error.response.data.message,
-          });
-          // setError(error.response.data.message, error.response.data.type);
+        mutate(form.getValues());
+        if (!isError) {
+          form.reset();
+          if (setOpenedModal) {
+            setOpenedModal(false);
+          }
         }
       })}
     >
@@ -278,7 +300,7 @@ export const FormGenerator: FC<formGeneratorProps> = ({
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
         {buttons.map((button) => {
-          return buttonGenerator(button);
+          return buttonGenerator(button, isLoading);
         })}
       </div>
     </form>

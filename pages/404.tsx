@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Title, Text, Button, Container, Group } from '@mantine/core';
 import classes from '../styles/NotFoundTitle.module.css';
 
-const NotFoundTitle: FC = () => {
+const NotFoundTitle: FC = (props) => {
   return (
     <Container className={classes.root}>
       <div className={classes.label}>404</div>
@@ -11,7 +11,7 @@ const NotFoundTitle: FC = () => {
         Unfortunately, this is only a 404 page. You may have mistyped the address, or the page has
         been moved to another URL.
       </Text>
-      <Group justify="center">
+      <Group>
         <Button variant="subtle" size="md">
           Take me back to home page
         </Button>

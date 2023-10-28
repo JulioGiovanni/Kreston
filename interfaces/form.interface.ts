@@ -1,3 +1,5 @@
+import { IconType } from 'react-icons';
+
 export interface IField {
   name: string;
   label: string;
@@ -24,6 +26,7 @@ export interface IButton {
   onClick?: any;
   disabled?: boolean;
   loading?: boolean;
+  Icon?: IconType;
 }
 
 export interface IOptions {

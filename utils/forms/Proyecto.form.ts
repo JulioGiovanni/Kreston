@@ -27,8 +27,6 @@ export const generateProyectosForm = (Clientes: any, Usuarios: any, Oficinas: an
         return { value: cliente.id.toString(), label: cliente.nombre };
       }),
       defaultValue: '',
-      createNew: true,
-      createNewModal: () => {},
     },
     {
       label: 'Seleccione un usuario para este proyecto',

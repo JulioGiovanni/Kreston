@@ -23,7 +23,6 @@ import { FormGenerator } from '../../components/common/FormGenerator';
 import { generateAreaForm } from '../../utils/forms/Area.form';
 import { areaSchema } from '../../schemas/areaSchema';
 import { ButtonTypes } from '../../interfaces/form.interface';
-import { onSubmitForm } from '../../utils/submitForm';
 import { queryOficinas } from '../../ReactQuery/Oficinas';
 
 export const Areas: FC = (props) => {
@@ -44,7 +43,6 @@ export const Areas: FC = (props) => {
           <Modal opened={openedModal} onClose={() => setOpenedModal(false)} title={'Agregar área'}>
             <FormGenerator
               fields={generateAreaForm(Oficinas)}
-              formSubmitAction={onSubmitForm}
               formSchema={areaSchema}
               buttons={[
                 {
@@ -53,9 +51,10 @@ export const Areas: FC = (props) => {
                 },
               ]}
               loading={stillLoading}
-              mutation={mutateAreas}
               setOpenedModal={setOpenedModal}
-              setError={setNewError}
+              mutationFn={createNewArea}
+              mutationKey={'areas'}
+              mutationInterface={{}}
             />
           </Modal>
           <HeaderApp
@@ -76,7 +75,7 @@ export const Areas: FC = (props) => {
                 .join('');
               return (
                 <Grid.Col span={{ sm: 12, md: 6, lg: 4 }} key={area.id}>
-                  <Card style={{ height: 150, padding: 40 }} withBorder>
+                  <Card style={{ padding: 40 }} withBorder>
                     <Card.Section>
                       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -103,7 +102,11 @@ export const Areas: FC = (props) => {
                     </Card.Section>
 
                     <Card.Section mt={20}>
-                      <Link href={`/areas/${area.id}`} passHref>
+                      <Link
+                        href={`/areas/${area.id}`}
+                        passHref
+                        style={{ textDecorationLine: 'none' }}
+                      >
                         <Button fullWidth>Ver Más</Button>
                       </Link>
                     </Card.Section>

@@ -82,7 +82,7 @@ const Proyectos: FC = (props) => {
         />
       </Modal>
 
-      <Card style={{ height: '90vh' }}>
+      <Card padding={'lg'} radius={'md'} withBorder>
         <HeaderApp
           title="Proyectos"
           input
