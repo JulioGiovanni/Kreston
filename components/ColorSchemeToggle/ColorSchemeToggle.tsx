@@ -8,7 +8,7 @@ export function SegmentedToggle() {
     <Group>
       <SegmentedControl
         value={colorScheme}
-        onChange={(value: 'light' | 'dark') => setColorScheme(value)}
+        onChange={(val) => setColorScheme(val as typeof colorScheme)}
         data={[
           {
             value: 'light',

@@ -275,7 +275,7 @@ export const FormGenerator: FC<formGeneratorProps> = ({
     }, {}),
   });
 
-  const { mutate, isLoading, isError, error } = useGenericMutation<typeof mutationInterface>(
+  const { mutate, isPending, isError, error } = useGenericMutation<typeof mutationInterface>(
     (newData: typeof mutationInterface) => mutationFn(newData),
     mutationKey,
     form
@@ -300,7 +300,7 @@ export const FormGenerator: FC<formGeneratorProps> = ({
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
         {buttons.map((button) => {
-          return buttonGenerator(button, isLoading);
+          return buttonGenerator(button, isPending);
         })}
       </div>
     </form>

@@ -5,11 +5,12 @@ import { useGenericQuery } from '../../ReactQuery';
 import { getAllAceptacionAnual } from '../../services/aceptacionanual.service';
 import LoadingTable from '../common/loaders/LoadingTable';
 import Error from '../UI/Error';
+import { useQuery } from '@tanstack/react-query';
 
 const AceptacionTablas = () => {
-  const { data, isLoading, isError } = useGenericQuery({
-    key: 'AceptacionTablas',
-    queryFn: getAllAceptacionAnual,
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['AceptacionTablas'],
+    queryFn: () => getAllAceptacionAnual(),
   });
   let Usuarios = [];
   if (data) {

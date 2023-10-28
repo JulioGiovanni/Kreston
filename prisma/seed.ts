@@ -85,9 +85,7 @@ const createUsers = async () => {
 const createCuestionario = async () => {
   await prisma.cuestionario.create({
     data: {
-      proyectoId: 1,
-      usuariosAsignados: ['clcqxmjcg00014yqr4uo944cm', 'clcqy3jik00004yfl93qq56sk'],
-      createdAt: new Date(),
+      TipoCuestionario: 'CUESTIONARIO_INDEPENDENCIA_PROYECTO',
     },
   });
 };

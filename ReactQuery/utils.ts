@@ -5,7 +5,7 @@ const queryClient = new QueryClient();
 export const performSearch = (query: string, setQuery: any) => {
   setQuery(query);
   window.setTimeout(() => {
-    queryClient.invalidateQueries(['clientes', { query }]);
+    queryClient.invalidateQueries({ queryKey: ['clientes', { query }] });
   }, 500);
 };
 
@@ -17,9 +17,10 @@ export function useGenericMutation<T>(
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation((data: T) => mutationFn(data), {
+  return useMutation({
+    mutationFn: (data: T) => mutationFn(data),
     onSuccess: () => {
-      queryClient.invalidateQueries([`${key}`]);
+      queryClient.invalidateQueries({ queryKey: [`${key}`] });
     },
     onError: (error: any) => {
       form.setError(error.response.data.type, {
@@ -39,7 +40,9 @@ export function useGenericQuery<T>({
   queryFn: () => Promise<T>;
   options?: any;
 }) {
-  return useQuery([`${key}`], () => queryFn(), {
+  return useQuery({
+    queryKey: key,
+    queryFn,
     ...options,
   });
 }
