@@ -1,27 +1,32 @@
-import {
-  FiCheck,
-  FiHome,
-  FiUser,
-  FiFolder,
-  FiSquare,
-  FiInfo,
-  FiClipboard,
-  FiBriefcase,
-  FiArchive,
-  FiUsers,
-  FiAward,
-} from 'react-icons/fi';
 import { IArrayLinks } from '../interfaces/links.interface';
+import {
+  IconArchive,
+  IconAward,
+  IconBriefcase,
+  IconCheck,
+  IconClipboard,
+  IconFolder,
+  IconHome,
+  IconInfoCircle,
+  IconSquare,
+  IconUser,
+  IconUsers,
+} from '@tabler/icons-react';
 
 export const AdminLinks: IArrayLinks[] = [
   {
     link: '/dashboard',
     text: 'Inicio',
-    Icon: FiHome,
+    Icon: IconHome,
+  },
+  {
+    text: 'Clientes',
+    Icon: IconUsers,
+    link: '/clientes',
   },
   {
     text: 'A Y C',
-    Icon: FiCheck,
+    Icon: IconCheck,
     accordion: true,
     tooltip: true,
     tooltipText: 'Aceptación y Continuidad',
@@ -38,7 +43,7 @@ export const AdminLinks: IArrayLinks[] = [
   },
   {
     text: 'Independencia',
-    Icon: FiFolder,
+    Icon: IconFolder,
     accordion: true,
     accordionLinks: [
       {
@@ -52,8 +57,13 @@ export const AdminLinks: IArrayLinks[] = [
     ],
   },
   {
+    text: 'Proyectos',
+    Icon: IconArchive,
+    link: '/proyectos',
+  },
+  {
     text: 'Consultas',
-    Icon: FiInfo,
+    Icon: IconInfoCircle,
     accordion: true,
     link: '/consultas',
     accordionLinks: [
@@ -78,36 +88,26 @@ export const AdminLinks: IArrayLinks[] = [
   {
     link: '/usuarios',
     text: 'Usuarios',
-    Icon: FiUser,
+    Icon: IconUser,
   },
   {
     link: '/areas',
     text: 'Áreas',
-    Icon: FiSquare,
+    Icon: IconSquare,
   },
   {
     link: '/oficinas',
     text: 'Oficinas',
-    Icon: FiBriefcase,
+    Icon: IconBriefcase,
   },
   {
     text: 'Cuestionario',
-    Icon: FiClipboard,
+    Icon: IconClipboard,
     link: '/cuestionarios',
   },
   {
-    text: 'Proyectos',
-    Icon: FiArchive,
-    link: '/proyectos',
-  },
-  {
-    text: 'Clientes',
-    Icon: FiUsers,
-    link: '/clientes',
-  },
-  {
     text: 'Control de calidad',
-    Icon: FiAward,
+    Icon: IconAward,
     link: '/calidad',
   },
 ];

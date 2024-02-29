@@ -1,7 +1,7 @@
 import { Button, TextInput, Title } from '@mantine/core';
-import { FiSearch } from 'react-icons/fi';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { IconSearch } from '@tabler/icons-react';
 interface Props {
   title: string;
   buttonTitle: string;
@@ -35,7 +35,7 @@ const HeaderApp = (props: Props) => {
         <TextInput
           placeholder={props.searchPlaceholder}
           label={props.searchLabel}
-          leftSection={<FiSearch />}
+          leftSection={<IconSearch />}
           {...register('nombre')}
           onBlur={searchOnBlur}
         />

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import { Stepper, Button, Group, Card, Text, Center } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { FormGenerator } from '../common/FormGenerator';
 import {
   queryAreas,
@@ -17,6 +18,7 @@ import { createNewCliente } from '../../services/cliente.service';
 import { proyectoSchema } from '../../schemas/proyectoSchema';
 import { createNewProyecto } from '../../services/proyecto.service';
 import { generateProyectosForm } from '../../utils/forms/Proyecto.form';
+import { StepperContext, StepperProvider } from '../../context/Stepper';
 
 const AceptacionUsuario = () => {
   const {
@@ -37,14 +39,46 @@ const AceptacionUsuario = () => {
   const { Clientes, isLoading: ClLoading, isError: ClError } = queryClientes();
 
   const [active, setActive] = useState(0);
+  const { clientCreated, projectCreated } = useContext(StepperContext);
   const nextStep = () => setActive((current) => (current < 3 ? current + 1 : current));
   const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
   const firstLoading = ScIsLoading || GrIsLoading;
   const secondLoading = UsLoading || ArLoading || ClLoading || OfLoading || PrLoading;
   const anyError = ScIsError || GrIsError;
+
+  const nextSteps = () => {
+    if (active === 0) {
+      if (clientCreated) {
+        nextStep();
+      } else {
+        //TODO: Crear alerta para decir que falta crear cliente
+        modals.openConfirmModal({
+          title: 'Error',
+          centered: true,
+          children: <Text> Para avanzar primero tienes que crear un cliente</Text>,
+          labels: { confirm: 'Aceptar', cancel: 'Cancelar' },
+        });
+      }
+    } else if (active === 1) {
+      if (projectCreated) {
+        nextStep();
+      } else {
+        //TODO: Crear alerta para decir que falta crear proyecto
+        modals.openConfirmModal({
+          title: 'Error',
+          centered: true,
+          children: <Text> Para avanzar primero tienes que crear un proyecto</Text>,
+          labels: { confirm: 'Aceptar', cancel: 'Cancelar' },
+        });
+      }
+    } else {
+      nextStep();
+    }
+  };
+
   return (
-    <div>
+    <StepperProvider>
       <Stepper active={active} onStepClick={setActive} allowNextStepsSelect={false}>
         <Stepper.Step label="Primer paso" description="Crear un cliente">
           <Card>
@@ -98,9 +132,9 @@ const AceptacionUsuario = () => {
         <Button variant="default" onClick={prevStep}>
           Paso anterior
         </Button>
-        <Button onClick={nextStep}>Siguiente paso</Button>
+        <Button onClick={nextSteps}>Siguiente paso</Button>
       </Group>
-    </div>
+    </StepperProvider>
   );
 };
 

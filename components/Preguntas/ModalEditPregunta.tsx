@@ -4,6 +4,7 @@ import { showNotification } from '@mantine/notifications';
 import React from 'react';
 import { IPregunta } from '../../interfaces/pregunta.interface';
 import { updatePregunta } from '../../services/pregunta.service';
+import { mutatePregunta } from '../../ReactQuery';
 
 interface modalProps {
   item: IPregunta;
@@ -11,6 +12,7 @@ interface modalProps {
 }
 
 const ModalEditPregunta = ({ item, closeModal }: modalProps) => {
+  const mutation = mutatePregunta(item.id);
   const form = useForm({
     initialValues: {
       pregunta: item?.pregunta,
@@ -21,7 +23,7 @@ const ModalEditPregunta = ({ item, closeModal }: modalProps) => {
   });
   const onSubmit = async (values: any) => {
     try {
-      await updatePregunta(values);
+      mutation.mutate(values);
       closeModal();
       showNotification({
         title: 'Pregunta actualizada',

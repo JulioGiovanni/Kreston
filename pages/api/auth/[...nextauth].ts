@@ -76,22 +76,27 @@ export default NextAuth({
 });
 
 const NextAuthLogin = async (correo: string, contrasena: string) => {
-  const user = await prisma.usuario.findUnique({
-    where: {
-      correo,
-    },
-    include: {
-      rol: true,
-      oficina: true,
-      area: true,
-    },
-  });
+  try {
+    const user = await prisma.usuario.findUnique({
+      where: {
+        correo,
+      },
+      include: {
+        rol: true,
+        oficina: true,
+        area: true,
+      },
+    });
 
-  if (!user) return null;
+    if (!user) return null;
 
-  if (user.activo === false) return null;
+    if (user.activo === false) return null;
 
-  if (!bcrypt.compareSync(contrasena, user.contrasena!)) return null;
+    if (!bcrypt.compareSync(contrasena, user.contrasena!)) return null;
 
-  return user;
+    return user;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 };

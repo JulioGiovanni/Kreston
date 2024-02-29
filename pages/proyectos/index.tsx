@@ -1,6 +1,5 @@
 import React, { FC, useContext, useState } from 'react';
 import { Table, Group, Text, Card, Modal, Space } from '@mantine/core';
-import { FiPlus } from 'react-icons/fi';
 import { ErrorsContext } from '../../context/Errors';
 import {
   queryAreas,
@@ -22,6 +21,7 @@ import { generateProyectosForm } from '../../utils/forms/Proyecto.form';
 import { proyectoSchema } from '../../schemas/proyectoSchema';
 import Error from '../../components/UI/Error';
 import { createNewProyecto } from '../../services/proyecto.service';
+import { IconUserPlus } from '@tabler/icons-react';
 
 const Proyectos: FC = (props) => {
   const [Nombre, setNombre] = useState('');
@@ -93,7 +93,7 @@ const Proyectos: FC = (props) => {
           openModalFunction={() => setOpenedModal(true)}
           buttonTitle="Agregar Proyecto"
           searchValue={Nombre}
-          Icon={FiPlus}
+          Icon={IconUserPlus}
           loading={stillLoading}
         />
         <Space h={30} />

@@ -18,7 +18,7 @@ import {
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useGenericMutation } from '../../ReactQuery';
-import { FiPlus } from 'react-icons/fi';
+import { IconUserPlus } from '@tabler/icons-react';
 
 interface formGeneratorProps {
   fields: IField[];
@@ -104,7 +104,7 @@ const fieldGenerator = (field: IField, form: any) => {
               )}
             />
             <Button color="green" onClick={field.createNewModal}>
-              <FiPlus />
+              <IconUserPlus />
             </Button>
           </div>
         );

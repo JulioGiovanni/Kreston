@@ -6,14 +6,13 @@ import { useForm } from '@mantine/form';
 import { queryPreguntas } from '../../ReactQuery';
 import ModalNewPregunta from '../../components/Preguntas/ModalNewPregunta';
 import PreguntasDraggable from '../../components/Preguntas/Draggable';
-import { useRouter } from 'next/router';
 
 import HeaderApp from '../../components/UI/HeaderApp';
 import { IPregunta } from '../../interfaces/pregunta.interface';
-import { FiPlus } from 'react-icons/fi';
 import LoadingTable from '../../components/common/loaders/LoadingTable';
 import { mutatePreguntas } from '../../ReactQuery/Preguntas';
 import { InferGetServerSidePropsType } from 'next';
+import { IconUserPlus } from '@tabler/icons-react';
 
 export const getServerSideProps = async (context: any) => {
   const id = context.params.id;
@@ -26,7 +25,6 @@ export const getServerSideProps = async (context: any) => {
 
 const Preguntas = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   //Get the id of the questionary based on the url
-  const router = useRouter();
   const { id } = props;
   const {
     data: Preguntas,
@@ -35,7 +33,6 @@ const Preguntas = (props: InferGetServerSidePropsType<typeof getServerSideProps>
     isFetching,
   } = queryPreguntas(id);
   const mutation = mutatePreguntas();
-
   const [state, handlers] = useListState<IPregunta>(Preguntas);
   const [openedModal, setOpenedModal] = useState(false);
 
@@ -60,7 +57,8 @@ const Preguntas = (props: InferGetServerSidePropsType<typeof getServerSideProps>
   const onSubmit = async (values: any) => {
     values.posicion = rootQuestions.length + 1;
 
-    mutation.mutate(values);
+    const data = mutation.mutate(values);
+    console.log(data);
     // const data = await createNewPregunta(values);
     if (mutation.isSuccess) {
       console.log('Mutation response', mutation.data);
@@ -79,7 +77,7 @@ const Preguntas = (props: InferGetServerSidePropsType<typeof getServerSideProps>
           title="Cuestionario"
           openModalFunction={() => setOpenedModal(true)}
           buttonTitle="Crear nueva pregunta"
-          Icon={FiPlus}
+          Icon={IconUserPlus}
           loading={PrLoading}
         />
         <ModalNewPregunta

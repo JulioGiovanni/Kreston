@@ -1,4 +1,3 @@
-import { FiPlus } from 'react-icons/fi';
 import {
   Avatar,
   Button,
@@ -24,6 +23,7 @@ import { generateAreaForm } from '../../utils/forms/Area.form';
 import { areaSchema } from '../../schemas/areaSchema';
 import { ButtonTypes } from '../../interfaces/form.interface';
 import { queryOficinas } from '../../ReactQuery/Oficinas';
+import { IconUserPlus } from '@tabler/icons-react';
 
 export const Areas: FC = (props) => {
   const [openedModal, setOpenedModal] = useState(false);
@@ -61,7 +61,7 @@ export const Areas: FC = (props) => {
             title="Áreas"
             openModalFunction={() => setOpenedModal(true)}
             buttonTitle="Agregar área"
-            Icon={FiPlus}
+            Icon={IconUserPlus}
             loading={stillLoading}
           />
           <Space h={30} />

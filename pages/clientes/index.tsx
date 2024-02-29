@@ -5,7 +5,6 @@ import { FC, useState } from 'react';
 import { Card, Modal, Space, Table, Pagination, Select } from '@mantine/core';
 
 //React Icons
-import { FiPlus } from 'react-icons/fi';
 
 //Interfaces
 import { ICliente } from '../../interfaces/cliente.interface';
@@ -25,6 +24,7 @@ import EmptyComponent from '../../components/common/Empty';
 import { generateClienteForm } from '../../utils/forms/Cliente.form';
 
 import { createNewCliente } from '../../services/cliente.service';
+import { IconUserPlus } from '@tabler/icons-react';
 
 const Clientes: FC = (props) => {
   const [Nombre, setNombre] = useState('');
@@ -100,7 +100,7 @@ const Clientes: FC = (props) => {
           openModalFunction={() => setOpenedModal(true)}
           buttonTitle="Agregar Cliente"
           searchValue={Nombre}
-          Icon={FiPlus}
+          Icon={IconUserPlus}
         />
 
         <Space h={30} />

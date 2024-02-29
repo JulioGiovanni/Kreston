@@ -1,4 +1,3 @@
-import { FiPlus } from 'react-icons/fi';
 import {
   Avatar,
   Button,
@@ -20,6 +19,7 @@ import { ErrorsContext } from '../../context/Errors';
 import { createNewOficina } from '../../services/oficina.service';
 import { queryOficinas } from '../../ReactQuery/Oficinas';
 import Loading from '../../components/common/loaders/Loading';
+import { IconUserPlus } from '@tabler/icons-react';
 
 const Oficinas: FC = (props) => {
   const { Oficinas, isLoading, isError } = queryOficinas();
@@ -73,7 +73,7 @@ const Oficinas: FC = (props) => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Title order={2}>Oficinas</Title>
-        <Button leftSection={<FiPlus />} onClick={() => setOpenedModal(true)}>
+        <Button leftSection={<IconUserPlus />} onClick={() => setOpenedModal(true)}>
           <Text>Agregar oficina</Text>
         </Button>
       </div>

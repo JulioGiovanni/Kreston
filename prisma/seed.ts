@@ -16,12 +16,12 @@ const createUsers = async () => {
       createdAt: new Date(),
     },
     {
-      nombre: 'Marco Antonio Carrillo Velasco',
-      correo: 'sociocalidad@test.com',
+      nombre: 'Claudia Aracely Flores Zermeño',
+      correo: 'gerente@test.com',
       contrasena: pass,
       oficinaId: 1,
       areaId: 1,
-      rolId: 5,
+      rolId: 2,
       createdAt: new Date(),
     },
     {
@@ -34,21 +34,21 @@ const createUsers = async () => {
       createdAt: new Date(),
     },
     {
-      nombre: 'Claudia Aracely Flores Zermeño',
-      correo: 'gerente@test.com',
-      contrasena: pass,
-      oficinaId: 1,
-      areaId: 1,
-      rolId: 2,
-      createdAt: new Date(),
-    },
-    {
       nombre: 'Mónica Zermeño Ramírez',
       correo: 'encargado@test.com',
       contrasena: pass,
       oficinaId: 1,
       areaId: 1,
       rolId: 4,
+      createdAt: new Date(),
+    },
+    {
+      nombre: 'Marco Antonio Carrillo Velasco',
+      correo: 'sociocalidad@test.com',
+      contrasena: pass,
+      oficinaId: 1,
+      areaId: 1,
+      rolId: 5,
       createdAt: new Date(),
     },
     {
@@ -172,12 +172,12 @@ const createRol = async () => {
 };
 
 async function main() {
-  // await createRol();
-  // await createOficina();
+  await createRol();
+  await createOficina();
   await createArea();
   await createUsers();
   await createCliente();
-  // await createCuestionario();
+  await createCuestionario();
 }
 
 main()

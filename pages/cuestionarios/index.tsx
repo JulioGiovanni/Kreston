@@ -1,6 +1,5 @@
 import { FC, useState } from 'react';
 import { Card, Modal, Space, Table } from '@mantine/core';
-import { FiPlus } from 'react-icons/fi';
 
 import { ICuestionario } from '../../interfaces/cuestionario.interface';
 import { useRouter } from 'next/router';
@@ -12,6 +11,7 @@ import HeaderApp from '../../components/UI/HeaderApp';
 import LoadingTable from '../../components/common/loaders/LoadingTable';
 import { createNewCuestionario } from '../../services/cuestionario.service';
 import { queryCuestionarios } from '../../ReactQuery';
+import { IconUserPlus } from '@tabler/icons-react';
 
 const Cuestionario: FC = (props) => {
   const { Cuestionarios, isLoading: CuLoading, isError } = queryCuestionarios();
@@ -72,7 +72,7 @@ const Cuestionario: FC = (props) => {
               title="Cuestionarios"
               openModalFunction={() => setOpenedModal(true)}
               buttonTitle="Agregar cuestionario"
-              Icon={FiPlus}
+              Icon={IconUserPlus}
               loading={CuLoading}
             />
             <Space h={30} />

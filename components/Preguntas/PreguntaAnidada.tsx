@@ -1,9 +1,9 @@
 import { Button, Select, TextInput } from '@mantine/core';
 import { TrashIcon } from '@modulz/radix-icons';
 import { useForm } from '@mantine/form';
-import { FiSave } from 'react-icons/fi';
 import { createNewPregunta, deletePregunta } from '../../services/pregunta.service';
 import { IPregunta } from '../../interfaces/pregunta.interface';
+import { IconDeviceFloppy } from '@tabler/icons-react';
 interface Props {
   subQuestion: any;
   preguntaPadre: IPregunta;
@@ -58,7 +58,7 @@ const PreguntaAnidada = ({ preguntaPadre, subQuestion }: Props) => {
       />
       {subQuestion?.pregunta ? (
         <Button onClick={() => onUpdate(form.values)} style={{ marginRight: '10px' }} color="green">
-          <FiSave />
+          <IconDeviceFloppy />
         </Button>
       ) : (
         <Button type="submit" style={{ marginRight: '10px' }} color="green">

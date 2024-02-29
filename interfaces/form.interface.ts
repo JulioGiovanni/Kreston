@@ -1,4 +1,4 @@
-import { IconType } from 'react-icons';
+import { ReactNode } from 'react';
 
 export interface IField {
   name: string;
@@ -26,7 +26,7 @@ export interface IButton {
   onClick?: any;
   disabled?: boolean;
   loading?: boolean;
-  Icon?: IconType;
+  Icon?: any;
 }
 
 export interface IOptions {

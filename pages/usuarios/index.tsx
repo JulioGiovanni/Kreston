@@ -1,6 +1,5 @@
 import { FC, useContext, useState } from 'react';
 import { Card, Modal, Space } from '@mantine/core';
-import { FiMail, FiPlus } from 'react-icons/fi';
 import { FormGenerator } from '../../components/common/FormGenerator';
 import HeaderApp from '../../components/UI/HeaderApp';
 import { ShowUsersTable2 } from '../../components/Users/ShowUsersTable2';
@@ -14,6 +13,7 @@ import { performSearch } from '../../ReactQuery/utils';
 import { UsuarioSchema } from '../../schemas/usuario.Schema';
 import { generateUsuarioForm } from '../../utils/forms/Usuario.form';
 import { createNewUser } from '../../services/usuarios.service';
+import { IconMail, IconUserPlus } from '@tabler/icons-react';
 
 const UsuariosIndex: FC = (props) => {
   const [Nombre, setNombre] = useState('');
@@ -32,7 +32,7 @@ const UsuariosIndex: FC = (props) => {
         <FormGenerator
           fields={generateUsuarioForm(Areas, Oficinas, Roles)}
           formSchema={UsuarioSchema}
-          buttons={[{ type: ButtonTypes.BUTTON, label: 'Enviar Correo', Icon: FiMail }]}
+          buttons={[{ type: ButtonTypes.BUTTON, label: 'Enviar Correo', Icon: IconMail }]}
           mutationFn={createNewUser}
           mutationKey={'users'}
           mutationInterface={{}}
@@ -52,7 +52,7 @@ const UsuariosIndex: FC = (props) => {
           setSearchValue={setNombre}
           openModalFunction={() => setOpenedModal(true)}
           buttonTitle="Agregar usuario"
-          Icon={FiPlus}
+          Icon={IconUserPlus}
         />
         <Space h={30} />
         <ShowUsersTable2 />

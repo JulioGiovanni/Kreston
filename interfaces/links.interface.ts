@@ -1,8 +1,6 @@
-import { IconType } from 'react-icons';
-
 export interface IArrayLinks {
   text: string;
-  Icon: IconType;
+  Icon: any;
   link?: string;
   accordion?: boolean;
   tooltip?: boolean;

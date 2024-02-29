@@ -1,7 +1,6 @@
 import { Button, Table, Tooltip } from '@mantine/core';
 import React from 'react';
 import { IconMailForward } from '@tabler/icons-react';
-import { useGenericQuery } from '../../ReactQuery';
 import { getAllAceptacionAnual } from '../../services/aceptacionanual.service';
 import LoadingTable from '../common/loaders/LoadingTable';
 import Error from '../UI/Error';
