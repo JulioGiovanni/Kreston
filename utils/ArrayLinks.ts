@@ -1,81 +1,115 @@
-
-import { FiCheck,FiHome,FiUser,FiFolder,FiSquare,FiInfo,FiClipboard, FiBriefcase,FiArchive,FiUsers } from "react-icons/fi";
 import { IArrayLinks } from '../interfaces/links.interface';
+import {
+  IconArchive,
+  IconAward,
+  IconBriefcase,
+  IconCheck,
+  IconClipboard,
+  IconFolder,
+  IconHome,
+  IconInfoCircle,
+  IconSquare,
+  IconUser,
+  IconUsers,
+} from '@tabler/icons-react';
 
 export const AdminLinks: IArrayLinks[] = [
-    {   
-        link: '/index/dashboard',  
-        text: 'Inicio',
-        Icon:  FiHome, 
-    },
-    {   
-        link: '/index/aceptacion',  
-        text: 'Aceptación',
-        Icon:  FiCheck,
-    },
-    {   
-        link: '/index/independencias',  
-        text: 'Independencia',
-        Icon:  FiFolder ,
-    },
-    {   
-        text: 'Consultas',
-        Icon:  FiInfo ,
-        accordion:true,
-        link:'/index/consultas',
-        accordionLinks:[
-
-            {
-                link: '/index/consultas/crear',
-                text:' Crear',  
-            },
-            {
-                link: '/index/consultas/aprobadas',
-                text:' Aprobadas',
-            },
-            {
-                link: '/index/consultas/rechazadas',
-                text:' Rechazadas',
-            },
-            {
-                link: '/index/consultas/espera',
-                text:' En espera',
-            },
-        ]
-        
-    },
-    {   
-        link: '/index/usuarios',  
-        text: 'Usuarios',
-        Icon:  FiUser ,
-    },
-    {   
-        link: '/index/areas',  
-        text: 'Áreas',
-        Icon:  FiSquare ,
-    },
-    {   
-        link: '/index/oficinas',  
-        text: 'Oficinas',
-        Icon:  FiBriefcase ,
-    },
-    {   
-        text: 'Cuestionario',
-        Icon: FiClipboard,
-        link: '/index/cuestionarios',
-        
-    },
-    {
-        text: 'Proyectos',
-        Icon: FiArchive,
-        link: '/index/proyectos',
-    },
-    {
-        text: 'Clientes',
-        Icon: FiUsers,
-        link: '/index/clientes',
-    }
-]
-
-export const UserLinks = [
+  {
+    link: '/dashboard',
+    text: 'Inicio',
+    Icon: IconHome,
+  },
+  {
+    text: 'Clientes',
+    Icon: IconUsers,
+    link: '/clientes',
+  },
+  {
+    text: 'A Y C',
+    Icon: IconCheck,
+    accordion: true,
+    tooltip: true,
+    tooltipText: 'Aceptación y Continuidad',
+    accordionLinks: [
+      {
+        link: '/ayc/aceptacion',
+        text: ' Aceptación',
+      },
+      {
+        link: '/ayc/continuidad',
+        text: ' Continuidad',
+      },
+    ],
+  },
+  {
+    text: 'Independencia',
+    Icon: IconFolder,
+    accordion: true,
+    accordionLinks: [
+      {
+        link: '/independencia/anual',
+        text: ' Anual',
+      },
+      {
+        link: '/independencia/proyecto',
+        text: ' Proyecto',
+      },
+    ],
+  },
+  {
+    text: 'Proyectos',
+    Icon: IconArchive,
+    link: '/proyectos',
+  },
+  {
+    text: 'Consultas',
+    Icon: IconInfoCircle,
+    accordion: true,
+    link: '/consultas',
+    accordionLinks: [
+      {
+        link: '/consultas/crear',
+        text: ' Crear',
+      },
+      {
+        link: '/consultas/aprobadas',
+        text: ' Aprobadas',
+      },
+      {
+        link: '/consultas/rechazadas',
+        text: ' Rechazadas',
+      },
+      {
+        link: '/consultas/espera',
+        text: ' En espera',
+      },
+    ],
+  },
+  {
+    link: '/usuarios',
+    text: 'Usuarios',
+    Icon: IconUser,
+  },
+  {
+    link: '/areas',
+    text: 'Áreas',
+    Icon: IconSquare,
+  },
+  {
+    link: '/oficinas',
+    text: 'Oficinas',
+    Icon: IconBriefcase,
+  },
+  {
+    text: 'Cuestionario',
+    Icon: IconClipboard,
+    link: '/cuestionarios',
+  },
+  {
+    text: 'Control de calidad',
+    Icon: IconAward,
+    link: '/calidad',
+  },
 ];
+
+export const UserLinks = [];

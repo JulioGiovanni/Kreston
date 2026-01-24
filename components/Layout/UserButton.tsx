@@ -1,44 +1,28 @@
 import { forwardRef, Ref } from 'react';
 import { ChevronRightIcon } from '@modulz/radix-icons';
 import { Group, Avatar, Text, UnstyledButton } from '@mantine/core';
-
+import cx from 'clsx';
+import classes from '../../styles/UserButton.module.css';
 interface Props {
-  image?: string | undefined, 
-  initials?: string | undefined, 
-  name: string | undefined, 
-  email:string | undefined, 
-  icon?:any
+  image?: string | undefined;
+  initials?: string | undefined;
+  name: string | undefined;
+  email: string | undefined;
+  icon?: any;
 }
 
 const UserButton = forwardRef(
-  ({ image, name, email, icon,initials, ...others }: Props, ref:Ref<HTMLButtonElement>) => (
-    
-    <UnstyledButton
-      ref={ref}
-      sx={(theme) => ({
-        display: 'block',
-        width: '100%',
-        padding: theme.spacing.md,
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-
-        '&:hover': {
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-        },
-      })}
-      {...others}
-    >
+  ({ image, name, email, icon, initials, ...others }: Props, ref: Ref<HTMLButtonElement>) => (
+    <UnstyledButton ref={ref} className={cx(classes.user)} {...others}>
       <Group>
-        {image ? (<Avatar src={image} radius="xl" />) : <Avatar  radius="xl">{initials}</Avatar>}
+        {image ? <Avatar src={image} radius="xl" /> : <Avatar radius="xl">{initials}</Avatar>}
         <div style={{ flex: 1 }}>
-          <Text size="sm" weight={500}>
+          <Text size="sm" fw={500}>
             {name}
-            {/* Nombre de prueba */}
           </Text>
 
-          <Text color="dimmed" size="xs">
+          <Text c="dimmed" size="xs">
             {email}
-            {/* email@email.com */}
           </Text>
         </div>
 

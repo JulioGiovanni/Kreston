@@ -1,86 +1,79 @@
-import React, { useContext } from 'react';
-import {
-  Table,
-  Checkbox,
-  Title,
-} from '@mantine/core';
+import { Checkbox, Table, Title } from '@mantine/core';
+import { IUsuario } from '../../interfaces';
+import { queryUsers } from '../../ReactQuery/Usuarios';
 import { useListState } from '@mantine/hooks';
-import { useForm } from '@mantine/form';
-import { DataContext } from '../../context/Data';
+import { deleteUser, reactiveUser } from '../../services/usuarios.service';
 
+import { useEffect } from 'react';
+import Error from '../UI/Error';
+import LoadingTable from '../common/loaders/LoadingTable';
 
 export function ShowUsersTable2() {
-    
-    const { Usuarios } = useContext(DataContext)
+  const { Usuarios, isLoading, isError } = queryUsers();
 
-    const [values, handlers] = useListState(Usuarios);
+  let rows: any = [];
+  const [values, handlers] = useListState<IUsuario>(Usuarios);
 
-  const initialValues = {
-    name:'',
-    email:'',
-  }
+  const ths = (
+    <Table.Tr>
+      <Table.Td>
+        <Title order={3}>Nombre</Title>
+      </Table.Td>
+      <Table.Td>
+        <Title order={3}>Correo</Title>
+      </Table.Td>
+      <Table.Td>
+        <Title order={3}>Rol</Title>
+      </Table.Td>
+      <Table.Td>
+        <Title order={3}>Oficina</Title>
+      </Table.Td>
+      <Table.Td>
+        <Title order={3}>Área</Title>
+      </Table.Td>
+      <Table.Td>
+        <Title order={3}>Activo</Title>
+      </Table.Td>
+    </Table.Tr>
+  );
 
-  const form = useForm({
-      initialValues,
-      // validationRules: {
-      //   name: (value) => value.trim().length > 2,
-      //   email: (value) => value.trim().length > 2,
-      // },
-    });
+  useEffect(() => {
+    handlers.setState(Usuarios);
+  }, [Usuarios]);
 
-
-    const ths = (
-        <tr>
-            <td>
-                <Title order={3}>Nombre</Title>
-            </td>
-            <td>
-                <Title order={3}>Correo</Title>
-            </td>
-            <td>
-                <Title order={3}>Rol</Title>
-            </td>
-            <td>
-                <Title order={3}>Oficina</Title>
-            </td>
-            <td>
-                <Title order={3}>Área</Title>
-            </td>
-            <td>
-                <Title order={3}>Activo</Title>
-            </td>
-        
-        </tr>
-      );
-    
-      const rows = Usuarios.map((row:any,index) => {
-        return(
-          <tr key={row.id}>
-          <td>{row.nombre}</td>
-          <td>{row.correo}</td>
-          <td>{row.rol.nombre}</td>
-          <td>{row.oficina.nombre}</td>
-          <td>{row.area.nombre}</td>
-          {/* <td>
-          <Checkbox checked={row.activo} onChange={ (event:React.ChangeEvent<HTMLInputElement> ) => {
-            //  handlers.setItemProp(index, 'activo', event.currentTarget.checked)
-            handlers.setItemProp(index, 'activo', event.currentTarget.checked)
-            row.activo ? API.UserApi.deleteUser(row.id) : API.UserApi.reactiveUser(row.id)
-          }} 
+  // if (Usuarios && Usuarios.length > 0) {
+  rows = values?.map((usuario: IUsuario, index: number) => {
+    return (
+      <Table.Tr key={usuario.id}>
+        <Table.Td>{usuario.nombre}</Table.Td>
+        <Table.Td>{usuario.correo}</Table.Td>
+        <Table.Td>{usuario.rol?.nombre}</Table.Td>
+        <Table.Td>{usuario.oficina?.nombre}</Table.Td>
+        <Table.Td>{usuario.area?.nombre}</Table.Td>
+        <Table.Td>
+          <Checkbox
+            checked={usuario.activo}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              handlers.setItemProp(index, 'activo', event.currentTarget.checked);
+              usuario.activo ? deleteUser(usuario.id) : reactiveUser(usuario.id);
+            }}
           />
-        </td> */}
-        </tr>
-        )
-      });
-    
-      return (
-        
-          Usuarios && (
-            <Table highlightOnHover>
-              <thead>{ths}</thead>
-              <tbody>{rows}</tbody>
-            </Table>
-          )
-        
-      );
+        </Table.Td>
+      </Table.Tr>
+    );
+  });
+  // }
+
+  return isError ? (
+    <Error />
+  ) : isLoading ? (
+    <LoadingTable />
+  ) : (
+    Usuarios && (
+      <Table highlightOnHover>
+        <Table.Thead>{ths}</Table.Thead>
+        <Table.Tbody>{rows}</Table.Tbody>
+      </Table>
+    )
+  );
 }

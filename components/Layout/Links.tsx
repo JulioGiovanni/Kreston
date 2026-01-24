@@ -1,74 +1,83 @@
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { NavLink, Text, Tooltip } from '@mantine/core';
 
-import React from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { NavLink, Text, useMantineTheme } from '@mantine/core'
-
-import { AdminLinks } from '../../utils/ArrayLinks'
-import { IAccordionLinks } from '../../interfaces/links.interface';
-
-
+import { AdminLinks } from '../../utils/ArrayLinks';
+import { IAccordionLinks, IArrayLinks } from '../../interfaces/links.interface';
 
 const Links = () => {
-    const router = useRouter()
-
-    const generalStyle = {
-        borderRadius: '10px',
-        margin: '5px 0',
-    }
+  const router = useRouter();
+  const generalStyle = {
+    borderRadius: '10px',
+    margin: '5px 0px',
+  };
 
   return (
-    <>            
-        {   
-            AdminLinks.map((link) => {
-            return(
-                link.accordion ?
-                <NavLink
-                    key={link.link}
-                    label={<Text weight={500} size="md" >{link.text}</Text>}
-                    icon={<link.Icon  size={18} />}
-                    childrenOffset={28}
-                    active={router.pathname.includes(link.link!)}
-                    defaultOpened={router.pathname.includes(link.link!)}
-                    variant="light"
-                    sx={generalStyle}
-                    color='gray'
-                >
-                    {link.accordionLinks!.map((l:IAccordionLinks) => {
-                        return(
-                            <Link href={l.link} passHref>
-                                <NavLink
-                                    key={l.link} 
-                                    label={<Text weight={500}  >{l.text}</Text>}
-                                    active={router.pathname == l.link}
-                                    variant="filled"
-                                    sx={{borderRadius: '10px'}}
-                                    color='gray'
-                                />
-                            </Link>
-                        )}
-                    )}
-
-                </NavLink>
-                :
-                <Link href={link.link!} passHref key={link.link}>
-                    <NavLink
-                        key={link.link}
-                        label={<Text weight={500} size="md" >{link.text}</Text>}
-                        icon={<link.Icon size={18}/>}
-                        active={router.pathname === link.link}
-                        variant="filled"
-                        sx={generalStyle}
-                        color='gray'
-                    >
-                    </NavLink>
-                </Link>
-
-                )
-            })
-        }
+    <>
+      {AdminLinks.map((link: IArrayLinks) => {
+        return link.accordion ? (
+          link.tooltip ? (
+            <Tooltip label={link.tooltipText} key={link.text}>
+              {generateAccordionLinks(link, router, generalStyle)}
+            </Tooltip>
+          ) : (
+            generateAccordionLinks(link, router, generalStyle)
+          )
+        ) : (
+          generateNavLinks(link, router, generalStyle)
+        );
+      })}
     </>
-  )
-}
+  );
+};
 
-export default Links
+export default Links;
+
+const generateNavLinks = (link: IArrayLinks, router: any, generalStyle: any) => {
+  return (
+    <NavLink
+      component={Link}
+      href={link.link!}
+      key={link.link}
+      label={<Text size="xs">{link.text}</Text>}
+      leftSection={<link.Icon size={18} />}
+      active={router.pathname.includes(link.link!)}
+      variant="filled"
+      style={generalStyle}
+    />
+  );
+};
+
+const generateAccordionLinks = (
+  link: IArrayLinks,
+  router: any,
+  generalStyle: any,
+  size?: string
+) => {
+  return (
+    <NavLink
+      key={link.text}
+      label={<Text size="xs">{link.text}</Text>}
+      leftSection={<link.Icon size={18} />}
+      childrenOffset={28}
+      active={router.pathname.includes(link.link!)}
+      defaultOpened={router.pathname.includes(link.link!)}
+      variant="light"
+      style={generalStyle}
+    >
+      {link.accordionLinks!.map((l: IAccordionLinks) => {
+        return (
+          <NavLink
+            component={Link}
+            href={l.link}
+            key={l.link}
+            label={<Text size="xs">{l.text}</Text>}
+            active={router.pathname == l.link}
+            variant="filled"
+            style={{ borderRadius: '10px' }}
+          />
+        );
+      })}
+    </NavLink>
+  );
+};

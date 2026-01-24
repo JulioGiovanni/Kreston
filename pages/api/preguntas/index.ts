@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '../../../db';
-import { Pregunta } from '../../../interfaces';
+import prisma from '../../../db';
+import { IPregunta } from '../../../interfaces/pregunta.interface';
 
 type Data = {
   message?: string;
@@ -10,8 +10,6 @@ type Data = {
 
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
-    case 'GET':
-      return getAllPreguntasFromCuestionario(req, res);
     case 'POST':
       return createNewPregunta(req, res);
     default:
@@ -20,31 +18,29 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   }
 }
 
-const getAllPreguntasFromCuestionario = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  try {
-    const areas = await prisma.area.findMany({});
-    return res.status(200).json({
-      message: 'ok',
-      data: areas,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: 'error',
-      data: error,
-    });
-  }
-};
 const createNewPregunta = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
-    const { mensaje, cuestionario, preguntaPadre } = req.body.data;
-    if (!mensaje)
+    const {
+      pregunta,
+      cuestionarioId,
+      preguntaPadre,
+      posicion,
+      tipoPregunta,
+      valorAnidado,
+      posiblesRespuestas,
+    } = req.body;
+    if (!pregunta)
       return res.status(400).json({ message: 'La pregunta es requerida', type: 'nombre' });
 
     const newPregunta = await prisma.pregunta.create({
       data: {
-        pregunta: mensaje,
-        cuestionarioId: cuestionario,
-        preguntaPadre,
+        pregunta,
+        cuestionarioId: Number(cuestionarioId),
+        tipo: tipoPregunta,
+        preguntaPadre: preguntaPadre ?? null,
+        posicion: posicion,
+        valorAnidado: valorAnidado ?? null,
+        posiblesRespuestas: posiblesRespuestas ?? {},
       },
       select: {
         id: true,

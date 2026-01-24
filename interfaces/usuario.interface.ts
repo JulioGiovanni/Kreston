@@ -1,13 +1,19 @@
+import { IRole } from './role.interface';
+import { IArea } from './area.interface';
+import { IOficina } from './oficina.interface';
 export interface IUsuario {
-    id?:number;                    
-    nombre:string;             
-    correo:string;
-    contrasena:string;
-    oficinaId:number;
-    areaId:number;
-    rolId:number;
-    activo?:boolean;
-    lastModifiedBy?:string;
-    createdAt?:string;
-    updatedAt?:string;
+  id?: string;
+  nombre: string;
+  correo: string;
+  contrasena: string;
+  oficinaId: number;
+  oficina?: IOficina;
+  areaId: number;
+  area?: IArea;
+  rolId: number;
+  rol?: IRole;
+  activo?: boolean;
+  lastModifiedBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
