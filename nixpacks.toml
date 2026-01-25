@@ -1,5 +1,4 @@
 [phases.setup]
-nixpkgsArchive = "bf744fe90419885eefced41b3e5ae442d732712d"
 
 [phases.install]
 cmds = ["npm ci"]
@@ -12,3 +11,4 @@ cmd = "npm start"
 
 [variables]
 NODE_ENV = "production"
+NIXPACKS_NODE_VERSION = "22"
